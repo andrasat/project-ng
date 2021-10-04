@@ -1,0 +1,23 @@
+.bodytext-14 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+
+  &.semibold {
+    font-weight: 600;
+    line-height: 18px;
+  }
+
+  &.bold {
+    font-weight: 700;
+    line-height: 18px;
+  }
+
+  &.black {
+    color: var(--black);
+  }
+  &.white {
+    color: var(--white);
+  }
+}

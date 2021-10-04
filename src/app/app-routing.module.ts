@@ -6,6 +6,10 @@ import { RouterModule } from '@angular/router';
     {
       path: '',
       loadChildren: () => import('@pages/landing-page/landing-page.module').then(m => m.LandingPageModule)
+    },
+    {
+      path: 'scan',
+      loadChildren: () => import('@pages/qr-code-scanner/qr-code-scanner.module').then(m => m.QrCodeScannerModule)
     }
   ])],
   exports: [RouterModule]

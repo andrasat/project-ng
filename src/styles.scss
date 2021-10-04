@@ -1,4 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
+
+:root {
+  --white: #fff;
+  --light-grey: #e3e9eb;
+  --grey: #95a0a9;
+  --black: #2c2a2b;
+  --orange: #ffa224;
+  --tangerine: #f07600;
+  --red: #c30b31;
+  --purple: #770248;
+  --green: #02d87d;
+  --ocean: #00acad;
+  --blue: #0054c0;
+  --blue-purple: #33377e;
+}
+
+.page-container {
+  position: relative;
+  width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  margin: 0;
+}
