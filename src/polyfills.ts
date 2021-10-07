@@ -23,6 +23,14 @@ import '@angular/localize/init';
  */
 
 /**
+ * Firebase Polyfills
+ */
+import 'core-js/stable';
+import 'globalthis';
+import 'proxy-polyfill';
+import 'cross-fetch/polyfill';
+
+/**
  * IE11 requires the following for NgClass support on SVG elements
  */
 // import 'classlist.js';  // Run `npm install --save classlist.js`.

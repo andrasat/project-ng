@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
   selector: 'app-primary-button',
@@ -7,5 +7,5 @@ import { Component, Input } from "@angular/core";
 })
 export class PrimaryButtonComponent {
   @Input() text: string = ''
-  @Input() onClick: Function
+  @Output() public clicked: EventEmitter<void> = new EventEmitter()
 }

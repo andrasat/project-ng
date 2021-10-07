@@ -7,6 +7,9 @@
       "@components/*": [
         "src/app/components/*"
       ],
+      "@core/*": [
+        "src/app/core/*"
+      ],
       "@icons/*": [
         "src/app/icons/*"
       ],
