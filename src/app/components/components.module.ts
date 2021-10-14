@@ -17,6 +17,7 @@ import {
 
 import {
   PrimaryButtonComponent,
+  SecondaryButtonComponent,
 } from './buttons';
 
 @NgModule({
@@ -34,7 +35,8 @@ import {
     SubtitleComponent,
     CaptionComponent,
     LinkComponent,
-    PrimaryButtonComponent
+    PrimaryButtonComponent,
+    SecondaryButtonComponent,
   ],
   exports: [
     CommonModule,
@@ -48,7 +50,8 @@ import {
     SubtitleComponent,
     CaptionComponent,
     LinkComponent,
-    PrimaryButtonComponent
+    PrimaryButtonComponent,
+    SecondaryButtonComponent,
   ]
 })
 export class ComponentsModule {}

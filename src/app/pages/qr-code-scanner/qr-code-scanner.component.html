@@ -1,5 +1,11 @@
 <div class="page-container">
 
+  <div class="nav-back-icon">
+    <a routerLink="..">
+      <app-icon-arrow-left color="white"></app-icon-arrow-left>
+    </a>
+  </div>
+
   <zxing-scanner
     (scanFailure)="scanFailureHandler"
     (scanError)="scanErrorHandler($event)"
@@ -10,8 +16,8 @@
 
   <div *ngIf="!!cameraError" class="scanner-container">
     <div class="camera-error-container">
-      <app-bodytext-14 [isBold]=true>
-        Your device does&apos;nt have a camera system
+      <app-bodytext-14 [isBold]=true color="white">
+        Your device does not have a camera system
         <br/>
         or please give the permission to access your camera
       </app-bodytext-14>
@@ -49,12 +55,6 @@
       </div>
     </div>
     <!-- Scanner Box -->
-
-    <div class="arrow-icon">
-      <a routerLink="..">
-        <app-icon-arrow-left color="white"></app-icon-arrow-left>
-      </a>
-    </div>
 
   </div>
 </div>

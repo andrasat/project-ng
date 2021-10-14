@@ -9,6 +9,7 @@
 }
 
 .scanner-container {
+  background-color: rgba($color: #000000, $alpha: 0.7);
   height: 100vh;
   width: 100%;
   position: absolute;
@@ -57,12 +58,6 @@
 .bottom-section {
   background-color: rgba($color: #000000, $alpha: 0.7);
   position: relative;
-}
-
-.arrow-icon {
-  position: absolute;
-  left: 20px;
-  top: 20px;
 }
 
 .text-container {

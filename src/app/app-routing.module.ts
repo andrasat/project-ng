@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule.forRoot([
     {
       path: '',
+      pathMatch: 'full',
       loadChildren: () => import('@pages/landing-page/landing-page.module').then(m => m.LandingPageModule)
     },
     {

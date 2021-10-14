@@ -19,6 +19,9 @@
       "@pages/*": [
         "src/app/pages/*"
       ],
+      "@utils/*": [
+        "src/app/utils/*"
+      ],
       "@environments/*": [
         "src/environments/*"
       ]

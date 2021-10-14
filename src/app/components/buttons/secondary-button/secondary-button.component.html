@@ -1,0 +1,8 @@
+<button
+  type="button"
+  class="btn secondary-button"
+  [ngClass]="{invert,transparent}"
+  (click)="clicked.emit()">
+  <img *ngIf="icon !== ''" [src]="icon" alt="icon">
+  <p>{{ text }}</p>
+</button>
