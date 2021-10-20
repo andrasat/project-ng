@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 
 @Component({
   selector: 'app-icon-arrow-left',
   templateUrl: './arrow-left.component.svg'
 })
-export class ArrowLeftComponent implements OnInit {
+export class ArrowLeftIconComponent implements OnInit, OnChanges {
   @Input() color: string
 
   fillColor: string
@@ -14,7 +14,18 @@ export class ArrowLeftComponent implements OnInit {
       case 'white':
         this.fillColor = '#FFFFFF';
         break;
-      case 'primary':
+      case 'tangerine':
+      default:
+        this.fillColor = '#F07600';
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    switch(changes.color.currentValue) {
+      case 'white':
+        this.fillColor = '#FFFFFF';
+        break;
+      case 'tangerine':
       default:
         this.fillColor = '#F07600';
     }

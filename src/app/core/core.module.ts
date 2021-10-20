@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
-import { NgModule } from "@angular/core";
+import { NgModule, APP_INITIALIZER } from "@angular/core";
 import { AngularFireAuthModule } from "@angular/fire/compat/auth";
 import { AngularFireModule } from "@angular/fire/compat";
 
@@ -8,7 +8,8 @@ import { environment } from "@environments/environment";
 import {
   AuthService,
   QSApiService,
-  StorageService
+  StorageService,
+  LocationService,
 } from "./services";
 
 @NgModule({
@@ -22,6 +23,13 @@ import {
     QSApiService,
     AuthService,
     StorageService,
+    LocationService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (locationService: LocationService) => () => locationService.getInitialPosition(),
+      deps: [LocationService],
+      multi: true,
+    }
   ]
 })
 export class CoreModule {}

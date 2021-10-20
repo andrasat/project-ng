@@ -8,10 +8,10 @@ import { AppComponent } from './app.component';
 
 @NgModule({
   imports: [
-    BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule,
     CoreModule,
+    ReactiveFormsModule,
+    BrowserModule,
   ],
   declarations: [AppComponent],
   bootstrap: [AppComponent],

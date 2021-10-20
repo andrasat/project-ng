@@ -31,7 +31,7 @@
       <div class="buttons">
         <app-secondary-button
           icon="assets/image/google-logo.png"
-          (clicked)="authService.signInGoogle()"
+          (clicked)="loginHandler('google')"
           text="CONTINUE WITH GOOGLE">
         </app-secondary-button>
       </div>
@@ -39,14 +39,14 @@
       <div class="buttons">
         <app-secondary-button
           icon="assets/image/facebook-logo.png"
-          (clicked)="authService.signInFacebook()"
+          (clicked)="loginHandler('facebook')"
           text="CONTINUE WITH FACEBOOK">
         </app-secondary-button>
       </div>
 
       <div class="buttons">
         <app-secondary-button
-          (clicked)="authService.signInWithoutProvider()"
+          (clicked)="loginHandler()"
           [transparent]="true"
           text="CONTINUE WITHOUT LOGIN">
         </app-secondary-button>

@@ -4,4 +4,24 @@ h5 {
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 2px;
+
+  &.black {
+    color: var(--black);
+  }
+
+  &.white {
+    color: var(--white);
+  }
+
+  &.red {
+    color: var(--red);
+  }
+  
+  &.tangerine {
+    color: var(--tangerine);
+  }
+
+  &.grey {
+    color: var(--grey-4);
+  }
 }

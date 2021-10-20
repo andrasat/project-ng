@@ -1,0 +1,51 @@
+<div class="page-container">
+  <router-outlet></router-outlet>
+
+  <nav class="nav justify-content-around bottom-nav">
+
+    <a
+      routerLinkActive
+      #rla1="routerLinkActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      [routerLink]="'/' + branchList?.companyCode">
+      <div class="bottom-nav-item nav-item d-flex flex-column">
+        <app-icon-home [color]="rla1.isActive ? 'tangerine' : 'grey'"></app-icon-home>
+        <app-caption class="mt-1" [color]="rla1.isActive ? 'tangerine' : 'grey'" [isBold]="rla1.isActive">Home</app-caption>
+      </div>
+    </a>
+
+    <a
+      routerLinkActive
+      #rla2="routerLinkActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      [routerLink]="'/' + branchList?.companyCode + '/promotion'">
+      <div class="bottom-nav-item nav-item d-flex flex-column">
+        <app-icon-promotion [color]="rla2.isActive ? 'tangerine' : 'grey'"></app-icon-promotion>
+        <app-caption class="mt-1" [color]="rla2.isActive ? 'tangerine' : 'grey'" [isBold]="rla2.isActive">Promotion</app-caption>
+      </div>
+    </a>
+
+    <a
+      routerLinkActive
+      #rla3="routerLinkActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      [routerLink]="'/' + branchList?.companyCode + '/order-history'">
+      <div class="bottom-nav-item nav-item d-flex flex-column">
+        <app-icon-history [color]="rla3.isActive ? 'tangerine' : 'grey'"></app-icon-history>
+        <app-caption class="mt-1" [color]="rla3.isActive ? 'tangerine' : 'grey'" [isBold]="rla3.isActive">History</app-caption>
+      </div>
+    </a>
+
+    <a
+      routerLinkActive
+      #rla4="routerLinkActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      [routerLink]="'/' + branchList?.companyCode + '/others'">
+      <div class="bottom-nav-item nav-item d-flex flex-column">
+        <app-icon-others [color]="rla4.isActive ? 'tangerine' : 'grey'"></app-icon-others>
+        <app-caption class="mt-1" [color]="rla4.isActive ? 'tangerine' : 'grey'" [isBold]="rla4.isActive">Others</app-caption>
+      </div>
+    </a>
+
+  </nav>
+</div>

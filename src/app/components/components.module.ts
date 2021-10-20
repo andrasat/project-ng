@@ -1,6 +1,7 @@
 
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
+import { IconModule } from "@icons/icons.module";
 
 import {
   BodyText14Component,
@@ -16,13 +17,21 @@ import {
 } from "./typography";
 
 import {
+  SearchBoxComponent,
+  TextBoxComponent,
+} from './inputs';
+
+import {
   PrimaryButtonComponent,
   SecondaryButtonComponent,
 } from './buttons';
 
+import { ListComponent } from './list/list.component';
+
 @NgModule({
   imports: [
     CommonModule,
+    IconModule,
   ],
   declarations: [
     Heading1Component,
@@ -35,8 +44,11 @@ import {
     SubtitleComponent,
     CaptionComponent,
     LinkComponent,
+    SearchBoxComponent,
+    TextBoxComponent,
     PrimaryButtonComponent,
     SecondaryButtonComponent,
+    ListComponent,
   ],
   exports: [
     CommonModule,
@@ -50,8 +62,11 @@ import {
     SubtitleComponent,
     CaptionComponent,
     LinkComponent,
+    SearchBoxComponent,
+    TextBoxComponent,
     PrimaryButtonComponent,
     SecondaryButtonComponent,
+    ListComponent,
   ]
 })
 export class ComponentsModule {}

@@ -1,0 +1,110 @@
+.map-container {
+  box-shadow: 0px -1px 1px 1px var(--light-grey);
+  position: relative;
+  height: 360px;
+  width: 100%;
+}
+
+.current-location-container {
+  padding: 8px 16px;
+}
+
+.additional-note-container {
+  border-top: 8px solid var(--grey-6);
+  padding: 16px;
+}
+
+.button-container {
+  padding: 16px;
+}
+
+.additional-note-input {
+  margin-top: 16px;
+}
+
+.grey-text {
+  color: var(--grey-4);
+}
+
+.map {
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+.map-icon {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  left: 45%;
+  top: 45%;
+  z-index: 500;
+}
+
+.search-box-container {
+  position: absolute;
+  top: 0;
+  padding: 8px 20px;
+  width: 100%;
+  z-index: 1002;
+}
+
+.current-location {
+  background-color: var(--white);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px var(--grey-4);
+  position: absolute;
+  bottom: 25px;
+  right: 10px;
+  height: 40px;
+  width: 40px;
+  z-index: 900;
+}
+
+.current-location-icon {
+  margin: auto;
+  width: 12px;
+  position: relative;
+  left: 35%;
+  top: 25%;
+}
+
+.search-result-container {
+  background: var(--white);
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1001;
+}
+
+.address-container {
+  position: relative;
+  border-top: 8px solid var(--grey-6);
+  top: 150px;
+}
+
+.heading-container {
+  padding: 16px;
+}
+
+.address-list {
+  padding: 10px 16px;
+}
+
+.address-box {
+  padding: 16px 0;
+
+  &.search-result {
+    border-top: 1px solid var(--grey-4);
+  }
+}
+
+.address-text-container {
+  padding-left: 25px;
+}
+
+.address-description {
+  margin-top: 6px;
+  max-width: 70vw;
+}
