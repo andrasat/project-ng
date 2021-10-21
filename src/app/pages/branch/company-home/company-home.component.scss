@@ -1,4 +1,25 @@
-.carousel-container {
-  height: 280px;
+:host ::ng-deep .carousel-indicators {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+
+  li {
+    border-bottom: none;
+    flex: 1 1 auto;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  li.active {
+    background-color: var(--tangerine);
+  }
+}
+
+.image-container {
+  max-height: 280px;
   width: 100%;
+
+  img {
+    width: 100%;
+  }
 }

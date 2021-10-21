@@ -1,8 +1,11 @@
-<div class="carousel-container">
-  
-</div>
+<ngb-carousel *ngIf="images" [showNavigationArrows]="false">
+  <ng-template ngbSlide *ngFor="let image of images; let i = index">
+    <div class="image-container">
+      <img [src]="image" [alt]="'promo-image-'+i">
+    </div>
+  </ng-template>
+</ngb-carousel>
 
 <div>
-  <h3>{{ branchList?.companyName }}</h3>
-  <!-- <app-heading-3></app-heading-3> -->
+  <app-heading-3>{{ branchList?.companyName }}</app-heading-3>
 </div>
