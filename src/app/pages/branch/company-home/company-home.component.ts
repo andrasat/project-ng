@@ -15,11 +15,14 @@ export class CompanyHomeComponent implements OnInit {
     public locationService: LocationService,
     public config: NgbCarouselConfig,
   ) {
+    config.interval = 5000;
   }
 
   branchList: IBranchList | undefined
   images = [
-    'assets/image/placeholder-landing-group.jpg'
+    'assets/image/placeholder-promo-1.jpg',
+    'assets/image/placeholder-promo-2.jpg',
+    'assets/image/placeholder-promo-3.jpg'
   ]
 
   ngOnInit() {

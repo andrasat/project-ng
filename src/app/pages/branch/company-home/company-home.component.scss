@@ -1,3 +1,4 @@
+// Custom ng carousel
 :host ::ng-deep .carousel-indicators {
   margin-left: 0;
   margin-right: 0;
@@ -16,10 +17,17 @@
 }
 
 .image-container {
-  max-height: 280px;
+  position: relative;
+  height: 280px;
   width: 100%;
 
   img {
     width: 100%;
+    position: absolute;
+    bottom: -35px;
   }
+}
+
+.company-container {
+  padding: 16px;
 }
