@@ -22,12 +22,18 @@
   width: 100%;
 
   img {
+    height: 100%;
     width: 100%;
     position: absolute;
-    bottom: -35px;
+    bottom: 0;
   }
 }
 
 .company-container {
   padding: 16px;
+  border-bottom: 8px solid var(--grey-6);
+}
+
+.branch-list-container {
+  padding: 16px 16px 80px 16px;
 }

@@ -8,6 +8,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/cor
 export class CaptionComponent implements OnInit, OnChanges {
   @Input() isSemiBold: boolean = false;
   @Input() isBold: boolean = false;
+  @Input() isTruncate: boolean = false;
   @Input() color: string = 'black';
 
   currentClasses: Record<string, boolean> = {}
@@ -16,6 +17,7 @@ export class CaptionComponent implements OnInit, OnChanges {
     this.currentClasses = {
       bold: this.isBold,
       semibold: this.isSemiBold,
+      'text-truncate': this.isTruncate,
       [this.color]: true,
     };
   }
@@ -24,6 +26,7 @@ export class CaptionComponent implements OnInit, OnChanges {
     this.currentClasses = {
       bold: changes.isBold?.currentValue,
       semibold: changes.isSemiBold?.currentValue,
+      'text-truncate': changes.isTruncate?.currentValue,
       [changes.color?.currentValue]: true,
     };
   }

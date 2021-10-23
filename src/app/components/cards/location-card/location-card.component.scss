@@ -1,2 +1,14 @@
 .location-card {
+  padding: 8px 16px;
+  border: 1px solid var(--grey-4);
+  border-radius: 6px;
+}
+
+.location-icon {
+  margin-right: 10px;
+}
+
+.location-text-container {
+  max-width: 375px;
+  width: 67.5vw;
 }

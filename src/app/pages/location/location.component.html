@@ -1,9 +1,7 @@
 <div class="page-container">
 
-  <div class="nav-back-icon">
-    <a routerLink="..">
-      <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
-    </a>
+  <div class="nav-back-icon" (click)="continueOnClick()">
+    <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
   </div>
 
   <div class="header-component">
@@ -25,6 +23,7 @@
     <div class="search-box-container">
       <app-input-search-box
         (focusEvent)="collapse.toggle()"
+        (focusOutEvent)="collapse.toggle()"
         (searchEvent)="onChangeSearch($event)">
       </app-input-search-box>
     </div>
@@ -35,7 +34,7 @@
       <img src="assets/image/current-location.svg" alt="current-location-icon" width="16px">
       <div class="address-text-container d-flex flex-column">
         <app-bodytext-14 [isSemiBold]="true">{{ currentAddress?.addressName }}</app-bodytext-14>
-        <app-caption class="text-truncate address-description" color="grey">{{ currentAddress?.address }}</app-caption>
+        <app-caption [isTruncate]="true" class="address-description" color="grey">{{ currentAddress?.address }}</app-caption>
       </div>
     </div>
   </div>
@@ -70,7 +69,7 @@
           <img src="assets/image/current-location.svg" alt="current-location-icon" width="16px">
           <div class="address-text-container d-flex flex-column">
             <app-caption color="grey">Current Location</app-caption>
-            <app-bodytext-14 class="text-truncate address-description" [isSemiBold]="true">{{ currentAddress?.address }}</app-bodytext-14>
+            <app-bodytext-14 [isTruncate]="true" class="address-description" [isSemiBold]="true">{{ currentAddress?.address }}</app-bodytext-14>
           </div>
         </div>
 
@@ -78,7 +77,7 @@
           <img src="assets/image/time.svg" alt="search-result-icon" width="16px">
           <div class="address-text-container d-flex flex-column">
             <app-bodytext-14 [isSemiBold]="true">{{ data?.displayName }}</app-bodytext-14>
-            <app-caption class="text-truncate address-description" color="grey">{{ data?.description }}</app-caption>
+            <app-caption [isTruncate]="true" class="address-description" color="grey">{{ data?.description }}</app-caption>
           </div>
         </div>
       </div>

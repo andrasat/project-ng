@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 
 @Component({
-  selector: 'app-icon-arrow-left',
-  templateUrl: './arrow-left.component.svg'
+  selector: 'app-icon-chevron-right',
+  templateUrl: './chevron-right.component.svg'
 })
-export class ArrowLeftIconComponent implements OnInit, OnChanges {
+export class ChevronRightIconComponent implements OnInit, OnChanges {
   @Input() color: string
 
   fillColor: string

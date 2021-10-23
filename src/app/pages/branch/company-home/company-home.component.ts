@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
-import { IBranchList } from '@core/models';
+import { IAddress, IBranchList } from '@core/models';
 import { LocationService, QSApiService } from '@core/services';
+import { separateAddress } from '@utils/separateAddress';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-company-home',
@@ -11,6 +14,8 @@ import { LocationService, QSApiService } from '@core/services';
 })
 export class CompanyHomeComponent implements OnInit {
   constructor(
+    public route: ActivatedRoute,
+    public router: Router,
     public qsApiService: QSApiService,
     public locationService: LocationService,
     public config: NgbCarouselConfig,
@@ -19,6 +24,7 @@ export class CompanyHomeComponent implements OnInit {
   }
 
   branchList: IBranchList | undefined
+  currentAddress: IAddress | undefined 
   images = [
     'assets/image/placeholder-promo-1.jpg',
     'assets/image/placeholder-promo-2.jpg',
@@ -26,10 +32,20 @@ export class CompanyHomeComponent implements OnInit {
   ]
 
   ngOnInit() {
-    this.locationService.currentPosition.subscribe(position => {
-      this.qsApiService.getBranchList(position.coords.latitude, position.coords.longitude);
-    });
+    this.locationService.currentPosition
+      .pipe(take(1))
+      .subscribe(position => {
+        this.qsApiService.getAddress(position.coords.latitude, position.coords.longitude);
+      });
 
-    this.qsApiService.branchList.subscribe(branchList => this.branchList = branchList);
+    this.qsApiService.branchList.subscribe(branchList => {
+      this.branchList = branchList;
+      console.log('branchList: ', branchList);
+    });
+    this.qsApiService.currentAddress.subscribe(address => this.currentAddress = address);
+  }
+
+  goToLocation() {
+    this.router.navigate(['/location'], { queryParams: { companyCode: this.branchList?.companyCode } });
   }
 }

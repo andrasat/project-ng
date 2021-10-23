@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { MapOptions, tileLayer, latLng, Map } from 'leaflet';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -17,6 +17,7 @@ import { take } from 'rxjs/operators';
 
 export class LocationComponent implements OnInit {
   constructor(
+    public zone: NgZone,
     public route: ActivatedRoute,
     public router: Router,
     public locationService: LocationService,
@@ -33,19 +34,18 @@ export class LocationComponent implements OnInit {
 
   isFavoriteAddressCollapse = true
   branchList: IBranchList | undefined
-  currentAddress: IAddress
+  currentAddress: IAddress | undefined
   devicePosition: GeolocationPosition
   searchResults: IAutocompleteResult[] = []
 
   ngOnInit() {
-    this.locationService.devicePosition
+    this.locationService.devicePosition.subscribe(position => {
+      this.devicePosition = position;
+    });
+
+    this.locationService.currentPosition
       .pipe(take(1))
       .subscribe(position => {
-        this.qsApiService.getAddress(position.coords.latitude, position.coords.longitude)
-          .subscribe(data => {
-            this.currentAddress = separateAddress(data.address);
-          });
-
         this.mapOptions = {
           layers: [
             tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -61,19 +61,12 @@ export class LocationComponent implements OnInit {
           zoom: 15,
           center: latLng(position.coords.latitude, position.coords.longitude)
         };
+      });
 
-        this.devicePosition = position;
-      });
-    
-    this.locationService.currentPosition
-      .subscribe(position => {
-        this.qsApiService.getAddress(position.coords.latitude, position.coords.longitude)
-          .subscribe(data => {
-            this.currentAddress = separateAddress(data.address);
-          });
-      });
-    
     this.qsApiService.branchList.subscribe(branchList => this.branchList = branchList);
+    this.qsApiService.currentAddress.subscribe(address => {
+      this.zone.run(() => this.currentAddress = address);
+    });
   }
 
   onMapReady(map: Map) {
@@ -97,12 +90,16 @@ export class LocationComponent implements OnInit {
         },
         timestamp: Date.now(),
       });
+
+      this.qsApiService.getAddress(center.lat, center.lng);
     }
   }
 
   goToDeviceLocation() {
     if (this.map) {
       this.map.panTo(latLng(this.devicePosition.coords.latitude, this.devicePosition.coords.longitude));
+
+      this.qsApiService.getAddress(this.devicePosition.coords.latitude, this.devicePosition.coords.longitude);
     }
   }
 
@@ -130,22 +127,8 @@ export class LocationComponent implements OnInit {
           });
 
           this.map?.panTo(latLng(place.lat, place.long));
-        },
-        () => {
-          this.locationService.updateCurrentPosition({
-            coords: {
-              accuracy: 0,
-              altitude: null,
-              altitudeAccuracy: null,
-              heading: null,
-              speed: null,
-              latitude: -1.1310182000000,
-              longitude: 133.5222313000000,
-            },
-            timestamp: Date.now(),
-          });
 
-          this.map?.panTo(latLng(-1.1310182000000, 133.5222313000000));
+          this.qsApiService.getAddress(place.lat, place.long);
         }
       );
   }

@@ -3,8 +3,9 @@ import { environment } from '@environments/environment';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject, Subscription } from 'rxjs';
 
-import { catchError, map } from 'rxjs/operators';
-import { IAddressResult, IAutocompleteResult, IBranchData, IBranchList, IPlaceResult, IUserData, IUserDataInput } from '@core/models';
+import { catchError, debounceTime, map } from 'rxjs/operators';
+import { IAddress, IAddressResult, IAutocompleteResult, IBranchData, IBranchList, IPlaceResult, IUserData, IUserDataInput } from '@core/models';
+import { separateAddress } from '@utils/separateAddress';
 
 @Injectable()
 export class QSApiService {
@@ -17,6 +18,9 @@ export class QSApiService {
 
   private _branchListSubject = new BehaviorSubject<IBranchList | undefined>(undefined)
   branchList = this._branchListSubject.asObservable()
+
+  private _currentAddressSubject = new BehaviorSubject<IAddress | undefined>(undefined)
+  currentAddress = this._currentAddressSubject.asObservable()
 
   // INTERNAL METHODS
 
@@ -76,16 +80,21 @@ export class QSApiService {
       }));
   }
 
-  getAddress(lat: number, lon: number, branchCode = 'ABC'): Observable<IAddressResult> {
+  getAddress(lat: number, lon: number, branchCode = 'ABC'): Subscription {
     return this.get(`/web/qsv1/map/address/${lat}/${lon}`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
       'Data-Branch': branchCode,
     }))
-      .pipe(map(data => data));
+      .pipe(
+        debounceTime(500),
+        map((data: IAddressResult) => separateAddress(data.address))
+      )
+      .subscribe(address => this._currentAddressSubject.next(address));
   }
 
   getPlace(placeId: string): Observable<IPlaceResult> {
-    return this.get(`/web/qsv1/map/place/${placeId}}`, undefined, new HttpHeaders({
+    console.log('placeId: ', placeId);
+    return this.get(`/web/qsv1/map/place/${placeId}`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
     }))
       .pipe(map(data => ({

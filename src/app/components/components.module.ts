@@ -17,6 +17,10 @@ import {
 } from "./typography";
 
 import {
+  LocationCardComponent,
+} from './cards';
+
+import {
   SearchBoxComponent,
   TextBoxComponent,
 } from './inputs';
@@ -44,6 +48,7 @@ import { ListComponent } from './list/list.component';
     SubtitleComponent,
     CaptionComponent,
     LinkComponent,
+    LocationCardComponent,
     SearchBoxComponent,
     TextBoxComponent,
     PrimaryButtonComponent,
@@ -62,6 +67,7 @@ import { ListComponent } from './list/list.component';
     SubtitleComponent,
     CaptionComponent,
     LinkComponent,
+    LocationCardComponent,
     SearchBoxComponent,
     TextBoxComponent,
     PrimaryButtonComponent,

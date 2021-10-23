@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-location-card',
-  templateUrl: 'location-card.component.html'
+  templateUrl: 'location-card.component.html',
+  styleUrls: ['./location-card.component.scss'],
 })
 
 export class LocationCardComponent {
-  constructor() {}
+  @Input() showArrow: boolean = false
 }

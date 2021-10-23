@@ -1,4 +1,8 @@
-<div class="location-card d-flex">
-  <img src="/assets/image/marker-outline.svg" alt="location-card-icon">
-  <ng-content select="selector"></ng-content>
+<div class="location-card d-flex flex-row justify-content-around align-items-center">
+  <img class="location-icon" src="/assets/image/marker-outline.svg" alt="location-card-icon" width="14px">
+  <div class="location-text-container d-flex flex-column">
+    <ng-content select="[topText]"></ng-content>
+    <ng-content select="[bottomText]"></ng-content>
+  </div>
+  <app-icon-chevron-right *ngIf="showArrow" color="black" ></app-icon-chevron-right>
 </div>
