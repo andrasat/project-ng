@@ -2,13 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { BranchComponent } from './branch.component';
-import { BranchHomeComponent } from './branch-home/branch-home.component';
-import { AddMenuComponent } from './branch-home/add-menu/add-menu.component';
+import { CompanyHomeComponent } from './company-home/company-home.component';
+import { RestaurantComponent } from './restaurant/restaurant.component';
+import { AddMenuComponent } from './restaurant/add-menu/add-menu.component';
 import { PromotionComponent } from './promotion/promotion.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { OthersComponent } from './others/others.component';
-import { CompanyHomeComponent } from './company-home/company-home.component';
-import { ComponentsModule } from '@components/components.module';
 
 @NgModule({
   imports: [
@@ -35,7 +34,7 @@ import { ComponentsModule } from '@components/components.module';
         }, {
           path: ':branchCode',
           pathMatch: 'full',
-          component: BranchHomeComponent,
+          component: RestaurantComponent,
         }, {
           path: ':branchCode/add-menu',
           pathMatch: 'full',
@@ -43,7 +42,6 @@ import { ComponentsModule } from '@components/components.module';
         }]
       },
     ]),
-    ComponentsModule,
   ],
   exports: [RouterModule],
 })

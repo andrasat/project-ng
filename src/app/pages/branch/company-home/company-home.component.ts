@@ -23,6 +23,7 @@ export class CompanyHomeComponent implements OnInit {
     config.interval = 5000;
   }
 
+  isSearchRestaurantCollapse = false
   branchList: IBranchList | undefined
   currentAddress: IAddress | undefined 
   images = [
@@ -45,7 +46,15 @@ export class CompanyHomeComponent implements OnInit {
     this.qsApiService.currentAddress.subscribe(address => this.currentAddress = address);
   }
 
+  goToSearchRestaurant() {
+    this.router.navigate(['/search-restaurant'], { queryParams: { companyCode: this.branchList?.companyCode } });
+  }
+
   goToLocation() {
     this.router.navigate(['/location'], { queryParams: { companyCode: this.branchList?.companyCode } });
+  }
+
+  goToBranchRestaurant(branchCode: string) {
+    this.router.navigate([`${branchCode}`], { relativeTo: this.route });
   }
 }

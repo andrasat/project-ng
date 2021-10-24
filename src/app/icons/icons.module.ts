@@ -5,6 +5,7 @@ import { ArrowLeftIconComponent } from "./arrow-left/component";
 import { ChevronRightIconComponent } from "./chevron-right/component";
 import { HistoryIconComponent } from "./history/component";
 import { HomeIconComponent } from "./home/component";
+import { MarkerIconComponent } from "./marker/component";
 import { OthersIconComponent } from "./others/component";
 import { PromotionIconComponent } from "./promotion/component";
 import { SearchIconComponent } from "./search/component";
@@ -18,6 +19,7 @@ import { SearchIconComponent } from "./search/component";
     ChevronRightIconComponent,
     HistoryIconComponent,
     HomeIconComponent,
+    MarkerIconComponent,
     OthersIconComponent,
     PromotionIconComponent,
     SearchIconComponent,
@@ -27,6 +29,7 @@ import { SearchIconComponent } from "./search/component";
     ChevronRightIconComponent,
     HistoryIconComponent,
     HomeIconComponent,
+    MarkerIconComponent,
     OthersIconComponent,
     PromotionIconComponent,
     SearchIconComponent,

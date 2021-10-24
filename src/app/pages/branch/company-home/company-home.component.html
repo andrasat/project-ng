@@ -6,6 +6,10 @@
   </ng-template>
 </ngb-carousel>
 
+<div class="search-icon-container" (click)="goToSearchRestaurant()">
+  <img src="/assets/image/search-circle.svg" alt="search restaurants">
+</div>
+
 <div class="company-container">
   <app-heading-3>
     {{ branchList?.companyName }}
@@ -45,8 +49,13 @@
   >
     <app-heading-5>{{ branchList?.nearMeBranchCount }} OUTLETS NEARBY</app-heading-5>
 
-    <div *ngFor="let branch of branchList?.branches" class="branch-container">
-      {{ branch.branchName }}
+    <div *ngFor="let branch of branchList?.branches" class="branch-container" (click)="goToBranchRestaurant(branch.branchCode)">
+      <app-restaurant-card
+        [restaurantName]="branch.branchName"
+        [restaurantPlace]="branch.branchName"
+        [restaurantDistance]="branch.distanceText"
+        [thumbnailImage]="branch.thumbnailImageUrl">
+      </app-restaurant-card>
     </div>
   </div>
 

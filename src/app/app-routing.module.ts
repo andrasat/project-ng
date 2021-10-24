@@ -25,6 +25,11 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('@pages/location/location.module' /* webpackChunkName: "location" */).then(m => m.LocationModule),
       },
       {
+        path: 'search-restaurant',
+        pathMatch: 'full',
+        loadChildren: () => import('@pages/search-restaurant/search-restaurant.module' /* webpackChunkName: "search-restaurant" */).then(m => m.SearchRestaurantModule),
+      },
+      {
         path: ':companyCode',
         loadChildren: () => import('@pages/branch/branch.module' /* webpackChunkName: "branch" */).then(m => m.BranchModule),
       }

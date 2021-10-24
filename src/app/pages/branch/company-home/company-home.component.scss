@@ -16,6 +16,12 @@
   }
 }
 
+.search-icon-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
 .image-container {
   position: relative;
   height: 280px;
@@ -36,4 +42,9 @@
 
 .branch-list-container {
   padding: 16px 16px 80px 16px;
+}
+
+.branch-container {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--grey);
 }

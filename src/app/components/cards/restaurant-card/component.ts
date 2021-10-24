@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-restaurant-card',
-  templateUrl: 'restaurant-card.component.html'
+  templateUrl: 'restaurant-card.component.html',
+  styleUrls: ['./restaurant-card.component.scss'],
 })
-
 export class RestaurantCardComponent {
-  constructor() { }
-
+  @Input() thumbnailImage: string
+  @Input() restaurantName: string
+  @Input() restaurantPlace: string
+  @Input() restaurantDistance: string
 }

@@ -18,6 +18,7 @@ import {
 
 import {
   LocationCardComponent,
+  RestaurantCardComponent,
 } from './cards';
 
 import {
@@ -49,6 +50,7 @@ import { ListComponent } from './list/list.component';
     CaptionComponent,
     LinkComponent,
     LocationCardComponent,
+    RestaurantCardComponent,
     SearchBoxComponent,
     TextBoxComponent,
     PrimaryButtonComponent,
@@ -68,6 +70,7 @@ import { ListComponent } from './list/list.component';
     CaptionComponent,
     LinkComponent,
     LocationCardComponent,
+    RestaurantCardComponent,
     SearchBoxComponent,
     TextBoxComponent,
     PrimaryButtonComponent,
