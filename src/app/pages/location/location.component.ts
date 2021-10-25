@@ -61,6 +61,9 @@ export class LocationComponent implements OnInit {
           zoom: 15,
           center: latLng(position.coords.latitude, position.coords.longitude)
         };
+
+        this.qsApiService.getBranchList(position.coords.latitude, position.coords.longitude);
+        this.qsApiService.getAddress(position.coords.latitude, position.coords.longitude);
       });
 
     this.qsApiService.branchList.subscribe(branchList => this.branchList = branchList);

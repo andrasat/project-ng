@@ -39,10 +39,7 @@ export class CompanyHomeComponent implements OnInit {
         this.qsApiService.getAddress(position.coords.latitude, position.coords.longitude);
       });
 
-    this.qsApiService.branchList.subscribe(branchList => {
-      this.branchList = branchList;
-      console.log('branchList: ', branchList);
-    });
+    this.qsApiService.branchList.subscribe(branchList => this.branchList = branchList);
     this.qsApiService.currentAddress.subscribe(address => this.currentAddress = address);
   }
 

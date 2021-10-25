@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { GeolocationService, GEOLOCATION_SUPPORT } from '@ng-web-apis/geolocation';
 
@@ -10,7 +9,6 @@ export class LocationService {
   constructor(
     @Inject(GEOLOCATION_SUPPORT) private readonly geolocationSupport: boolean,
     private readonly geolocation: GeolocationService,
-    private http: HttpClient,
   ) {}
 
   getInitialPosition() {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
@@ -10,6 +10,8 @@ import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 })
 
 export class SearchBoxComponent implements AfterViewInit {
+  @Input() placeholder: string = 'Search'
+
   @Output() focusEvent = new EventEmitter()
   @Output() focusOutEvent = new EventEmitter()
   @Output() searchEvent = new EventEmitter<string>()

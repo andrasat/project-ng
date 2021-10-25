@@ -6,8 +6,7 @@
     #searchinput
     type="text"
     class="form-control search-input"
-    placeholder="Search landmark or address"
-    aria-label="Search landmark or address"
+    [placeholder]="placeholder"
     aria-describedby="addon-wrapping"
     (focus)="focusEvent.emit($event)"
     (focusout)="focusOutEvent.emit($event)">

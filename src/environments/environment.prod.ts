@@ -4,6 +4,8 @@ export const environment = {
   apiQS: 'https://stg7.esb.co.id/api-ezo-int',
   bearerQS: 'cjNPJgQJrdtlP3qgnO5f6qZ7lZML9n2XkoynmVPqSB1QseIxwImTDGBEVQPJ',
   visitPurposeID: 'aA%3D%3D',
+  usernameQS: 'ESBADMIN',
+  passwordQS: '14ecdbacbc51885a09c4d0592e685898',
   mapboxToken: '',
   firebase: {},
 };

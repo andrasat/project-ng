@@ -22,6 +22,7 @@
     </div>
     <div class="search-box-container">
       <app-input-search-box
+        placeholder="Search landmark or address"
         (focusEvent)="collapse.toggle()"
         (focusOutEvent)="collapse.toggle()"
         (searchEvent)="onChangeSearch($event)">

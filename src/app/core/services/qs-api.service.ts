@@ -4,8 +4,21 @@ import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject, Subscription } from 'rxjs';
 
 import { catchError, debounceTime, map } from 'rxjs/operators';
-import { IAddress, IAddressResult, IAutocompleteResult, IBranchData, IBranchList, IPlaceResult, IUserData, IUserDataInput } from '@core/models';
-import { separateAddress } from '@utils/separateAddress';
+import {
+  IAddress,
+  IAddressResult,
+  IAutocompleteResult,
+  IBranchData,
+  IBranchList,
+  IBrandList,
+  IBrandData,
+  IPlaceResult,
+  IUserData,
+  IUserDataInput,
+} from '@core/models';
+import { separateAddress, utf8ToBase64 } from '@utils/index';
+
+import { brandListData } from '../mock/';
 
 @Injectable()
 export class QSApiService {
@@ -15,9 +28,16 @@ export class QSApiService {
 
   API_URL = environment.devApiQS
   BEARER_TOKEN = environment.devBearerQS
+  BASIC_TOKEN = utf8ToBase64(`${environment.usernameQS}:${environment.passwordQS}`)
 
   private _branchListSubject = new BehaviorSubject<IBranchList | undefined>(undefined)
   branchList = this._branchListSubject.asObservable()
+
+  private _brandListSubject = new BehaviorSubject<IBrandList | undefined>(undefined)
+  brandList = this._brandListSubject.asObservable()
+
+  private _brandDataSubject = new BehaviorSubject<IBrandData | undefined>(undefined)
+  brandData = this._brandDataSubject.asObservable()
 
   private _currentAddressSubject = new BehaviorSubject<IAddress | undefined>(undefined)
   currentAddress = this._currentAddressSubject.asObservable()
@@ -65,6 +85,28 @@ export class QSApiService {
       'Data-Branch': branchCode,
     }))
       .pipe(map((data: IBranchData) => data));
+  }
+
+  getBrandList(lat: number = -6.2087634, long: number = 106.84559899999999): Subscription {
+    return this.get(`/web/qsv1/brand/${lat}/${long}`, undefined, new HttpHeaders({
+      authorization: `Basic ${this.BASIC_TOKEN}`,
+    }))
+      .pipe(map((data: IBrandList) => data))
+      .subscribe(
+        brandList => this._brandListSubject.next(brandList),
+        () => this._brandListSubject.next(brandListData), // use mock data because CORS error
+      );
+  }
+
+  getBrandData(lat: number = -6.2087634, long: number = 106.84559899999999, brandId: string): Subscription {
+    return this.get(`/web/qsv1/setting/brand/${lat}/${long}`, undefined, new HttpHeaders({
+      authorization: `Basic ${this.BASIC_TOKEN}`,
+      'Data-Brand': brandId,
+    }))
+      .pipe(map((data: IBrandData) => data))
+      .subscribe(
+        brandData => this._brandDataSubject.next(brandData),
+      );
   }
 
   getSearch(keyword: string): Observable<IAutocompleteResult[]> {
