@@ -9,7 +9,9 @@ export class CaptionComponent implements OnInit, OnChanges {
   @Input() isSemiBold: boolean = false;
   @Input() isBold: boolean = false;
   @Input() isTruncate: boolean = false;
+  @Input() isStrikethrough: boolean = false;
   @Input() color: string = 'black';
+  @Input() fontSize: number = 12;
 
   currentClasses: Record<string, boolean> = {}
 
@@ -17,6 +19,7 @@ export class CaptionComponent implements OnInit, OnChanges {
     this.currentClasses = {
       bold: this.isBold,
       semibold: this.isSemiBold,
+      strikethrough: this.isStrikethrough,
       'text-truncate': this.isTruncate,
       [this.color]: true,
     };
@@ -26,6 +29,7 @@ export class CaptionComponent implements OnInit, OnChanges {
     this.currentClasses = {
       bold: changes.isBold?.currentValue,
       semibold: changes.isSemiBold?.currentValue,
+      strikethrough: changes.isStrikethrough?.currentValue,
       'text-truncate': changes.isTruncate?.currentValue,
       [changes.color?.currentValue]: true,
     };

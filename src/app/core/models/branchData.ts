@@ -33,8 +33,8 @@ export interface IBranchDataBusinessHour {
 }
 
 export interface IBranchDataOrderModes {
-  type: string,
-  visitPurposeID: string,
+  type?: string,
+  visitPurposeID?: string,
   deliveryCourier?: string,
 }
 

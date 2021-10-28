@@ -10,4 +10,5 @@ export class RestaurantCardComponent {
   @Input() restaurantName: string
   @Input() restaurantPlace: string
   @Input() restaurantDistance: string
+  @Input() isClosed: boolean = false
 }

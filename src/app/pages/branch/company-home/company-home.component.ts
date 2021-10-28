@@ -43,6 +43,10 @@ export class CompanyHomeComponent implements OnInit {
     this.qsApiService.currentAddress.subscribe(address => this.currentAddress = address);
   }
 
+  goToBack() {
+    this.router.navigate(['/login']);
+  }
+
   goToSearchRestaurant() {
     this.router.navigate(['/search-restaurant'], { queryParams: { companyCode: this.branchList?.companyCode } });
   }

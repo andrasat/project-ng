@@ -15,6 +15,8 @@ import {
   IPlaceResult,
   IUserData,
   IUserDataInput,
+  IPromotion,
+  IMenuData,
 } from '@core/models';
 import { separateAddress, utf8ToBase64 } from '@utils/index';
 
@@ -33,11 +35,20 @@ export class QSApiService {
   private _branchListSubject = new BehaviorSubject<IBranchList | undefined>(undefined)
   branchList = this._branchListSubject.asObservable()
 
+  private _branchDataSubject = new BehaviorSubject<IBranchData | undefined>(undefined)
+  branchData = this._branchDataSubject.asObservable()
+
   private _brandListSubject = new BehaviorSubject<IBrandList | undefined>(undefined)
   brandList = this._brandListSubject.asObservable()
 
   private _brandDataSubject = new BehaviorSubject<IBrandData | undefined>(undefined)
   brandData = this._brandDataSubject.asObservable()
+
+  private _promotionSubject = new BehaviorSubject<IPromotion[] | undefined>(undefined)
+  promotion = this._promotionSubject.asObservable()
+
+  private _menuSubject = new BehaviorSubject<IMenuData | undefined>(undefined)
+  menu = this._menuSubject.asObservable()
 
   private _currentAddressSubject = new BehaviorSubject<IAddress | undefined>(undefined)
   currentAddress = this._currentAddressSubject.asObservable()
@@ -79,12 +90,13 @@ export class QSApiService {
       .subscribe(branchList => this._branchListSubject.next(branchList));
   }
 
-  getBranchData(branchCode: string): Observable<IBranchData> {
+  getBranchData(branchCode: string): Subscription {
     return this.get('/web/qsv1/setting/branch', undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
       'Data-Branch': branchCode,
     }))
-      .pipe(map((data: IBranchData) => data));
+      .pipe(map((data: IBranchData) => data))
+      .subscribe(branchData => this._branchDataSubject.next(branchData));
   }
 
   getBrandList(lat: number = -6.2087634, long: number = 106.84559899999999): Subscription {
@@ -107,6 +119,24 @@ export class QSApiService {
       .subscribe(
         brandData => this._brandDataSubject.next(brandData),
       );
+  }
+
+  getPromotion(branchCode: string): Subscription {
+    return this.get(`/web/qsv1/promotion`, undefined, new HttpHeaders({
+      authorization: `Bearer ${this.BEARER_TOKEN}`,
+      'Data-Branch': branchCode,
+    }))
+      .pipe(map(data => data))
+      .subscribe(promotion => this._promotionSubject.next(promotion));
+  }
+
+  getMenu(branchCode: string, visitPurposeID: string): Subscription {
+    return this.get(`/web/qsv1/menu/${visitPurposeID}`, undefined, new HttpHeaders({
+      authorization: `Bearer ${this.BEARER_TOKEN}`,
+      'Data-Branch': branchCode,
+    }))
+      .pipe(map(data => data))
+      .subscribe(menuData => this._menuSubject.next(menuData));
   }
 
   getSearch(keyword: string): Observable<IAutocompleteResult[]> {

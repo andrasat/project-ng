@@ -1,5 +1,13 @@
 <div class="restaurant-card-container d-flex flex-row align-items-center">
   <div class="restaurant-thumbnail-container">
+    <div *ngIf="isClosed" class="closed-overlay d-flex justify-content-center align-items-center">
+      <app-caption
+        color="white"
+        [isBold]="true"
+        [fontSize]="9">
+        Closed
+      </app-caption>
+    </div>
     <img [src]="thumbnailImage || 'https://via.placeholder.com/56'" [alt]="restaurantName" width="56px" height="56px">
   </div>
   <div class="text-container">

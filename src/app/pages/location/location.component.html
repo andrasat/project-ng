@@ -74,7 +74,7 @@
           </div>
         </div>
 
-        <div *ngFor="let data of searchResults" class="address-box search-result d-flex flex-row" (click)="collapse.toggle(); onSelectLocation(data)">
+        <div *ngFor="let data of searchResults" class="address-box search-result d-flex flex-row" (click)="onSelectLocation(data)">
           <img src="assets/image/time.svg" alt="search-result-icon" width="16px">
           <div class="address-text-container d-flex flex-column">
             <app-bodytext-14 [isSemiBold]="true">{{ data?.displayName }}</app-bodytext-14>

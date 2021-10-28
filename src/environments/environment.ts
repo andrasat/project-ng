@@ -12,7 +12,6 @@ export const environment = {
   devBearerQS: 'zmxncbv1029384756',
   usernameQS: 'ESBADMIN',
   passwordQS: '14ecdbacbc51885a09c4d0592e685898',
-  visitPurposeID: 'aA%3D%3D',
   // OTHER
   mapboxToken: 'pk.eyJ1IjoiYW5kcmFzYXQiLCJhIjoiY2t1d2JvMzUyMjllODJvczdtbnBub2RqcyJ9.DZdpSQCcqxoopSpQcaZIpw',
   firebase: {

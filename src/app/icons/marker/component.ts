@@ -28,7 +28,7 @@ export class MarkerIconComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    switch(changes.color.currentValue) {
+    switch(changes.color?.currentValue) {
       case 'white':
         this.fillColor = '#FFFFFF';
         break;

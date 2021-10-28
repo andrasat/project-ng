@@ -1,0 +1,103 @@
+// Custom ng carousel
+:host ::ng-deep .carousel-indicators {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+
+  li {
+    border-bottom: none;
+    flex: 1 1 auto;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  li.active {
+    background-color: var(--tangerine);
+  }
+}
+
+.image-container {
+  position: relative;
+  height: 280px;
+  width: 100%;
+
+  img {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+  }
+}
+
+.restaurant-container {
+  padding: 16px;
+}
+
+.promo-button-container {
+  padding: 20px 0;
+}
+
+.section-container {
+  padding: 16px;
+}
+
+// Select Order Mode Collapse
+
+.select-order-mode-container {
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  z-index: 100;
+}
+
+.order-mode {
+  background: var(--white);
+  border-radius: 6px;
+  position: inherit;
+  bottom: 0;
+  padding: 20px;
+  min-height: 40%;
+  width: 100%;
+}
+
+.order-mode-title {
+  flex: 0 0 70%;
+}
+
+.mode-container {
+  padding: 16px 0;
+}
+
+.mode-button {
+  border: none;
+  border-radius: 6px;
+  color: var(--grey-3);
+  position: relative;
+  height: 80px;
+  width: 150px;
+
+  &.active {
+    color: var(--white);
+    background-color: var(--tangerine);
+  }
+}
+
+.mode-text {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  position: absolute;
+  bottom: 10px;
+  left: 5px;
+  width: 80px;
+}
+
+.mode-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

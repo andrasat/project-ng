@@ -113,6 +113,8 @@ export class LocationComponent implements OnInit {
   }
 
   onSelectLocation(data: IAutocompleteResult) {
+    this.isFavoriteAddressCollapse = true;
+
     this.qsApiService.getPlace(data.placeId)
       .subscribe(
         place => {

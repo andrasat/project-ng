@@ -6,6 +6,10 @@
   </ng-template>
 </ngb-carousel>
 
+<div class="nav-back-icon" (click)="goToBack()">
+  <app-icon-arrow-left color="white"></app-icon-arrow-left>
+</div>
+
 <div class="search-icon-container" (click)="goToSearchRestaurant()">
   <img src="/assets/image/search-circle.svg" alt="search restaurants">
 </div>
@@ -54,7 +58,8 @@
         [restaurantName]="branch.branchName"
         [restaurantPlace]="branch.branchName"
         [restaurantDistance]="branch.distanceText"
-        [thumbnailImage]="branch.thumbnailImageUrl">
+        [thumbnailImage]="branch.thumbnailImageUrl"
+        [isClosed]="branch.businessHour.status === 'closed'">
       </app-restaurant-card>
     </div>
   </div>

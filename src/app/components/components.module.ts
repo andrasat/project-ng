@@ -18,6 +18,7 @@ import {
 
 import {
   LocationCardComponent,
+  MenuCardComponent,
   RestaurantCardComponent,
 } from './cards';
 
@@ -29,9 +30,10 @@ import {
 import {
   PrimaryButtonComponent,
   SecondaryButtonComponent,
+  PromoButtonComponent,
 } from './buttons';
 
-import { ListComponent } from './list/list.component';
+import { TimePickerComponent } from './time-picker/time-picker.component';
 
 @NgModule({
   imports: [
@@ -50,12 +52,14 @@ import { ListComponent } from './list/list.component';
     CaptionComponent,
     LinkComponent,
     LocationCardComponent,
+    MenuCardComponent,
     RestaurantCardComponent,
     SearchBoxComponent,
     TextBoxComponent,
     PrimaryButtonComponent,
     SecondaryButtonComponent,
-    ListComponent,
+    PromoButtonComponent,
+    TimePickerComponent,
   ],
   exports: [
     CommonModule,
@@ -70,12 +74,14 @@ import { ListComponent } from './list/list.component';
     CaptionComponent,
     LinkComponent,
     LocationCardComponent,
+    MenuCardComponent,
     RestaurantCardComponent,
     SearchBoxComponent,
     TextBoxComponent,
     PrimaryButtonComponent,
     SecondaryButtonComponent,
-    ListComponent,
+    PromoButtonComponent,
+    TimePickerComponent,
   ]
 })
 export class ComponentsModule {}

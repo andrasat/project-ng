@@ -4,5 +4,4 @@ export interface IProfile {
   phoneNumber: string | null,
   imageUrl: string | null,
   loginVia: string,
-  
 }

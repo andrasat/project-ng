@@ -1,7 +1,6 @@
 .caption {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
-  font-size: 12px;
   line-height: 14px;
 
   &.semibold {
@@ -10,6 +9,10 @@
 
   &.bold {
     font-weight: 700;
+  }
+
+  &.strikethrough {
+    text-decoration: line-through;
   }
 
   &.black {
@@ -23,7 +26,7 @@
   &.red {
     color: var(--red);
   }
-  
+
   &.tangerine {
     color: var(--tangerine);
   }

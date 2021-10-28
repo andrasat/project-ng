@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { BranchComponent } from './branch.component';
 import { CompanyHomeComponent } from './company-home/company-home.component';
 import { RestaurantComponent } from './restaurant/restaurant.component';
-import { AddMenuComponent } from './restaurant/add-menu/add-menu.component';
+import { MenuComponent } from './restaurant/menu/menu.component';
 import { PromotionComponent } from './promotion/promotion.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { OthersComponent } from './others/others.component';
@@ -36,9 +36,9 @@ import { OthersComponent } from './others/others.component';
           pathMatch: 'full',
           component: RestaurantComponent,
         }, {
-          path: ':branchCode/add-menu',
+          path: ':branchCode/menu',
           pathMatch: 'full',
-          component: AddMenuComponent
+          component: MenuComponent
         }]
       },
     ]),

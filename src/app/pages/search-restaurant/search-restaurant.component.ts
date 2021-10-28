@@ -63,7 +63,7 @@ export class SearchRestaurantComponent implements OnInit {
 
   goToBranchRestaurant(branchCode: string) {
     const sanitizedBranchCode = branchCode.includes(this.params.companyCode) ? branchCode.replace(`${this.params.companyCode}/`, '') : branchCode;
-    this.router.navigate([`/${this.params.companyCode}/${sanitizedBranchCode}`], { relativeTo: this.route });
+    this.router.navigate([`/${this.params.companyCode}/${sanitizedBranchCode}`]);
   }
 
   onClickOutlets(brand: IBrands) {

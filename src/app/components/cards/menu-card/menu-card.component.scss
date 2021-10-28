@@ -1,0 +1,33 @@
+.menu-card {
+  border: 1px solid var(--grey);
+  border-radius: 6px;
+  height: 220px;
+  width: 140px;
+}
+
+.image-container {
+  position: relative;
+  height: 140px;
+  width: 140px;
+}
+
+.out-of-stock-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  height: 140px;
+  width: 140px;
+  z-index: 10;
+}
+
+.image {
+  height: 100%;
+  width: 100%;
+}
+
+.text-container {
+  padding: 8px;
+}
+
+.price-container {
+  padding: 8px;
+}
