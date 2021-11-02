@@ -16,6 +16,12 @@
   }
 }
 
+.search-icon-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
 .image-container {
   position: relative;
   height: 280px;
@@ -30,7 +36,19 @@
 }
 
 .restaurant-container {
-  padding: 16px;
+  padding: 16px 16px 100px;
+}
+
+.closed-label {
+  background-color: var(--red);
+  border-radius: 6px;
+  color: var(--white);
+  padding: 3px 6px;
+  margin-top: 5px;
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
 }
 
 .promo-button-container {
@@ -38,12 +56,55 @@
 }
 
 .section-container {
-  padding: 16px;
+  padding: 16px 0;
+  overflow: hidden;
 }
 
-// Select Order Mode Collapse
+.carousel-menu-list {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  min-width: 100vw;
+  padding-right: 10vw;
 
-.select-order-mode-container {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.carousel-child-menu-container {
+  padding: 8px;
+
+  &:first-of-type {
+    padding-left: 0px;
+  }
+}
+
+.floating-button-container {
+  position: fixed;
+  bottom: 70px;
+  right: 10px;
+  width: 95%;
+}
+
+.menu-button {
+  float: right;
+  margin-bottom: 12px;
+  width: 64px;
+}
+
+.checkout-button {
+  width: 100%;
+}
+
+.checkout-text {
+  padding: 0 16px;
+}
+
+// Collapse
+
+.collapse-container {
   background: rgba(0, 0, 0, 0.5);
   position: absolute;
   bottom: 0;
@@ -53,10 +114,12 @@
   z-index: 100;
 }
 
+// Order Mode
+
 .order-mode {
   background: var(--white);
   border-radius: 6px;
-  position: inherit;
+  position: fixed;
   bottom: 0;
   padding: 20px;
   min-height: 40%;
@@ -100,4 +163,76 @@
   position: absolute;
   top: 0;
   right: 0;
+}
+
+// Outlet Closed
+
+.outlet-closed {
+  background: var(--white);
+  border-radius: 6px;
+  position: fixed;
+  bottom: 0;
+  padding: 20px;
+  min-height: 40%;
+  width: 100%;
+}
+
+.outlet-closed-image {
+  height: 120px;
+  width: 120px;
+}
+
+.recommended-outlet-list {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  padding-top: 16px;
+  padding-bottom: 48px;
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.recommended-outlet {
+  border: 1px solid var(--grey);
+  border-radius: 6px;
+  padding: 10px;
+  margin-left: 16px;
+  min-width: 250px;
+
+  &:first-of-type {
+    margin-left: 0px;
+  }
+}
+
+.outlet-closed-button {
+  margin-top: 20px;
+}
+
+// Menu Drawer
+
+.menu-drawer {
+  background: var(--white);
+  border-radius: 6px;
+  position: fixed;
+  bottom: 0;
+  padding: 20px 0;
+  min-height: 40%;
+  width: 100%;
+}
+
+.header-drawer {
+  height: 45px;
+  padding: 0 20px;
+}
+
+.drawer-text-container {
+  padding: 16px;
+}
+
+.separator {
+  background-color: var(--grey-6);
+  height: 8px;
 }

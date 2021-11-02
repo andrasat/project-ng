@@ -33,7 +33,14 @@ import {
   PromoButtonComponent,
 } from './buttons';
 
+import {
+  MenuListComponent,
+  MenuExtraListComponent,
+  MenuPackageListComponent,
+} from './lists';
+
 import { TimePickerComponent } from './time-picker/time-picker.component';
+import { LabelComponent } from './label/label.component';
 
 @NgModule({
   imports: [
@@ -60,6 +67,10 @@ import { TimePickerComponent } from './time-picker/time-picker.component';
     SecondaryButtonComponent,
     PromoButtonComponent,
     TimePickerComponent,
+    MenuListComponent,
+    MenuExtraListComponent,
+    MenuPackageListComponent,
+    LabelComponent,
   ],
   exports: [
     CommonModule,
@@ -82,6 +93,10 @@ import { TimePickerComponent } from './time-picker/time-picker.component';
     SecondaryButtonComponent,
     PromoButtonComponent,
     TimePickerComponent,
+    MenuListComponent,
+    MenuExtraListComponent,
+    MenuPackageListComponent,
+    LabelComponent,
   ]
 })
 export class ComponentsModule {}

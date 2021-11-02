@@ -1,0 +1,21 @@
+.menu-container {
+  padding: 15px 0;
+}
+
+.menu-image-container {
+  flex: 0 0 20%;
+  border-radius: 6px;
+  margin-right: 16px;
+  height: 72px;
+  width: 72px;
+  overflow: hidden;
+}
+
+.menu-text-container {
+  flex: 0 0 70%;
+}
+
+.menu-image {
+  height: 72px;
+  width: 72px;
+}

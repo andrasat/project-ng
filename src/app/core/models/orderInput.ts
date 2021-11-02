@@ -1,0 +1,45 @@
+export interface IMenuPackagesInput {
+  menuID: number,
+  menuName: string,
+  sellPrice: number,
+  qty: number,
+  menuGroupID: number,
+}
+
+export interface IMenuExtrasInput {
+  menuExtraID: number,
+  menuExtraName: string,
+  sellPrice: number,
+  qty: number,
+}
+
+export interface ISalesMenusInput {
+  menuID: number,
+  menuName: string,
+  sellPrice: number,
+  imageUrl: string,
+  qty: number,
+  extras: IMenuExtrasInput[],
+  packages: IMenuPackagesInput[],
+  notes: string,
+}
+
+export interface IOrderInput {
+  type: string,
+  typeName: string | null,
+  fullName: string,
+  email: string,
+  deliveryAddress: string,
+  deliveryAddressInfo: string | null,
+  visitPurposeID: string,
+  latitude: number,
+  longitude: number,
+  phoneNumber: string,
+  memberID: string | null,
+  salesMenus: ISalesMenusInput[],
+  promotionCode: string,
+  vouchers: string[],
+  paymentMethodID: string,
+  amount: number,
+  returnUrl: string,
+}

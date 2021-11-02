@@ -73,6 +73,10 @@ export interface IMenus {
   menuPackages: IMenuPackages[],
   menuExtras: IMenuExtras[],
   relatedMenus: IRelatedMenus[],
+  // Other field might be needed
+  flagVegan?: boolean,
+  flagSpicy?: boolean,
+  flagHot?: boolean,
 }
 
 export interface IMenuCategoryDetails {

@@ -10,4 +10,8 @@
   letter-spacing: 1px;
   padding: 14px 0;
   width: 100%;
+
+  &.small-padding {
+    padding: 7px 0;
+  }
 }

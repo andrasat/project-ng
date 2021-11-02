@@ -1,0 +1,26 @@
+<div class="d-flex flex-row justify-content-between">
+  <div class="text-container">
+    <app-bodytext-14>{{ extra.menuExtraName }}</app-bodytext-14>
+    <app-caption color="grey">
+      {{ extra.sellPrice }}
+      &nbsp;
+      {{ extra.maxExtraQty > 0 ? '(Max.'+ extra.maxExtraQty +')' : '' }}
+    </app-caption>
+  </div>
+
+  <div class="d-flex flex-row">
+    <app-icon-circle-minus
+      class="mr-3"
+      [color]="counter === 0 ? 'grey' : 'tangerine'"
+      (click)="decrement()"
+    ></app-icon-circle-minus>
+
+    <app-bodytext-16 class="text-counter">{{ counter }}</app-bodytext-16>
+
+    <app-icon-circle-plus
+      class="ml-3"
+      [color]="extra.maxExtraQty > 0 && extra.maxExtraQty === counter ? 'grey' : 'tangerine'"
+      (click)="increment(extra.maxExtraQty)"
+    ></app-icon-circle-plus>
+  </div>
+</div>

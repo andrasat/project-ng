@@ -8,6 +8,8 @@ import { MenuComponent } from './restaurant/menu/menu.component';
 import { PromotionComponent } from './promotion/promotion.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { OthersComponent } from './others/others.component';
+import { SearchMenuComponent } from './restaurant/search-menu/search-menu.component';
+import { CheckoutComponent } from './restaurant/checkout/checkout.component';
 
 @NgModule({
   imports: [
@@ -16,7 +18,7 @@ import { OthersComponent } from './others/others.component';
         path: '',
         component: BranchComponent,
         children: [{
-          path: '',
+          path: 'home',
           pathMatch: 'full',
           component: CompanyHomeComponent,
         }, {
@@ -32,13 +34,21 @@ import { OthersComponent } from './others/others.component';
           pathMatch: 'full',
           component: OthersComponent
         }, {
-          path: ':branchCode',
+          path: 'home/:branchCode',
           pathMatch: 'full',
           component: RestaurantComponent,
         }, {
-          path: ':branchCode/menu',
+          path: 'home/:branchCode/checkout',
+          pathMatch: 'full',
+          component: CheckoutComponent,
+        }, {
+          path: 'home/:branchCode/menu/:menuID',
           pathMatch: 'full',
           component: MenuComponent
+        }, {
+          path: 'home/:branchCode/search-menu',
+          pathMatch: 'full',
+          component: SearchMenuComponent,
         }]
       },
     ]),

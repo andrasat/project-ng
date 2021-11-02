@@ -6,8 +6,7 @@
     <a
       routerLinkActive
       #rla1="routerLinkActive"
-      [routerLinkActiveOptions]="{exact: true}"
-      [routerLink]="'/' + branchList?.companyCode">
+      [routerLink]="'/' + branchList?.companyCode + '/home'">
       <div class="bottom-nav-item nav-item d-flex flex-column">
         <app-icon-home [color]="rla1.isActive ? 'tangerine' : 'grey'"></app-icon-home>
         <app-caption class="mt-1" [color]="rla1.isActive ? 'tangerine' : 'grey'" [isBold]="rla1.isActive">Home</app-caption>
@@ -17,7 +16,6 @@
     <a
       routerLinkActive
       #rla2="routerLinkActive"
-      [routerLinkActiveOptions]="{exact: true}"
       [routerLink]="'/' + branchList?.companyCode + '/promotion'">
       <div class="bottom-nav-item nav-item d-flex flex-column">
         <app-icon-promotion [color]="rla2.isActive ? 'tangerine' : 'grey'"></app-icon-promotion>
@@ -39,7 +37,6 @@
     <a
       routerLinkActive
       #rla4="routerLinkActive"
-      [routerLinkActiveOptions]="{exact: true}"
       [routerLink]="'/' + branchList?.companyCode + '/others'">
       <div class="bottom-nav-item nav-item d-flex flex-column">
         <app-icon-others [color]="rla4.isActive ? 'tangerine' : 'grey'"></app-icon-others>

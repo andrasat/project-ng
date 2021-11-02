@@ -1,9 +1,11 @@
 <div class="menu-card d-flex flex-column ">
   <div class="image-container">
     <div class="out-of-stock-overlay" *ngIf="isOutOfStock">
-      <app-caption color="white" [isBold]="true">Out of Stock</app-caption>
+      <div class="out-of-stock-text">
+        <app-caption color="white" [isBold]="true">Out of Stock</app-caption>
+      </div>
     </div>
-    <img class="image" [src]="cardImage" [alt]="cardImageAlt">
+    <img class="image" [src]="cardImage || 'https://via.placeholder.com/140'" [alt]="cardImageAlt">
   </div>
 
   <div class="text-container">
@@ -11,16 +13,16 @@
 
     <div class="price-container d-flex flex-row">
       <app-caption
-        *ngIf="menuDiscountPrice !== ''"
+        *ngIf="discountedPriceDisplay !== ''"
         [isStrikethrough]="true"
         [fontSize]="9"
         color="grey">
-        {{ menuPrice }}
+        {{ priceDisplay }}
       </app-caption>
       <app-caption
         [fontSize]="12"
         [isSemiBold]="true">
-        {{ menuDiscountPrice || menuPrice }}
+        {{ discountedPriceDisplay || priceDisplay }}
       </app-caption>
     </div>
   </div>

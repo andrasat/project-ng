@@ -13,8 +13,12 @@
   <div class="text-container">
     <app-bodytext-14 [isSemiBold]="true">{{ restaurantName }}</app-bodytext-14>
     <app-caption color="grey">{{ restaurantPlace }}</app-caption>
+    <div *ngIf="showDistanceBelow" class="d-flex flex-row align-items-center">
+      <app-icon-marker class="distance-icon" [width]="9" color="grey"></app-icon-marker>
+      <app-caption color="grey">{{ restaurantDistance }}</app-caption>
+    </div>
   </div>
-  <div class="d-flex flex-row align-items-center">
+  <div *ngIf="!showDistanceBelow" class="d-flex flex-row align-items-center">
     <app-icon-marker class="distance-icon" [width]="9" color="grey"></app-icon-marker>
     <app-caption color="grey">{{ restaurantDistance }}</app-caption>
   </div>

@@ -13,6 +13,10 @@ import { MarkerIconComponent } from "./marker/component";
 import { OthersIconComponent } from "./others/component";
 import { PromotionIconComponent } from "./promotion/component";
 import { SearchIconComponent } from "./search/component";
+import { CircleMinusIconComponent } from './circle-minus-icon/component';
+import { CirclePlusIconComponent } from './circle-plus-icon/component';
+import { RadioIconComponent } from './radio/component';
+import { ContactIconComponent } from './contact/component';
 
 @NgModule({
   imports: [
@@ -31,6 +35,10 @@ import { SearchIconComponent } from "./search/component";
     OthersIconComponent,
     PromotionIconComponent,
     SearchIconComponent,
+    CircleMinusIconComponent,
+    CirclePlusIconComponent,
+    RadioIconComponent,
+    ContactIconComponent,
   ],
   exports: [
     ArrowLeftIconComponent,
@@ -45,6 +53,10 @@ import { SearchIconComponent } from "./search/component";
     OthersIconComponent,
     PromotionIconComponent,
     SearchIconComponent,
+    CircleMinusIconComponent,
+    CirclePlusIconComponent,
+    RadioIconComponent,
+    ContactIconComponent,
   ]
 })
 export class IconModule {}

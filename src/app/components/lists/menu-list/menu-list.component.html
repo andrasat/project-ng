@@ -1,0 +1,23 @@
+<div class="menu-container d-flex flex-row">
+  <div class="menu-image-container">
+    <img class="menu-image" [src]="menu.imageUrl || 'https://via.placeholder.com/72'" [alt]="menu.menuName">
+  </div>
+  <div class="menu-text-container d-flex flex-column">
+    <app-bodytext-14 [isBold]="true">{{ menu.menuName }}</app-bodytext-14>
+    <app-caption color="grey">{{ menu.description || '&nbsp;' }}</app-caption>
+
+    <div class="d-flex flex-row justify-content-between">
+      <div>
+        <img *ngIf="menu.flagRecommendation === 1" src="/assets/image/recommended.svg" alt="recommended">
+        <img *ngIf="menu.flagVegan" class="menu-icon" src="/assets/image/vegan.svg" alt="vegan">
+        <img *ngIf="menu.flagSpicy" class="menu-icon" src="/assets/image/spicy.svg" alt="spicy">
+        <img *ngIf="menu.flagHot" class="menu-icon" src="/assets/image/hot.svg" alt="hot">
+      </div>
+
+      <div class="menu-price d-flex flex-column">
+        <app-caption *ngIf="discountedPriceDisplay !== ''" color="grey" [fontSize]="9" [isStrikethrough]="true">{{ discountedPriceDisplay }}</app-caption>
+        <app-caption [isSemiBold]="true">{{ priceDisplay }}</app-caption>
+      </div>
+    </div>
+  </div>
+</div>

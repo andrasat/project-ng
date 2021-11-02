@@ -16,9 +16,9 @@
       (leafletMapReady)="onMapReady($event)"
     >
       <img class="map-icon" src="assets/image/map-marker.svg" alt="your-location" />
-      <div class="current-location" (click)="goToDeviceLocation()">
-        <img class="current-location-icon" src="assets/image/current-location.svg" alt="go-to-current-location">
-      </div>
+    </div>
+    <div class="current-location" (click)="goToDeviceLocation()">
+      <img class="current-location-icon" src="assets/image/current-location.svg" alt="go-to-current-location">
     </div>
     <div class="search-box-container">
       <app-input-search-box
@@ -46,7 +46,7 @@
       <span class="grey-text">(OPTIONAL)</span>
     </app-heading-5>
     <div class="additional-note-input">
-      <app-input-text-box placeholder="ex: put package at lobby"></app-input-text-box>
+      <app-input-text-box placeholder="ex: put package at lobby" (inputEvent)="setNotes($event)"></app-input-text-box>
     </div>
   </div>
 
@@ -56,33 +56,67 @@
 
   <div
     #collapse="ngbCollapse"
-    [(ngbCollapse)]="isFavoriteAddressCollapse"
-    class="search-result-container">
-    <div class="address-container">
+    [(ngbCollapse)]="hideCollapse"
+    [class]="showOutOfReachError ? 'collapse-container' : 'search-result-container'">
 
-      <div class="heading-container">
-        <app-heading-5>OR, SELECT LOCATION</app-heading-5>
-      </div>
-
-      <div class="address-list">
-
-        <div class="address-box d-flex flex-row" (click)="collapse.toggle()">
-          <img src="assets/image/current-location.svg" alt="current-location-icon" width="16px">
-          <div class="address-text-container d-flex flex-column">
-            <app-caption color="grey">Current Location</app-caption>
-            <app-bodytext-14 [isTruncate]="true" class="address-description" [isSemiBold]="true">{{ currentAddress?.address }}</app-bodytext-14>
+    <ng-container *ngIf="!!showOutOfReachError">
+      <div class="out-of-reach">
+        <div class="d-flex flex-row justify-content-between">
+          &nbsp;
+          <div (click)="collapse.toggle()">
+            <app-icon-close></app-icon-close>
           </div>
         </div>
 
-        <div *ngFor="let data of searchResults" class="address-box search-result d-flex flex-row" (click)="onSelectLocation(data)">
-          <img src="assets/image/time.svg" alt="search-result-icon" width="16px">
-          <div class="address-text-container d-flex flex-column">
-            <app-bodytext-14 [isSemiBold]="true">{{ data?.displayName }}</app-bodytext-14>
-            <app-caption [isTruncate]="true" class="address-description" color="grey">{{ data?.description }}</app-caption>
+        <div class="d-flex flex-column mt-3">
+          <img class="out-of-reach-image" src="/assets/image/out-of-reach.svg" alt="out of reach">
+          <app-heading-3>Sorry, You are Out of Reach</app-heading-3>
+
+          <app-bodytext-14 *ngIf="!!openBranches.length">Sorry, it seems your location is not within this outlet reach, but you can order from these outlet instead:</app-bodytext-14>
+          <div *ngIf="!!openBranches.length" class="recommended-outlet-list d-flex flex-row">
+            <div *ngFor="let branch of openBranches" class="recommended-outlet" (click)="goToRestaurant(branch.branchCode)">
+              <app-restaurant-card
+                [restaurantName]="branch.branchName"
+                [restaurantPlace]="branch.branchName"
+                [restaurantDistance]="branch.distanceText"
+                [thumbnailImage]="branch.thumbnailImageUrl"
+                [showDistanceBelow]="true"
+              ></app-restaurant-card>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!showOutOfReachError">
+      <div class="address-container">
+
+        <div class="heading-container">
+          <app-heading-5>OR, SELECT LOCATION</app-heading-5>
+        </div>
+
+        <div class="address-list">
+
+          <div class="address-box d-flex flex-row" (click)="collapse.toggle()">
+            <img src="assets/image/current-location.svg" alt="current-location-icon" width="16px">
+            <div class="address-text-container d-flex flex-column">
+              <app-caption color="grey">Current Location</app-caption>
+              <app-bodytext-14 [isTruncate]="true" class="address-description" [isSemiBold]="true">{{ currentAddress?.address }}</app-bodytext-14>
+            </div>
+          </div>
+
+          <div *ngFor="let data of searchResults" class="address-box search-result d-flex flex-row" (click)="onSelectLocation(data)">
+            <img src="assets/image/time.svg" alt="search-result-icon" width="16px">
+            <div class="address-text-container d-flex flex-column">
+              <app-bodytext-14 [isSemiBold]="true">{{ data?.displayName }}</app-bodytext-14>
+              <app-caption [isTruncate]="true" class="address-description" color="grey">{{ data?.description }}</app-caption>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </ng-container>
+
   </div>
 
 </div>

@@ -1,6 +1,8 @@
 <button
   type="button"
   class="btn primary-button"
+  [ngClass]="{'small-padding': smallPadding}"
   (click)="clicked.emit()">
   {{ text }}
+  <ng-content *ngIf="!text"></ng-content>
 </button>

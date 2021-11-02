@@ -1,0 +1,34 @@
+.label {
+  border-radius: 6px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: 1px;
+  padding: 2px 4px;
+
+  &.completed {
+    color: var(--white);
+    background-color: var(--green);
+  }
+
+  &.cancelled {
+    color: var(--white);
+    background-color: var(--red);
+  }
+
+  &.ongoing {
+    color: var(--white);
+    background-color: var(--blue);
+  }
+
+  &.promo {
+    color: var(--tangerine);
+    background-color: rgba($color: #ffa224, $alpha: 0.3);
+  }
+
+  &.out-of-stock {
+    color: var(--red);
+    background-color: rgba($color: #eb5757, $alpha: 0.3);
+  }
+}

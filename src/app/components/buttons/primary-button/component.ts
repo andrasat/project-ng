@@ -7,5 +7,6 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 })
 export class PrimaryButtonComponent {
   @Input() text: string = ''
+  @Input() smallPadding: boolean = false
   @Output() public clicked: EventEmitter<void> = new EventEmitter()
 }

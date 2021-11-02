@@ -1,1 +1,107 @@
-<div>MENU</div>
+<div class="image-container">
+  <img [src]="menu?.imageUrl || 'https://via.placeholder.com/280'" alt="menu image">
+</div>
+
+<div class="close-icon-container" (click)="goBack()">
+  <app-icon-close color="white"></app-icon-close>
+</div>
+
+<div class="menu-container">
+  <div class="menu-icons d-flex flex-row justify-content-between">
+    <div>
+      <img *ngIf="menu?.flagRecommendation" src="/assets/image/recommended.svg" alt="recommended">
+    </div>
+    <app-label *ngIf="menu?.sellPrice !== menu?.originalSellPrice" type="promo" text="PROMO"></app-label>
+  </div>
+
+  <div class="title-container">
+    <app-heading-3>{{ menu?.menuName }}</app-heading-3>
+
+    <div class="d-flex flex-row align-items-center">
+      <app-caption
+        *ngIf="menu?.sellPrice !== menu?.originalSellPrice"
+        color="grey"
+        [isStrikethrough]="true">
+        {{ priceDisplay }}
+      </app-caption>
+      <app-bodytext-14 [isSemiBold]="true">
+        {{ discountedPriceDisplay || priceDisplay }}
+      </app-bodytext-14>
+    </div>
+
+    <app-bodytext-14>
+      {{ menu?.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque pretium at ipsum sit amet tristique.' }}
+    </app-bodytext-14>
+  </div>
+
+  <ng-container *ngFor="let menuPackage of menu?.menuPackages">
+
+    <div class="menu-packages">
+      <app-heading-5>{{ menuPackage.menuGroup.toUpperCase() }}</app-heading-5>
+
+      <div *ngFor="let packageData of menuPackage.packages" class="package" (click)="selectPackage(packageData)">
+        <app-menu-package-list
+          [package]="packageData"
+          [selected]="this.saleMenu.packages[0] && this.saleMenu.packages[0].menuID === packageData.menuID"
+        ></app-menu-package-list>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <ng-container *ngFor="let menuExtras of menu?.menuExtras">
+
+    <div class="menu-extras">
+      <app-heading-5>{{ menuExtras.menuGroup.toUpperCase() }}</app-heading-5>
+
+      <div *ngFor="let extras of menuExtras.extras" class="extras" (click)="addExtras(extras)">
+        <app-menu-extra-list
+          [extra]="extras"
+        ></app-menu-extra-list>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <div class="notes">
+    <app-heading-5>NOTES</app-heading-5>
+
+    <div class="notes-input-container">
+      <app-caption color="grey">Optional Notes</app-caption>
+
+      <textarea #notesInput class="text-area" placeholder="ex: less sweet"></textarea>
+    </div>
+  </div>
+
+  <div class="menu-submit">
+
+    <div class="mb-3 d-flex flex-row justify-content-between">
+
+      <div class="text-container">
+        <app-bodytext-14>Quantity</app-bodytext-14>
+      </div>
+
+      <div class="d-flex flex-row">
+        <app-icon-circle-minus
+          class="mr-3"
+          [color]="counter === 0 ? 'grey' : 'tangerine'"
+          (click)="decrement()"
+        ></app-icon-circle-minus>
+
+        <app-bodytext-16 class="text-counter">{{ counter }}</app-bodytext-16>
+
+        <app-icon-circle-plus
+          class="ml-3"
+          color="tangerine"
+          (click)="increment()"
+        ></app-icon-circle-plus>
+      </div>
+    </div>
+
+    <app-primary-button
+      [text]="counter === 0 ? 'BACK TO RESTAURANT' : getTotalText()"
+      (clicked)="goBack()"
+    ></app-primary-button>
+  </div>
+
+</div>

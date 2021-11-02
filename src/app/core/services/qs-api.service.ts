@@ -17,10 +17,15 @@ import {
   IUserDataInput,
   IPromotion,
   IMenuData,
+  IOrderInput,
+  ISaveOrderResult,
+  ICalculateTotalInput,
+  ICalculateTotalResult,
+  IValidateRadiusResult,
 } from '@core/models';
 import { separateAddress, utf8ToBase64 } from '@utils/index';
 
-import { brandListData } from '../mock/';
+import { brandListData, getAddress } from '../mock/';
 
 @Injectable()
 export class QSApiService {
@@ -28,8 +33,8 @@ export class QSApiService {
     private http: HttpClient,
   ) {}
 
-  API_URL = environment.devApiQS
-  BEARER_TOKEN = environment.devBearerQS
+  API_URL = environment.apiQS
+  BEARER_TOKEN = environment.bearerQS
   BASIC_TOKEN = utf8ToBase64(`${environment.usernameQS}:${environment.passwordQS}`)
 
   private _branchListSubject = new BehaviorSubject<IBranchList | undefined>(undefined)
@@ -78,6 +83,16 @@ export class QSApiService {
       `${this.API_URL}${path}`,
       { headers },
     ).pipe(catchError(this.formatErrors));
+  }
+
+  // METHODS
+
+  resetMenu() {
+    this._menuSubject.next(undefined);
+  }
+
+  resetBranchData() {
+    this._branchDataSubject.next(undefined);
   }
 
   // QS API METHODS
@@ -136,7 +151,7 @@ export class QSApiService {
       'Data-Branch': branchCode,
     }))
       .pipe(map(data => data))
-      .subscribe(menuData => this._menuSubject.next(menuData));
+      .subscribe(menu => this._menuSubject.next(menu));
   }
 
   getSearch(keyword: string): Observable<IAutocompleteResult[]> {
@@ -152,7 +167,7 @@ export class QSApiService {
       }));
   }
 
-  getAddress(lat: number, lon: number, branchCode = 'ABC'): Subscription {
+  getAddress(lat: number, lon: number, branchCode = 'TC001'): Subscription {
     return this.get(`/web/qsv1/map/address/${lat}/${lon}`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
       'Data-Branch': branchCode,
@@ -161,7 +176,10 @@ export class QSApiService {
         debounceTime(500),
         map((data: IAddressResult) => separateAddress(data.address))
       )
-      .subscribe(address => this._currentAddressSubject.next(address));
+      .subscribe(
+        address => this._currentAddressSubject.next(address),
+        () => this._currentAddressSubject.next(separateAddress(getAddress()))
+      );
   }
 
   getPlace(placeId: string): Observable<IPlaceResult> {
@@ -184,5 +202,35 @@ export class QSApiService {
       'Content-Type': 'application/json',
     }))
       .pipe(map((data: IUserData) => data));
+  }
+
+  calculateTotal(calculateTotal: ICalculateTotalInput, branchCode: string): Observable<ICalculateTotalResult> {
+    return this.post('/web/qsv1/order/calculate-total', {
+      ...calculateTotal,
+    }, new HttpHeaders({
+      authorization: `Bearer ${this.BEARER_TOKEN}`,
+      'Content-Type': 'application/json',
+      'Data-Branch': branchCode,
+    }))
+      .pipe(map(data => data));
+  }
+
+  validateRadius(lat: number, long: number, branchCode: string): Observable<IValidateRadiusResult> {
+    return this.get(`/web/qsv1/map/distance/${lat}/${long}`, undefined, new HttpHeaders({
+      authorization: `Bearer ${this.BEARER_TOKEN}`,
+      'Data-Branch': branchCode,
+    }))
+      .pipe(map(data => data));
+  }
+
+  saveOrder(orderInput: IOrderInput, branchCode: string): Observable<ISaveOrderResult> {
+    return this.post('/web/qsv1/order', {
+      ...orderInput,
+    }, new HttpHeaders({
+      authorization: `Bearer ${this.BEARER_TOKEN}`,
+      'Content-Type': 'application/json',
+      'Data-Branch': branchCode,
+    }))
+      .pipe(map((data: ISaveOrderResult) => data));
   }
 }
