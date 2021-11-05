@@ -20,6 +20,7 @@ import {
   LocationCardComponent,
   MenuCardComponent,
   RestaurantCardComponent,
+  PaymentCardComponent,
 } from './cards';
 
 import {
@@ -37,6 +38,7 @@ import {
   MenuListComponent,
   MenuExtraListComponent,
   MenuPackageListComponent,
+  ContactListComponent,
 } from './lists';
 
 import { TimePickerComponent } from './time-picker/time-picker.component';
@@ -61,6 +63,7 @@ import { LabelComponent } from './label/label.component';
     LocationCardComponent,
     MenuCardComponent,
     RestaurantCardComponent,
+    PaymentCardComponent,
     SearchBoxComponent,
     TextBoxComponent,
     PrimaryButtonComponent,
@@ -70,6 +73,7 @@ import { LabelComponent } from './label/label.component';
     MenuListComponent,
     MenuExtraListComponent,
     MenuPackageListComponent,
+    ContactListComponent,
     LabelComponent,
   ],
   exports: [
@@ -87,6 +91,7 @@ import { LabelComponent } from './label/label.component';
     LocationCardComponent,
     MenuCardComponent,
     RestaurantCardComponent,
+    PaymentCardComponent,
     SearchBoxComponent,
     TextBoxComponent,
     PrimaryButtonComponent,
@@ -96,6 +101,7 @@ import { LabelComponent } from './label/label.component';
     MenuListComponent,
     MenuExtraListComponent,
     MenuPackageListComponent,
+    ContactListComponent,
     LabelComponent,
   ]
 })

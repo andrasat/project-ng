@@ -1,0 +1,67 @@
+<div class="image-container">
+  <img src="/assets/image/placeholder-promo-0.jpg" alt="Promo">
+</div>
+
+<div class="nav-back-icon" (click)="goBack()">
+  <app-icon-arrow-left color="white"></app-icon-arrow-left>
+</div>
+
+<div class="share-icon-container" (click)="shareLink()">
+  <img src="/assets/image/share.svg" alt="Share">
+</div>
+
+<div class="promo-detail-container">
+
+  <app-heading-3>{{ queryParams.title }}</app-heading-3>
+  <app-caption color="grey">valid Until 10 June 2021</app-caption>
+
+  <div class="promo-code-container d-flex flex-row justify-content-between align-items-center" (click)="copyPromoCode()">
+    <div class="d-flex flex-column">
+      <app-caption color="grey">Promo Code</app-caption>
+      <app-heading-4>{{ queryParams.promoCode }}</app-heading-4>
+    </div>
+
+    <app-link>COPY</app-link>
+  </div>
+
+  <div class="section-container">
+    <app-heading-5>DESCRIPTION</app-heading-5>
+
+    <app-bodytext-14>
+      Get free shipping for your first purchase in 2021 with a maximum delivery distance of 3km from your location
+    </app-bodytext-14>
+  </div>
+
+  <div class="section-container">
+    <app-heading-5>TERMS & CONDITIONS</app-heading-5>
+
+    <app-bodytext-14>
+      <ul>
+        <li>Maximum distance 3km from your location</li>
+        <li>Available in all Outlets</li>
+        <li>Promo can only be used once</li>
+        <li>Promo applies to prices before tax</li>
+        <li>Only available until 10 June 2021</li>
+        <li>Parking fee aren&apos;t included</li>
+      </ul>
+    </app-bodytext-14>
+  </div>
+
+  <div class="section-container">
+    <app-heading-5>TERMS & CONDITIONS</app-heading-5>
+
+    <app-bodytext-14>
+      <ul>
+        <li>Copy the promo code above</li>
+        <li>Make purchases of products that have been choosen</li>
+        <li>Confirm the product you want to buy</li>
+        <li>On the "Order" page scroll down until you find the "Promo" section</li>
+        <li>Press "add promo code" and paste the promo code that you have copied</li>
+      </ul>
+    </app-bodytext-14>
+  </div>
+
+  <div *ngIf="queryParams.from === 'checkout'" class="apply-button">
+    <app-primary-button text="APPLY" (clicked)="applyPromoCode()"></app-primary-button>
+  </div>
+</div>

@@ -4,12 +4,15 @@ import { RouterModule } from '@angular/router';
 import { BranchComponent } from './branch.component';
 import { CompanyHomeComponent } from './company-home/company-home.component';
 import { RestaurantComponent } from './restaurant/restaurant.component';
-import { MenuComponent } from './restaurant/menu/menu.component';
+import { MenuComponent } from './menu/menu.component';
 import { PromotionComponent } from './promotion/promotion.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { OthersComponent } from './others/others.component';
-import { SearchMenuComponent } from './restaurant/search-menu/search-menu.component';
-import { CheckoutComponent } from './restaurant/checkout/checkout.component';
+import { SearchMenuComponent } from './search-menu/search-menu.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { PromotionDetailComponent } from './promotion-detail/promotion-detail.component';
+import { PaymentComponent } from './payment/payment.component';
+import { PaymentConfirmationComponent } from './payment-confirmation/payment-confirmation.component';
 
 @NgModule({
   imports: [
@@ -25,6 +28,10 @@ import { CheckoutComponent } from './restaurant/checkout/checkout.component';
           path: 'promotion',
           pathMatch: 'full',
           component: PromotionComponent
+        }, {
+          path: 'promotion/:promoID',
+          pathMatch: 'full',
+          component: PromotionDetailComponent,
         }, {
           path: 'order-history',
           pathMatch: 'full',
@@ -42,13 +49,21 @@ import { CheckoutComponent } from './restaurant/checkout/checkout.component';
           pathMatch: 'full',
           component: CheckoutComponent,
         }, {
-          path: 'home/:branchCode/menu/:menuID',
-          pathMatch: 'full',
-          component: MenuComponent
-        }, {
           path: 'home/:branchCode/search-menu',
           pathMatch: 'full',
           component: SearchMenuComponent,
+        }, {
+          path: 'home/:branchCode/payment',
+          pathMatch: 'full',
+          component: PaymentComponent,
+        }, {
+          path: 'home/:branchCode/payment-confirmation',
+          pathMatch: 'full',
+          component: PaymentConfirmationComponent,
+        }, {
+          path: 'home/:branchCode/menu/:menuID',
+          pathMatch: 'full',
+          component: MenuComponent
         }]
       },
     ]),

@@ -1,0 +1,50 @@
+<div class="nav-back-icon" (click)="goBack()">
+  <app-icon-arrow-left color="white"></app-icon-arrow-left>
+</div>
+
+<div class="payment-header" [ngClass]="paymentHeaderClass">
+  <div class="payment-icon">
+    <img [src]="'/assets/image/' + queryParams.paymentMethod + '.png'" [alt]="queryParams.paymentMethod + ' icon'">
+  </div>
+</div>
+
+<div class="payment-confimation-content">
+  <app-heading-3>Waiting for Payment</app-heading-3>
+
+  <app-bodytext-14>Please check your {{ queryParams.paymentMethod.toUpperCase() }} application to resume your payment process</app-bodytext-14>
+
+  <div class="mt-4 d-flex flex-row justify-content-between align-items-center ">
+    <div class="step-number" [ngClass]="paymentHeaderClass">1</div>
+    <div class="grow">
+      <app-bodytext-14>Login to your {{ queryParams.paymentMethod.toUpperCase() }} app</app-bodytext-14>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex flex-row justify-content-between align-items-center ">
+    <div class="step-number" [ngClass]="paymentHeaderClass">2</div>
+    <div class="grow">
+      <app-bodytext-14>Check notification. If you haven’t find the payment notif, please wait.</app-bodytext-14>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex flex-row justify-content-between align-items-center ">
+    <div class="step-number" [ngClass]="paymentHeaderClass">3</div>
+    <div class="grow">
+      <app-bodytext-14>Confirm total payment</app-bodytext-14>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex flex-row justify-content-between align-items-center ">
+    <div class="step-number" [ngClass]="paymentHeaderClass">4</div>
+    <div class="grow">
+      <app-bodytext-14>Authorize payment</app-bodytext-14>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex flex-row justify-content-between align-items-center ">
+    <div class="step-number" [ngClass]="paymentHeaderClass">5</div>
+    <div class="grow">
+      <app-bodytext-14>Wait to be redirected to this website</app-bodytext-14>
+    </div>
+  </div>
+</div>

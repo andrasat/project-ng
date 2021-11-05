@@ -1,0 +1,59 @@
+.contact-list-container {
+  padding: 16px 0 80px;
+}
+
+.contact {
+  border-bottom: 1px solid var(--grey-4);
+  padding: 16px 0;
+  margin: 0 16px;
+}
+
+.add-new-recipient {
+  position: absolute;
+  bottom: 0;
+  padding: 16px;
+  width: 100%;
+}
+
+.collapse-container {
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  z-index: 100;
+}
+
+.contact-form {
+  background: var(--white);
+  border-radius: 12px;
+  position: fixed;
+  bottom: 0;
+  padding: 20px;
+  min-height: 40%;
+  width: 100%;
+}
+
+.contact-form-title {
+  flex: 0 0 70%;
+}
+
+.validation-container {
+  height: 14px;
+  margin-top: 4px;
+}
+
+.email-info {
+  padding: 12px 0 0;
+}
+
+.info-icon {
+  margin-right: 8px;
+}
+
+.form-continue-button {
+  padding: 16px 0;
+  width: 100%;
+}

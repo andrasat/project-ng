@@ -9,11 +9,13 @@
   --grey: #95a0a9;
   --grey-3: #828282;
   --grey-4: #bdbdbd;
+  --grey-5: #e0e0e0;
   --grey-6: #f2f2f2;
   --black: #2c2a2b;
   --orange: #ffa224;
   --tangerine: #f07600;
   --red: #c30b31;
+  --red-1: #eb5757;
   --purple: #770248;
   --green: #02d87d;
   --ocean: #00acad;
@@ -31,10 +33,14 @@
 
 .header-component {
   position: relative;
-  height: 80px;
+  min-height: 60px;
   padding: 20px;
   width: 100%;
   z-index: 2000;
+
+  &.header-shadow {
+    box-shadow: 0 0 5px 0 var(--grey);
+  }
 }
 
 .nav-back-icon {

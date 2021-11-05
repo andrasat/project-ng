@@ -10,5 +10,6 @@ export class SecondaryButtonComponent {
   @Input() icon: string = ''
   @Input() invert: boolean = false
   @Input() transparent: boolean = false
+  @Input() withBorder: boolean = false
   @Output() public clicked: EventEmitter<void> = new EventEmitter()
 }

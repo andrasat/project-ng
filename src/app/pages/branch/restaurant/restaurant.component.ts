@@ -1,11 +1,13 @@
 import { formatCurrency } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Query, QueryList, ViewChildren } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IBranchData, IBranchDataOrderModes, IBranches, IBranchList, IMenuCategoryDetails, IMenuData, IMenus, IOrderInput, IPromotion } from '@core/models';
+import { IBranchData, IBranchDataOrderModes, IBranches, IBranchList, ICustomOrderFormData, ICustomOrderModeForms, IMenuCategoryDetails, IMenuData, IMenus, IOrderInput, IPromotion } from '@core/models';
 import { LocationService, QSApiService, StorageService } from '@core/services';
 import { NgbCollapseConfig } from '@ng-bootstrap/ng-bootstrap';
 
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-restaurant',
@@ -40,12 +42,18 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     });
   }
 
-  branchDataObs: Subscription;
-  menuDataObs: Subscription;
+  @ViewChildren('orderModeButton') orderModeButtonRefs: QueryList<ElementRef<HTMLButtonElement>>
+
+  private unsubscribe$ = new Subject<void>()
+
+  customOrderFormGroup: FormGroup | undefined
+  tableNumberControl: FormControl | undefined
 
   hideCollapseContainer = false
   showMenuDrawer = false;
   showOutletClosed: boolean | undefined
+  customOrderModeForm: ICustomOrderModeForms[] | undefined
+  customOrderFormData: ICustomOrderFormData[] | undefined
   selectedOrderMode = ''
   selectedHour = ''
   selectedMinute = ''
@@ -56,7 +64,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
   branchData: IBranchData | undefined
   branchList: IBranchList | undefined
   currentPosition: GeolocationPosition
-  orderInput: IOrderInput
+  orderInput: IOrderInput | undefined
 
   orderModes: IBranchDataOrderModes[] = []
   openBranches: IBranches[] = []
@@ -77,153 +85,269 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     this.qsApiService.resetMenu();
     this.qsApiService.resetBranchData();
 
-    this.menuDataObs.unsubscribe();
-    this.branchDataObs.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   ngOnInit() {
     this.qsApiService.getBranchData(this.params.branchCode);
     this.qsApiService.getPromotion(this.params.branchCode);
 
-    this.locationService.currentPosition.subscribe(position => this.currentPosition = position);
-    this.qsApiService.promotion.subscribe(promotions => this.promotions = promotions || []);
+    if (this.queryParams.orderMode === 'delivery' && this.queryParams.lat && this.queryParams.lng) {
+      this.locationService.updateCurrentPosition({
+        coords: {
+          accuracy: 0,
+          altitude: null,
+          altitudeAccuracy: null,
+          heading: null,
+          latitude: this.queryParams.lat,
+          longitude: this.queryParams.lng,
+          speed: null,
+        },
+        timestamp: Date.now(),
+      });
+    }
 
-    this.qsApiService.branchList.subscribe(branchList => {
-      this.branchList = branchList;
+    this.locationService.currentPosition
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(position => this.currentPosition = position);
+    this.qsApiService.promotion
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(promotions => this.promotions = promotions || []);
 
-      this.openBranches = branchList ?
-        branchList.branches.filter(branch => branch.businessHour.status.includes('open'))
-        : [];
-    });
+    this.qsApiService.branchList
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(branchList => {
+        this.branchList = branchList;
 
-    this.branchDataObs = this.qsApiService.branchData.subscribe(branchData => {
-      this.branchData = branchData;
+        this.openBranches = branchList ?
+          branchList.branches.filter(branch => branch.businessHour.status.includes('open'))
+          : [];
+      });
 
-      const today = branchData?.businessHour.find(hour => hour.isCurrentDay);
-      this.businessHourText = `${branchData?.businessHour[0].day} - ${branchData?.businessHour[branchData?.businessHour.length - 1].day} ${today?.startTime} - ${today?.endTime}`;
-      this.orderModes = branchData?.orderModes ? branchData?.orderModes.filter(mode => mode.type?.match(/takeAway|delivery/)) : [];
-      this.showOutletClosed = typeof branchData?.isOpen !== 'undefined' ? !branchData?.isOpen : undefined;
+    this.qsApiService.branchData
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(branchData => {
+        this.branchData = branchData;
 
-      if (!this.branchList && this.showOutletClosed === true) {
-        this.qsApiService.getBranchList(this.currentPosition.coords.latitude, this.currentPosition.coords.longitude);
-      }
+        const today = branchData?.businessHour.find(hour => hour.isCurrentDay);
+        this.businessHourText = `${branchData?.businessHour[0].day} - ${branchData?.businessHour[branchData?.businessHour.length - 1].day} ${today?.startTime} - ${today?.endTime}`;
+        this.showOutletClosed = typeof branchData?.isOpen !== 'undefined' ? !branchData?.isOpen : undefined;
 
-      if (branchData && this.queryParams.orderMode) {
-        this.hideCollapseContainer = true;
-        const selectedMode = this.orderModes.find(mode => mode.type === this.queryParams.orderMode);
-
-        this.qsApiService.getMenu(this.params.branchCode, selectedMode?.visitPurposeID!);
-
-        const orderInputData = this.storageService.getItem(`order_${this.params.companyCode}_${this.params.branchCode}`);
-
-        if (orderInputData) {
-          this.orderInput = JSON.parse(orderInputData);
-          this.orderInput.type = selectedMode?.type!;
-          this.orderInput.visitPurposeID = selectedMode?.visitPurposeID!;
-
-          const totalAmount = this.orderInput.salesMenus.reduce((total, saleMenu) => {
-            const totalPackage = saleMenu.packages.reduce((amountPackages, packageData) => {
-              return amountPackages + (packageData.sellPrice * saleMenu.qty);
-            }, 0);
-
-            const totalExtras = saleMenu.extras.reduce((amountExtras, extraData) => {
-              return amountExtras + (extraData.sellPrice * saleMenu.qty);
-            }, 0);
-
-            return total + totalPackage + totalExtras + (saleMenu.sellPrice * saleMenu.qty);
-          }, 0);
-
-          this.orderInput.amount = totalAmount;
-          this.displayTotalAmount = formatCurrency(totalAmount, 'id-ID', 'Rp', 'IDR', '1.0-0');
-        } else {
-          this.orderInput = {
-            type: selectedMode?.type!,
-            typeName: null,
-            amount: 0,
-            deliveryAddress: '',
-            deliveryAddressInfo: null,
-            email: '',
-            fullName: '',
-            memberID: null,
-            paymentMethodID: '',
-            visitPurposeID: selectedMode?.visitPurposeID!,
-            latitude: this.currentPosition.coords.latitude,
-            longitude: this.currentPosition.coords.longitude,
-            phoneNumber: '',
-            promotionCode: '',
-            salesMenus: [],
-            vouchers: [],
-            returnUrl: '',
-          };
+        if (!this.branchList && this.showOutletClosed === true) {
+          this.qsApiService.getBranchList(this.currentPosition.coords.latitude, this.currentPosition.coords.longitude);
         }
 
-        this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
-      }
-    });
-
-    this.menuDataObs = this.qsApiService.menu.subscribe(menu => {
-      this.menuData = menu;
-
-      // Get recommendation menu id list
-      const recommendationMenuIdList = menu?.menuRecommendations?.reduce((menuIdList: number[], nextRecommendation) => {
-        const menuIds = nextRecommendation.menuIDs;
-
-        if (menuIdList.length === 0) return [...menuIds];
-
-        let menuIdString = menuIds.join(',');
-
-        menuIdList.forEach(menuId => {
-          if (menuIdString.includes(String(menuId))) {
-            menuIdString = menuIdString.replace(String(menuId), '');
+        // map and reformat orderModes
+        this.orderModes = branchData?.orderModes ? branchData.orderModes.reduce((orderModesArr: IBranchDataOrderModes[], orderMode) => {
+          if (Array.isArray(orderMode)) {
+            return [...orderModesArr, ...orderMode];
           }
-        });
 
-        const newMenuIds = menuIdString
-          .split(',')
-          .filter(menuId => !!menuId)
-          .map(menuId => Number(menuId));
+          return [...orderModesArr, orderMode];
+        }, []).map(mode => {
 
-        return [...menuIdList, ...newMenuIds];
-      }, []);
+          if (mode.forms) {
+            return {
+              ...mode,
+              forms: mode.forms.map(customForm => {
+                return { ...customForm, inputID: customForm.inputID.replace(`${branchData.companyCode.toLowerCase()}-`, '') };
+              })
+            };
+          }
 
-      // Get menu list by recommendation ids
-      const popularMenuList = menu?.menuCategories.reduce((list: IMenus[], menuCategory) => {
+          return mode;
+        }) : [];
 
-        const menusByCategoryDetail = menuCategory.menuCategoryDetails.reduce((menuList: IMenus[], menuCategoryDetail) => {
-          return [ ...menuList, ...menuCategoryDetail.menus];
-        }, []);
+        if (branchData && this.queryParams.orderMode) {
+          const selectedMode = this.orderModes.find(mode => mode.type === this.queryParams.orderMode);
+          const orderInputData = this.storageService.getItem(`order_${this.params.companyCode}_${this.params.branchCode}`);
 
-        const recommendationMenus = recommendationMenuIdList ?
-          recommendationMenuIdList.reduce((menus: IMenus[], nextMenuId) => {
-            const recommendedMenu = menusByCategoryDetail.find(menu => menu.menuID === nextMenuId);
-            const isAlreadyInList = list.find(menu => menu.menuID === nextMenuId);
+          // adjust custom order mode with query params
+          if (this.queryParams.orderMode === 'custom' && selectedMode && selectedMode.forms) {
+            this.customOrderModeForm = selectedMode.forms;
+            this.customOrderFormGroup = new FormGroup(selectedMode.forms.reduce((formObject, form) => {
+              return {
+                ...formObject,
+                [form.inputID]: new FormControl(
+                  {
+                    value: this.queryParams[form.inputID],
+                    disabled: !!this.queryParams[form.inputID]
+                  },
+                  form.flagMandatory ? [Validators.required] : undefined,
+                )
+              };
+            }, {}));
 
-            if (recommendedMenu && !isAlreadyInList) {
-              return [...menus, recommendedMenu];
+            this.orderModeButtonRefs?.changes
+              .pipe(take(1))
+              .subscribe((queryList: QueryList<ElementRef<HTMLButtonElement>>) => {
+                const [customButton] = queryList.filter(button => button.nativeElement.className.includes('active'));
+                customButton.nativeElement.scrollIntoView({ behavior: 'smooth' });
+              });
+          } else {
+            this.hideCollapseContainer = true;
+            this.qsApiService.getMenu(this.params.branchCode, selectedMode?.visitPurposeID!);
+          }
+
+          if (orderInputData) {
+            this.orderInput = JSON.parse(orderInputData) as IOrderInput;
+
+            // decide if there is additionalCustomerInfo, hide custom form at open page
+            if (this.orderInput.additionalCustomerInfo && selectedMode && selectedMode.forms) {
+              let mandatoryFlagCounter = 0;
+              const mandatoryFlagCount = selectedMode.forms?.filter(form => form.flagMandatory > 0).length;
+
+              const hideCollapseContainer = this.orderInput.additionalCustomerInfo.reduce((result, formData) => {
+                if (mandatoryFlagCounter === mandatoryFlagCount || mandatoryFlagCount === 0) {
+                  return true;
+                }
+
+                const foundForm = selectedMode.forms?.find(form => form.inputLabelEn === formData.desc);
+
+                if (foundForm && foundForm.flagMandatory > 0 && formData.value) {
+                  mandatoryFlagCounter++;
+                  return result;
+                }
+
+                return result;
+              }, false);
+
+              mandatoryFlagCounter = 0;
+
+              if (hideCollapseContainer) {
+                this.hideCollapseContainer = true;
+                this.qsApiService.getMenu(this.params.branchCode, selectedMode?.visitPurposeID!);
+              }
             }
 
-            return menus;
-          }, [])
-          : menusByCategoryDetail;
+            if (this.queryParams.orderMode === 'dineIn' && this.queryParams.tableNumber) {
+              this.orderInput.tableName = this.queryParams.tableNumber;
+            }
 
-        return [...list, ...recommendationMenus];
-      }, []);
+            this.orderInput!.type = selectedMode?.type!;
+            this.orderInput!.typeName = selectedMode?.name || null;
+            this.orderInput!.visitPurposeID = selectedMode?.visitPurposeID!;
 
-      // Get price chopped menu list
-      const priceChoppedMenuList = menu?.menuCategories.reduce((list: IMenus[], menuCategory) => {
+            const totalAmount = this.orderInput!.salesMenus.reduce((total, saleMenu) => {
+              const totalPackage = saleMenu.packages.reduce((amountPackages, packageData) => {
+                return amountPackages + (packageData.sellPrice * saleMenu.qty);
+              }, 0);
 
-        const menusByCategoryDetail = menuCategory.menuCategoryDetails.reduce((menuList: IMenus[], menuCategoryDetail) => {
-          return [ ...menuList, ...menuCategoryDetail.menus]; 
+              const totalExtras = saleMenu.extras.reduce((amountExtras, extraData) => {
+                return amountExtras + (extraData.sellPrice * saleMenu.qty);
+              }, 0);
+
+              return total + totalPackage + totalExtras + (saleMenu.sellPrice * saleMenu.qty);
+            }, 0);
+
+            this.orderInput!.amount = totalAmount;
+            this.displayTotalAmount = formatCurrency(totalAmount, 'id-ID', 'Rp', 'IDR', '1.0-0');
+          } else {
+            this.orderInput = {
+              type: selectedMode?.type!,
+              tableName: this.queryParams.tableNumber,
+              typeName: selectedMode?.name || null,
+              amount: 0,
+              deliveryAddress: this.queryParams.addr || '',
+              deliveryAddressInfo: null,
+              email: '',
+              fullName: '',
+              memberID: null,
+              paymentMethodID: '',
+              visitPurposeID: selectedMode?.visitPurposeID!,
+              latitude: this.queryParams.lat || this.currentPosition.coords.latitude,
+              longitude: this.queryParams.lng || this.currentPosition.coords.longitude,
+              phoneNumber: '',
+              promotionCode: '',
+              salesMenus: [],
+              vouchers: [],
+              returnUrl: '',
+            };
+          }
+
+          this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
+        }
+      });
+
+    this.qsApiService.menu
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(menu => {
+        this.menuData = menu;
+
+        // Get recommendation menu id list
+        const recommendationMenuIdList = menu?.menuRecommendations?.reduce((menuIdList: number[], nextRecommendation) => {
+          const menuIds = nextRecommendation.menuIDs;
+
+          if (menuIdList.length === 0) return [...menuIds];
+
+          let menuIdString = menuIds.join(',');
+
+          menuIdList.forEach(menuId => {
+            if (menuIdString.includes(String(menuId))) {
+              menuIdString = menuIdString.replace(String(menuId), '');
+            }
+          });
+
+          const newMenuIds = menuIdString
+            .split(',')
+            .filter(menuId => !!menuId)
+            .map(menuId => Number(menuId));
+
+          return [...menuIdList, ...newMenuIds];
         }, []);
 
-        const priceChoppedMenus = menusByCategoryDetail.filter(menus => menus.originalSellPrice !== menus.sellPrice);
+        // Get menu list by recommendation ids
+        const popularMenuList = menu?.menuCategories.reduce((list: IMenus[], menuCategory) => {
 
-        return [...list, ...priceChoppedMenus];
-      }, []);
+          const menusByCategoryDetail = menuCategory.menuCategoryDetails.reduce((menuList: IMenus[], menuCategoryDetail) => {
+            return [ ...menuList, ...menuCategoryDetail.menus];
+          }, []);
 
-      this.popularMenus = popularMenuList || [];
-      this.priceChoppedMenus = priceChoppedMenuList || [];
-    });
+          const recommendationMenus = recommendationMenuIdList ?
+            recommendationMenuIdList.reduce((menus: IMenus[], nextMenuId) => {
+              const recommendedMenu = menusByCategoryDetail.find(menu => menu.menuID === nextMenuId);
+              const isAlreadyInList = list.find(menu => menu.menuID === nextMenuId);
+
+              if (recommendedMenu && !isAlreadyInList) {
+                return [...menus, recommendedMenu];
+              }
+
+              return menus;
+            }, [])
+            : menusByCategoryDetail;
+
+          return [...list, ...recommendationMenus];
+        }, []);
+
+        // Get price chopped menu list
+        const priceChoppedMenuList = menu?.menuCategories.reduce((list: IMenus[], menuCategory) => {
+
+          const menusByCategoryDetail = menuCategory.menuCategoryDetails.reduce((menuList: IMenus[], menuCategoryDetail) => {
+            return [ ...menuList, ...menuCategoryDetail.menus]; 
+          }, []);
+
+          const priceChoppedMenus = menusByCategoryDetail.filter(menus => menus.originalSellPrice !== menus.sellPrice);
+
+          return [...list, ...priceChoppedMenus];
+        }, []);
+
+        this.popularMenus = popularMenuList || [];
+        this.priceChoppedMenus = priceChoppedMenuList || [];
+      });
+  }
+
+  getOrderModeText(mode: string, name?: string) {
+    switch (mode) {
+      case 'dineIn':
+        return 'Dine In';
+      case 'delivery':
+        return 'Delivery';
+      case 'takeAway':
+        return 'In-Store Pick Up';
+      default:
+        return name || 'Custom';
+    }
   }
 
   getFragmentId(menuDesc: string) {
@@ -236,8 +360,32 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
-  selectOrderMode(orderMode?: string) {
-    this.selectedOrderMode = orderMode || '';
+  selectOrderMode(mode: IBranchDataOrderModes) {
+    this.selectedOrderMode = mode.type || '';
+    this.customOrderModeForm = mode.forms;
+
+    if (mode.type === 'dineIn') {
+      this.tableNumberControl = new FormControl(this.queryParams.tableNumber || '', [Validators.required]);
+    } else {
+      this.tableNumberControl = undefined;
+    }
+
+    if (mode.forms) {
+      this.customOrderFormGroup = new FormGroup(mode.forms.reduce((formObject, form) => {
+        return {
+          ...formObject,
+          [form.inputID]: new FormControl(
+            {
+              value: this.queryParams[form.inputID],
+              disabled: !!this.queryParams[form.inputID]
+            },
+            form.flagMandatory ? [Validators.required] : undefined,
+          )
+        };
+      }, {}));
+    } else {
+      this.customOrderFormGroup = undefined;
+    }
   }
 
   onSelectedHour(hour: string) {
@@ -264,31 +412,50 @@ export class RestaurantComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.tableNumberControl) {
+      if (!this.tableNumberControl.valid) return;
+    }
+
+    if (this.customOrderFormGroup) {
+      if (!this.customOrderFormGroup.valid) return;
+
+      const formRawValue = this.customOrderFormGroup.getRawValue();
+      this.customOrderFormData = this.customOrderModeForm?.map(form => {
+        const formValue = form.inputID.includes('pickuptime') ? `${this.selectedHour}:${this.selectedMinute}` : formRawValue[form.inputID];
+      
+        return {
+          desc: form.inputLabelEn,
+          value: formValue,
+        };
+      });
+    }
+
     this.hideCollapseContainer = true;
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        orderMode: this.selectedOrderMode,
-        ...(this.selectedHour && this.selectedMinute ? {
-          takeAwayTime: `${this.selectedHour}:${this.selectedMinute}`,
-        } : {}),
-      },
-      queryParamsHandling: 'merge',
-    });
 
     const selectedMode = this.orderModes.find(mode => mode.type === this.selectedOrderMode);
-    this.qsApiService.getMenu(this.params.branchCode, selectedMode?.visitPurposeID!);
-
     const orderInputData = this.storageService.getItem(`order_${this.params.companyCode}_${this.params.branchCode}`);
+
+    if (selectedMode?.type === 'takeAway') {
+      const selectedDate = new Date();
+      selectedDate.setHours(Number(this.selectedHour));
+      selectedDate.setMinutes(Number(this.selectedMinute));
+
+      if (selectedDate.getTime() < Date.now()) return;
+      this.customOrderFormData = [{desc: 'Pickup Time', value: `${this.selectedHour}:${this.selectedMinute}`}];
+    }
 
     if (orderInputData) {
       this.orderInput = JSON.parse(orderInputData);
-      this.orderInput.type = selectedMode?.type!;
-      this.orderInput.visitPurposeID = selectedMode?.visitPurposeID!;
+      this.orderInput!.type = selectedMode?.type!;
+      this.orderInput!.typeName = selectedMode?.type! === 'custom' && selectedMode?.name ? selectedMode?.name : null;
+      this.orderInput!.visitPurposeID = selectedMode?.visitPurposeID!;
+      this.orderInput!.additionalCustomerInfo = this.customOrderFormData;
     } else {
       this.orderInput = {
+        additionalCustomerInfo: this.customOrderFormData,
+        tableName: this.tableNumberControl?.value,
         type: selectedMode?.type!,
-        typeName: null,
+        typeName: selectedMode?.name || null,
         amount: 0,
         deliveryAddress: '',
         deliveryAddressInfo: null,
@@ -308,6 +475,15 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     }
 
     this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
+    this.qsApiService.getMenu(this.params.branchCode, selectedMode?.visitPurposeID!);
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        orderMode: this.selectedOrderMode,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   goBack() {

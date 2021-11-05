@@ -39,6 +39,10 @@
     }
   }
 
+  &.with-border {
+    border: 1px solid var(--tangerine);
+  }
+
   img {
     left: 16px;
     top: 12px;

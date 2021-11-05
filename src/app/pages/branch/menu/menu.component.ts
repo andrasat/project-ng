@@ -166,6 +166,12 @@ export class MenuComponent implements OnInit, AfterViewInit {
     };
   }
 
+  getSubmitButtonText() {
+    if (this.queryParams.edit && this.counter === 0) return 'BACK TO CHECKOUT';
+    if (this.counter === 0) return 'BACK TO RESTAURANT';
+    return this.getTotalText();
+  }
+
   getTotalText() {
     const totalMenuPrice =
       ((this.menu?.sellPrice || 0) * this.saleMenu.qty) +
@@ -198,12 +204,14 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   goBack() {
-    if (this.saleMenu.qty > 0) {
+    if (this.saleMenu.menuID) {
       const foundMenuIndex = this.orderInput.salesMenus.findIndex(s => s.menuID === this.saleMenu.menuID);
 
-      if (foundMenuIndex >= 0) {
+      if (foundMenuIndex >= 0 && this.saleMenu.qty > 0) {
         this.orderInput.salesMenus[foundMenuIndex] = this.saleMenu;
-      } else {
+      } else if (foundMenuIndex >= 0 && this.saleMenu.qty === 0) {
+        this.orderInput.salesMenus.splice(foundMenuIndex, 1);
+      } else if (this.saleMenu.qty > 0) {
         this.orderInput = {
           ...this.orderInput,
           salesMenus: [...this.orderInput.salesMenus, this.saleMenu],
@@ -213,7 +221,16 @@ export class MenuComponent implements OnInit, AfterViewInit {
       this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
     }
 
-    this.router.navigate(['../..'], {
+    if (this.queryParams.edit) {
+      return this.router.navigate(['../../checkout'], {
+        relativeTo: this.route,
+        queryParams: {
+          orderMode: this.queryParams.orderMode,
+        }
+      });;
+    }
+
+    return this.router.navigate(['../..'], {
       relativeTo: this.route,
       queryParams: {
         orderMode: this.queryParams.orderMode,

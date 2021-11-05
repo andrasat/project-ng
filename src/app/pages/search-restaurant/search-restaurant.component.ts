@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IBranches, IBranchList, IBrandData, IBrandList, IBrands } from '@core/models';
 import { LocationService, QSApiService } from '@core/services';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-restaurant',
@@ -22,6 +23,8 @@ export class SearchRestaurantComponent implements OnInit, OnDestroy {
     });
   }
 
+  private unsubscribe$ = new Subject<void>()
+
   isSelectRestaurant = false
   isSearchRestaurant = false
   branchList: IBranchList | undefined
@@ -29,24 +32,32 @@ export class SearchRestaurantComponent implements OnInit, OnDestroy {
   brandData: IBrandData | undefined
   currentPosition: GeolocationPosition
   params: any = {}
-  observer: Subscription | undefined
 
   filteredBranches: IBranches[]
 
   ngOnInit() {
-    this.observer = this.locationService.currentPosition.subscribe(position => {
-      this.currentPosition = position;
-      this.qsApiService.getBrandList(position.coords.latitude, position.coords.longitude);
-      this.qsApiService.getBranchList(position.coords.latitude, position.coords.longitude);
-    });
+    this.locationService.currentPosition
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(position => {
+        this.currentPosition = position;
+        this.qsApiService.getBrandList(position.coords.latitude, position.coords.longitude);
+        this.qsApiService.getBranchList(position.coords.latitude, position.coords.longitude);
+      });
 
-    this.qsApiService.branchList.subscribe(branchlist => this.branchList = branchlist);
-    this.qsApiService.brandList.subscribe(brandList => this.brandList = brandList);
-    this.qsApiService.brandData.subscribe(brandData => this.brandData = brandData);
+    this.qsApiService.branchList
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(branchlist => this.branchList = branchlist);
+    this.qsApiService.brandList
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(brandList => this.brandList = brandList);
+    this.qsApiService.brandData
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(brandData => this.brandData = brandData);
   }
 
   ngOnDestroy() {
-    this.observer?.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   setIsSearchRestaurant(value: boolean) {

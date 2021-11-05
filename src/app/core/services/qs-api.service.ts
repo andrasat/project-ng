@@ -22,10 +22,13 @@ import {
   ICalculateTotalInput,
   ICalculateTotalResult,
   IValidateRadiusResult,
+  IProfile,
+  IOrderHistoryResult,
+  IValidatePaymentResult,
 } from '@core/models';
 import { separateAddress, utf8ToBase64 } from '@utils/index';
 
-import { brandListData, getAddress } from '../mock/';
+import { brandListData } from '../mock/';
 
 @Injectable()
 export class QSApiService {
@@ -55,13 +58,18 @@ export class QSApiService {
   private _menuSubject = new BehaviorSubject<IMenuData | undefined>(undefined)
   menu = this._menuSubject.asObservable()
 
+  private _profileSubject = new BehaviorSubject<IProfile | undefined>(undefined)
+  profile = this._profileSubject.asObservable()
+
+  private _validatePaymentSubject = new BehaviorSubject<IValidatePaymentResult | undefined>(undefined)
+  validatePaymentData = this._validatePaymentSubject.asObservable()
+
   private _currentAddressSubject = new BehaviorSubject<IAddress | undefined>(undefined)
   currentAddress = this._currentAddressSubject.asObservable()
 
   // INTERNAL METHODS
 
   private formatErrors(error: any) {
-    console.log('error: ', error);
     return throwError(error.error);
   }
 
@@ -70,11 +78,11 @@ export class QSApiService {
       .pipe(catchError(this.formatErrors));
   }
 
-  private post(path: string, body: any = {}, headers: HttpHeaders = new HttpHeaders): Observable<any> {
+  private post(path: string, body: any = {}, headers: HttpHeaders = new HttpHeaders, params: HttpParams = new HttpParams()): Observable<any> {
     return this.http.post(
       `${this.API_URL}${path}`,
       JSON.stringify(body),
-      { headers },
+      { headers, params },
     ).pipe(catchError(this.formatErrors));
   }
 
@@ -167,7 +175,7 @@ export class QSApiService {
       }));
   }
 
-  getAddress(lat: number, lon: number, branchCode = 'TC001'): Subscription {
+  getAddress(lat: number, lon: number, branchCode = 'ABC'): Subscription {
     return this.get(`/web/qsv1/map/address/${lat}/${lon}`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
       'Data-Branch': branchCode,
@@ -178,7 +186,6 @@ export class QSApiService {
       )
       .subscribe(
         address => this._currentAddressSubject.next(address),
-        () => this._currentAddressSubject.next(separateAddress(getAddress()))
       );
   }
 
@@ -204,6 +211,25 @@ export class QSApiService {
       .pipe(map((data: IUserData) => data));
   }
 
+  getProfile(token: string): Subscription {
+    return this.get('/web/v1/user/profile', undefined, new HttpHeaders({
+      authorization: `Bearer ${token}`,
+    }))
+      .pipe(map(data => data))
+      .subscribe(profile => this._profileSubject.next(profile));
+  }
+
+  getOrderHistory(token: string, orderIds: string[]): Observable<IOrderHistoryResult> {
+    return this.post('/web/v1/user/order', orderIds, new HttpHeaders({
+      authorization: `Bearer ${token}`,
+    }), new HttpParams({
+      fromObject: {
+        page: 1,
+        limit: 3,
+      },
+    })).pipe(map(data => data));
+  }
+
   calculateTotal(calculateTotal: ICalculateTotalInput, branchCode: string): Observable<ICalculateTotalResult> {
     return this.post('/web/qsv1/order/calculate-total', {
       ...calculateTotal,
@@ -221,6 +247,24 @@ export class QSApiService {
       'Data-Branch': branchCode,
     }))
       .pipe(map(data => data));
+  }
+
+  validatePromo(promotionCode: string, paymentMethodID: string) {
+    return this.post('/web/qsv1/promotion/validate-payment', {
+      promotionCode,
+      paymentMethodID,
+    }, new HttpHeaders({
+      authorization: `Bearer ${this.BEARER_TOKEN}`,
+    }))
+      .pipe(map((data: boolean) => data));
+  }
+
+  validatePayment(orderID: string) {
+    return this.get(`/web/qsv1/payment/validate/${orderID}`, undefined, new HttpHeaders({
+      authorization: `Bearer ${this.BEARER_TOKEN}`,
+    }))
+      .pipe(map((data: IValidatePaymentResult) => data))
+      .subscribe(data => this._validatePaymentSubject.next(data));
   }
 
   saveOrder(orderInput: IOrderInput, branchCode: string): Observable<ISaveOrderResult> {

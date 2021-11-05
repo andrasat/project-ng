@@ -1,8 +1,8 @@
 <button
   type="button"
   class="btn secondary-button"
-  [ngClass]="{invert,transparent}"
+  [ngClass]="{invert,transparent,'with-border': withBorder}"
   (click)="clicked.emit()">
   <img *ngIf="icon !== ''" [src]="icon" alt="icon">
-  <p>{{ text }}</p>
+  <span>{{ text }}</span>
 </button>

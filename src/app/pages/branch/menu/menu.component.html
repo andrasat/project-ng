@@ -8,8 +8,9 @@
 
 <div class="menu-container">
   <div class="menu-icons d-flex flex-row justify-content-between">
-    <div>
+    <div class="icon-list">
       <img *ngIf="menu?.flagRecommendation" src="/assets/image/recommended.svg" alt="recommended">
+      <img *ngFor="let icon of menu?.menuIcons" [src]="icon.iconUrl" [alt]="icon.iconName" />
     </div>
     <app-label *ngIf="menu?.sellPrice !== menu?.originalSellPrice" type="promo" text="PROMO"></app-label>
   </div>
@@ -84,7 +85,7 @@
       <div class="d-flex flex-row">
         <app-icon-circle-minus
           class="mr-3"
-          [color]="counter === 0 ? 'grey' : 'tangerine'"
+          [color]="counter === 0 || !saleMenu ? 'grey' : 'tangerine'"
           (click)="decrement()"
         ></app-icon-circle-minus>
 
@@ -92,14 +93,14 @@
 
         <app-icon-circle-plus
           class="ml-3"
-          color="tangerine"
+          [color]="!saleMenu ? 'grey' : 'tangerine'"
           (click)="increment()"
         ></app-icon-circle-plus>
       </div>
     </div>
 
     <app-primary-button
-      [text]="counter === 0 ? 'BACK TO RESTAURANT' : getTotalText()"
+      [text]="getSubmitButtonText()"
       (clicked)="goBack()"
     ></app-primary-button>
   </div>

@@ -1,0 +1,81 @@
+:host .alert-custom::ng-deep {
+  background-color: var(--red-1);
+  border-radius: 6px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  left: 5vw;
+  width: 90%;
+
+  & button span {
+    color: var(--white);
+  }
+}
+
+.total-payment-container {
+  border-bottom: 8px solid var(--grey-6);
+  position: relative;
+  padding: 16px;
+}
+
+.payment-method-container {
+  padding: 16px;
+}
+
+.payment-method {
+  margin-top: 12px;
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+.tnc-checkbox-icon {
+  margin-right: 12px;
+}
+
+.validation-container {
+  height: 14px;
+  margin-top: 4px;
+}
+
+// Collapse
+
+.collapse-container {
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  z-index: 100;
+}
+
+.payment-detail {
+  background: var(--white);
+  border-radius: 12px;
+  position: fixed;
+  bottom: 0;
+  padding: 20px 16px;
+  min-height: 40%;
+  width: 100%;
+}
+
+.separator {
+  height: 1px;
+  margin-top: 20px;
+  background-color: var(--grey-5);
+}
+
+.payment-total {
+  margin-top: 20px;
+}
+
+.total-text {
+  color: var(--grey);
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 32px;
+  margin-right: 10px;
+}

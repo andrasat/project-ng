@@ -30,6 +30,11 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('@pages/search-restaurant/search-restaurant.module' /* webpackChunkName: "search-restaurant" */).then(m => m.SearchRestaurantModule),
       },
       {
+        path: 'contacts',
+        pathMatch: 'full',
+        loadChildren: () => import('@pages/choose-contact/choose-contact.module' /* webpackChunkName: "choose-contact" */).then(m => m.ChooseContactModule),
+      },
+      {
         path: ':companyCode',
         loadChildren: () => import('@pages/branch/branch.module' /* webpackChunkName: "branch" */).then(m => m.BranchModule),
       }

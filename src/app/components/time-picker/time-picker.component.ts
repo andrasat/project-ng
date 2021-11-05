@@ -25,7 +25,7 @@ export class TimePickerComponent implements OnInit, OnChanges, AfterViewInit, On
   hourMoveDirection = ''
   minuteMoveDirection = ''
 
-  hourList = ['07','08','09','10','11','12','13','14','15','16','17']
+  hourList = this._getHourList()
   hourTranslateY = -250
   backgroundHourTranslateY = -90
 
@@ -38,6 +38,34 @@ export class TimePickerComponent implements OnInit, OnChanges, AfterViewInit, On
 
   minuteLastTouchPos = 0
   minuteStartTouchPos = 0
+
+  private _getHourList() {
+    const currentHour = new Date().getHours();
+
+    const fiveHourAhead = Array.from({ length: 5 }).map((_,i) => {
+      let nextHour = currentHour + (i + 1);
+      if (nextHour > 24) nextHour = nextHour - 24;
+
+      if (String(nextHour).length < 2) {
+        return `0${nextHour}`;
+      } else {
+        return String(nextHour);
+      }
+    });
+
+    const fiveHourAgo = Array.from({ length: 5 }).map((_,i) => {
+      let hourAgo = currentHour - (i + 1);
+      if (hourAgo < 0) hourAgo = hourAgo + 24;
+
+      if (String(hourAgo).length < 2) {
+        return `0${hourAgo}`;
+      } else {
+        return String(hourAgo);
+      }
+    }).sort((a,b) => Number(a) - Number(b));
+
+    return [...fiveHourAgo ,String(currentHour), ...fiveHourAhead];
+  }
 
   private _getTransitionEndEventName() {
     const transitions: {
@@ -139,7 +167,7 @@ export class TimePickerComponent implements OnInit, OnChanges, AfterViewInit, On
   }
 
   ngOnInit() {
-    this.selectedHourChanged.emit('12');
+    this.selectedHourChanged.emit(this.hourList[Math.floor(this.hourList.length / 2)]);
     this.selectedMinuteChanged.emit('00');
   }
 

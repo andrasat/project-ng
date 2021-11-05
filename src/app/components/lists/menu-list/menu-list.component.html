@@ -7,11 +7,9 @@
     <app-caption color="grey">{{ menu.description || '&nbsp;' }}</app-caption>
 
     <div class="d-flex flex-row justify-content-between">
-      <div>
+      <div class="icon-list">
         <img *ngIf="menu.flagRecommendation === 1" src="/assets/image/recommended.svg" alt="recommended">
-        <img *ngIf="menu.flagVegan" class="menu-icon" src="/assets/image/vegan.svg" alt="vegan">
-        <img *ngIf="menu.flagSpicy" class="menu-icon" src="/assets/image/spicy.svg" alt="spicy">
-        <img *ngIf="menu.flagHot" class="menu-icon" src="/assets/image/hot.svg" alt="hot">
+        <img *ngFor="let icon of menu.menuIcons" [src]="icon.iconUrl" [alt]="icon.iconName">
       </div>
 
       <div class="menu-price d-flex flex-column">

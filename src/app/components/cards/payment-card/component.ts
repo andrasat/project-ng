@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { IBranchDataPaymentOnline } from '@core/models';
 
 @Component({
   selector: 'app-payment-card',
-  templateUrl: 'payment-card.component.html'
+  templateUrl: 'payment-card.component.html',
+  styleUrls: ['./payment-card.component.scss']
 })
 
 export class PaymentCardComponent {
-  constructor() { }
-
+  @Input() payment: IBranchDataPaymentOnline
+  @Input() selected: boolean
+  @Output() radioClick = new EventEmitter()
 }

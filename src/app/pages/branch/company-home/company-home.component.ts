@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { IAddress, IBranchList } from '@core/models';
 import { LocationService, QSApiService } from '@core/services';
-import { separateAddress } from '@utils/separateAddress';
-import { take } from 'rxjs/operators';
+
+import { take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-company-home',
@@ -12,7 +13,7 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./company-home.component.scss'],
   providers: [NgbCarouselConfig],
 })
-export class CompanyHomeComponent implements OnInit {
+export class CompanyHomeComponent implements OnInit, OnDestroy {
   constructor(
     public route: ActivatedRoute,
     public router: Router,
@@ -22,6 +23,8 @@ export class CompanyHomeComponent implements OnInit {
   ) {
     config.interval = 5000;
   }
+
+  private unsubscribe$ = new Subject<void>()
 
   isSearchRestaurantCollapse = false
   branchList: IBranchList | undefined
@@ -39,8 +42,18 @@ export class CompanyHomeComponent implements OnInit {
         this.qsApiService.getAddress(position.coords.latitude, position.coords.longitude);
       });
 
-    this.qsApiService.branchList.subscribe(branchList => this.branchList = branchList);
-    this.qsApiService.currentAddress.subscribe(address => this.currentAddress = address);
+    this.qsApiService.branchList
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(branchList => this.branchList = branchList);
+
+    this.qsApiService.currentAddress
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(address => this.currentAddress = address);
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   goToBack() {

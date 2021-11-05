@@ -1,7 +1,7 @@
 <div class="page-container">
   <router-outlet></router-outlet>
 
-  <nav class="nav justify-content-around align-items-center bottom-nav">
+  <nav *ngIf="!hideBottomNav" class="nav justify-content-around align-items-center bottom-nav">
 
     <a
       routerLinkActive

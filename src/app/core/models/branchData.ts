@@ -32,10 +32,19 @@ export interface IBranchDataBusinessHour {
   isOperatingDay: string,
 }
 
+export interface ICustomOrderModeForms {
+  inputID: string,
+  inputLabelEn: string,
+  inputLabelId: string | null,
+  flagMandatory: number
+}
+
 export interface IBranchDataOrderModes {
-  type?: string,
-  visitPurposeID?: string,
+  type: string,
+  visitPurposeID: string,
   deliveryCourier?: string,
+  name?: string,
+  forms?: ICustomOrderModeForms[],
 }
 
 export interface IBranchDataPaymentOnline {
@@ -86,6 +95,6 @@ export interface IBranchData {
   feature: IBranchDataFeature,
   rangeMenuPrice: boolean,
   businessHour: IBranchDataBusinessHour[],
-  orderModes: IBranchDataOrderModes[],
+  orderModes: (IBranchDataOrderModes|IBranchDataOrderModes[])[],
   payment: IBranchDataPayment,
 }

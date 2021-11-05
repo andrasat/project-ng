@@ -17,6 +17,7 @@ import { CircleMinusIconComponent } from './circle-minus-icon/component';
 import { CirclePlusIconComponent } from './circle-plus-icon/component';
 import { RadioIconComponent } from './radio/component';
 import { ContactIconComponent } from './contact/component';
+import { CheckboxIconComponent } from './checkbox/component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { ContactIconComponent } from './contact/component';
     CirclePlusIconComponent,
     RadioIconComponent,
     ContactIconComponent,
+    CheckboxIconComponent,
   ],
   exports: [
     ArrowLeftIconComponent,
@@ -57,6 +59,7 @@ import { ContactIconComponent } from './contact/component';
     CirclePlusIconComponent,
     RadioIconComponent,
     ContactIconComponent,
+    CheckboxIconComponent,
   ]
 })
 export class IconModule {}

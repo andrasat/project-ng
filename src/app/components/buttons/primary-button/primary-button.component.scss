@@ -14,4 +14,8 @@
   &.small-padding {
     padding: 7px 0;
   }
+
+  &.disabled {
+    background-color: var(--grey-4);
+  }
 }

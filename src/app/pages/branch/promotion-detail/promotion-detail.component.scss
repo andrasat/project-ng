@@ -1,0 +1,38 @@
+.image-container {
+  position: relative;
+  height: 280px;
+  width: 100%;
+  overflow: hidden;
+
+  img {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+  }
+}
+
+.share-icon-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.promo-detail-container {
+  padding: 16px 16px 70px;
+}
+
+.promo-code-container {
+  border: 1px dashed var(--tangerine);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-top: 12px;
+}
+
+.section-container {
+  padding: 12px 0;
+}
+
+.apply-button {
+  width: 100%;
+}

@@ -1,0 +1,380 @@
+<div class="nav-back-icon" (click)="goBack()">
+  <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
+</div>
+
+<div class="header-component header-shadow text-center">
+  <app-bodytext-16 [isSemiBold]="true">Check Out</app-bodytext-16>
+  <app-caption color="grey">{{ branchData?.branchName }}</app-caption>
+</div>
+
+<div class="checkout-container">
+
+  <ngb-alert type="custom" *ngIf="showAlertError">
+    <app-bodytext-14 color="white">{{ alertErrorMessage }}</app-bodytext-14>
+  </ngb-alert>
+
+  <!-- DELIVERY MODE -->
+  <div *ngIf="queryParams.orderMode === 'delivery'" class="section-container">
+    <div class="d-flex flex-row justify-content-between">
+      <app-heading-5>DELIVER TO</app-heading-5>
+      <app-heading-5 *ngIf="!!orderInput.deliveryAddress" color="tangerine" (click)="goToSearchLocation()">EDIT</app-heading-5>
+    </div>
+
+    <ng-container *ngIf="!!orderInput.deliveryAddress">
+      <div class="mt-3">
+        <app-bodytext-14 [isSemiBold]="true">{{ separateAddress(orderInput.deliveryAddress).addressName }}</app-bodytext-14>
+        <app-caption>{{ separateAddress(orderInput.deliveryAddress).address }}</app-caption>
+      </div>
+
+      <div class="mt-2">
+        <app-caption color="grey">Notes</app-caption>
+        <div class="mt-2 white-box">{{ orderInput.deliveryAddressInfo || '-' }}</div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!orderInput.deliveryAddress">
+      <div class="mt-3 d-flex flex-row justify-content-between align-items-center" (click)="goToSearchLocation()">
+        <img src="/assets/image/marker-outline.svg" alt="set delivery">
+
+        <app-bodytext-14 class="pl-3 grow-element">Set your delivery detail</app-bodytext-14>
+
+        <app-icon-chevron-right color="black"></app-icon-chevron-right>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- OTHER MODE -->
+  <div *ngIf="queryParams.orderMode !== 'delivery'" class="section-container">
+    <div class="d-flex flex-row justify-content-between">
+      <app-heading-5>{{ getOrderModeTitleText(queryParams.orderMode) }}</app-heading-5>
+      <app-heading-5 color="tangerine" (click)="goToHome()">EDIT</app-heading-5>
+    </div>
+
+    <div class="mt-3 d-flex flex-row">
+      <div class="restaurant-image">
+        <img [src]="branchData?.thumbnailImageUrl" [alt]="branchData?.branchName">
+      </div>
+
+      <div>
+        <app-bodytext-14 [isSemiBold]="true">{{ branchData?.branchName }}</app-bodytext-14>
+        <app-caption [isTruncate]="true" color="grey">{{ branchData?.address }}</app-caption>
+
+        <br/>
+
+        <ng-container *ngFor="let data of orderInput.additionalCustomerInfo">
+          <app-caption color="grey">
+            {{ data.desc }}: {{ data.value || '-' }}
+          </app-caption>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-container">
+    <div class="d-flex flex-row justify-content-between">
+      <app-heading-5>CONTACT DETAIL</app-heading-5>
+      <app-heading-5 *ngIf="!!orderInput.email" color="tangerine" (click)="goToContacts()">EDIT</app-heading-5>
+    </div>
+
+    <ng-container *ngIf="!!orderInput.email">
+      <div class="mt-3">
+        <app-bodytext-14 [isSemiBold]="true">{{ orderInput.fullName }}</app-bodytext-14>
+        <app-caption color="grey">
+          {{ orderInput.phoneNumber }}
+          <br/>
+          {{ orderInput.email }}
+        </app-caption>
+      </div>
+    </ng-container>
+
+    <div *ngIf="!orderInput.email" class="mt-3 d-flex flex-row justify-content-between align-items-center" (click)="goToContacts()">
+      <app-icon-contact></app-icon-contact>
+
+      <app-bodytext-14 class="pl-3 grow-element">Add contact details</app-bodytext-14>
+
+      <app-icon-chevron-right color="black"></app-icon-chevron-right>
+    </div>
+  </div>
+
+  <div class="order-container">
+    <div class="d-flex flex-row justify-content-between">
+      <app-heading-5>MY ORDER</app-heading-5>
+      <app-heading-5 *ngIf="!!orderInput.salesMenus.length" color="tangerine" (click)="goBack()">ADD ORDER</app-heading-5>
+    </div>
+
+    <ng-container *ngIf="!!orderInput.salesMenus.length">
+      <ng-container *ngFor="let saleMenu of orderInput.salesMenus">
+
+        <div class="sale-menu d-flex flex-row">
+          <div class="sale-menu-image">
+            <img [src]="saleMenu.imageUrl" [alt]="saleMenu.menuName">
+          </div>
+
+          <div class="sale-menu-text">
+            <div class="d-flex flex-row justify-content-between">
+              <app-bodytext-14 [isBold]=true>{{ saleMenu.menuName }}</app-bodytext-14>
+              <app-caption [isBold]="true" color="tangerine" (click)="goToMenu(saleMenu.menuID)" >EDIT</app-caption>
+            </div>
+
+            <ng-container *ngIf="!!saleMenu.extras.length">
+              <app-caption *ngFor="let extra of saleMenu.extras" color="grey">{{ (extra.qty * saleMenu.qty) + ' ' + extra.menuExtraName }}</app-caption>
+            </ng-container>
+
+            <ng-container *ngIf="!!saleMenu.packages.length">
+              <app-caption *ngFor="let packageData of saleMenu.packages">{{ (packageData.qty * saleMenu.qty) + ' ' + packageData.menuName }}</app-caption>
+            </ng-container>
+
+            <div class="bottom-price-text">
+              <app-caption [isSemiBold]="true">{{ saleMenu.qty + ' X ' + formatToCurrency(saleMenu.sellPrice) }}</app-caption>
+            </div>
+          </div>
+        </div>
+
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="!orderInput.salesMenus.length">
+      <div class="add-order-button-container">
+        <button class="add-order-button" (click)="goBack()">
+          <app-bodytext-14 [isBold]="true">+ ADD ITEM</app-bodytext-14>
+        </button>
+      </div>
+    </ng-container>
+
+  </div>
+
+  <div class="add-more-item">
+    <app-heading-5>ADD MORE ITEMS?</app-heading-5>
+
+    <div class="carousel-menu-list d-flex flex-row justify-content-evenly align-items-center">
+      <div *ngFor="let menu of menusAddMore" class="carousel-child-menu-list">
+        <app-menu-card
+          [menuTitle]="menu.menuName"
+          [menuPrice]="menu.originalSellPrice"
+          [menuDiscountPrice]="menu.sellPrice"
+          [cardImage]="menu.imageUrl"
+          [isOutOfStock]="menu.flagSoldOut"
+        ></app-menu-card>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-container">
+    <app-heading-5>PROMO CODE</app-heading-5>
+
+    <div *ngIf="!orderInput.promotionCode" class="mt-3 d-flex flex-row justify-content-between align-items-center" (click)="showPromoFormCollapse()">
+      <app-icon-promotion></app-icon-promotion>
+
+      <app-bodytext-14 class="pl-3 grow-element">Add promo code</app-bodytext-14>
+
+      <app-icon-chevron-right color="black"></app-icon-chevron-right>
+    </div>
+
+    <div *ngIf="!!orderInput.promotionCode" class="mt-3 d-flex flex-row justify-content-between align-items-center">
+      <div>
+        <app-bodytext-14 [isSemiBold]="true">{{ orderInput.promotionCode }}</app-bodytext-14>
+        <app-caption color="grey">Discount {{ formatToCurrency(calculateResult.discountTotal) }}</app-caption>
+      </div>
+
+      <img src="/assets/image/trash.svg" alt="Delete Promo" (click)="showPromoDeleteCollapse()">
+    </div>
+  </div>
+
+  <div class="section-container">
+    <div class="d-flex flex-row align-items-center">
+      <app-heading-5>VOUCHER CODE</app-heading-5>
+      <img class="ml-1" src="/assets/image/info.svg" alt="voucher code" width="13px">
+    </div>
+
+    <div *ngIf="!orderInput.vouchers.length" class="mt-3 d-flex flex-row justify-content-between align-items-center" (click)="showVoucherFormCollapse()">
+      <app-icon-promotion></app-icon-promotion>
+
+      <app-bodytext-14 class="pl-3 grow-element">Add voucher code</app-bodytext-14>
+
+      <app-icon-chevron-right color="black"></app-icon-chevron-right>
+    </div>
+
+    <ng-container *ngIf="!!orderInput.vouchers.length">
+      <div *ngFor="let voucherCode of orderInput.vouchers" class="mt-2 d-flex flex-row justify-content-between align-items-center">
+        <app-bodytext-14 [isSemiBold]="true">{{ voucherCode }}</app-bodytext-14>
+        <img src="/assets/image/trash.svg" alt="Delete Promo" (click)="showPromoDeleteCollapse()">
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="section-container">
+    <div class="d-flex flex-row justify-content-between">
+      <app-bodytext-14>Subtotal</app-bodytext-14>
+      <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(calculateResult?.subtotal || 0) }}</app-bodytext-14>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between">
+      <div class="d-flex flex-row align-items-center">
+        <app-bodytext-14>Additional Charge</app-bodytext-14>
+        <img class="ml-1" src="/assets/image/info.svg" alt="additional charge" width="13px">
+      </div>
+      <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(calculateResult?.pb1 || 0) }}</app-bodytext-14>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between">
+      <app-bodytext-14>Delivery</app-bodytext-14>
+      <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(calculateResult?.deliveryCost || 0) }}</app-bodytext-14>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between">
+      <app-bodytext-14>Tax</app-bodytext-14>
+      <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(calculateResult?.additionalTax || 0) }}</app-bodytext-14>
+    </div>
+
+    <div *ngIf="orderInput.promotionCode" class="d-flex flex-row justify-content-between">
+      <app-bodytext-14>Promo Code</app-bodytext-14>
+      <app-bodytext-14 [isSemiBold]="true" color="tangerine">-{{ formatToCurrency(calculateResult?.discountTotal || 0) }}</app-bodytext-14>
+    </div>
+
+    <div *ngIf="!!orderInput.vouchers.length" class="d-flex flex-row justify-content-between">
+      <app-bodytext-14>Voucher Code</app-bodytext-14>
+      <app-bodytext-14 [isSemiBold]="true" color="tangerine">-{{ formatToCurrency(calculateResult?.voucherTotal || 0) }}</app-bodytext-14>
+    </div>
+  </div>
+
+  <div class="submit-checkout">
+    <div class="d-flex flex-row justify-content-between">
+      <div>
+        <app-caption>Total Payment</app-caption>
+        <app-heading-3>{{ formatToCurrency(calculateResult?.grandTotal || 0) }}</app-heading-3>
+      </div>
+
+      <div class="pay-button">
+        <app-primary-button
+          [disabled]="disableContinueToPayment"
+          (clicked)="toPayment()"
+          text="CONFIRM & PAY"
+        ></app-primary-button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div
+  [(ngbCollapse)]="hideCollapseContainer"
+  #collapse="ngbCollapse"
+  class="collapse-container">
+
+  <!-- INPUT PROMO -->
+  <div *ngIf="showPromoForm" class="collapse-inner-container">
+    <div class="d-flex flex-row justify-content-between">
+      <app-heading-3>Select Promo</app-heading-3>
+      <div (click)="hidePromoFormCollapse()">
+        <app-icon-close></app-icon-close>
+      </div>
+    </div>
+
+    <div class="promo-list mt-3 d-flex flex-row">
+      <div *ngFor="let promotion of promotions; index as i" class="promo" (click)="goToPromoDetail(promotion)">
+        <img *ngIf="promotion.flagShow" [src]="'/assets/image/placeholder-promo-'+i+'.jpg'" [alt]="promotion.promotionCode" width="240px" >
+      </div>
+    </div>
+
+    <div class="form-group mt-2">
+      <label for="promoCodeControl">
+        <app-caption color="grey">or enter promo code</app-caption>
+      </label>
+      <input id="promo-code" class="form-control" type="text" placeholder="Enter promo code" [formControl]="promoCodeControl">
+
+      <div class="validation-container">
+        <app-caption *ngIf="getPromoCodeControlError()" color="red">Invalid code. Please recheck and enter the right code</app-caption>
+      </div>
+
+      <div class="mt-3">
+        <app-primary-button text="APPLY" (clicked)="applyPromoCode()"></app-primary-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INPUT VOUCHER CODE -->
+  <div *ngIf="showVoucherForm" class="collapse-inner-container">
+    <div class="d-flex flex-row justify-content-between">
+      <app-heading-3>Use Voucher Code</app-heading-3>
+      <div (click)="hideVoucherFormCollapse()">
+        <app-icon-close></app-icon-close>
+      </div>
+    </div>
+
+    <app-bodytext-14>Find code on the back side of voucher</app-bodytext-14>
+
+    <div class="form-group mt-2">
+      <label for="voucherCodeControl">
+        <app-caption color="grey">Voucher Code</app-caption>
+      </label>
+      <input id="voucher-code" class="form-control" type="text" placeholder="Enter 16-digit code" [formControl]="voucherCodeControl">
+
+      <div class="validation-container">
+        <app-caption *ngIf="getVoucherCodeControlError()" color="red">Invalid code. Please recheck and enter the right code</app-caption>
+      </div>
+
+      <div class="mt-3">
+        <app-primary-button text="APPLY" [disabled]="!voucherCodeControl.value" (clicked)="applyVoucherCode()"></app-primary-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE PROMO -->
+  <div *ngIf="showDeletePromo" class="collapse-inner-container">
+    <div class="d-flex flex-row justify-content-between">
+      &nbsp;
+      <div (click)="hidePromoDeleteCollapse()">
+        <app-icon-close></app-icon-close>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <img src="/assets/image/warning.png" alt="Delete promo confirmation" width="120px">
+    </div>
+
+    <div class="mt-2">
+      <app-heading-3>Are you sure you want to remove the promo code ?</app-heading-3>
+      <app-bodytext-14>You won&apos;t get {{ formatToCurrency(calculateResult.discountTotal) }} deduction</app-bodytext-14>
+    </div>
+
+    <div class="mt-3 d-flex flex-row justify-content-around">
+      <div class="delete-promo-button-container">
+        <app-secondary-button text="REMOVE" [withBorder]="true" (clicked)="removePromoCode()"></app-secondary-button>
+      </div>
+
+      <div class="delete-promo-button-container">
+        <app-primary-button text="No, use code" (clicked)="hidePromoDeleteCollapse()"></app-primary-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE VOUCHER -->
+  <div *ngIf="showDeleteVoucher" class="collapse-inner-container">
+    <div class="d-flex flex-row justify-content-between">
+      &nbsp;
+      <div (click)="hideVoucherDeleteCollapse()">
+        <app-icon-close></app-icon-close>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <img src="/assets/image/warning.png" alt="Delete voucher confirmation" width="120px">
+    </div>
+
+    <div class="mt-2">
+      <app-heading-3>Are you sure you want to remove the voucher code ?</app-heading-3>
+      <app-bodytext-14>You won&apos;t get {{ formatToCurrency(calculateResult.voucherTotal) }} deduction</app-bodytext-14>
+    </div>
+
+    <div class="mt-3 d-flex flex-row justify-content-around">
+      <div class="delete-promo-button-container">
+        <app-secondary-button text="REMOVE" [withBorder]="true" (clicked)="removeVoucherCode()"></app-secondary-button>
+      </div>
+
+      <div class="delete-promo-button-container">
+        <app-primary-button text="No, use code" (clicked)="hideVoucherDeleteCollapse()"></app-primary-button>
+      </div>
+    </div>
+  </div>
+
+</div>

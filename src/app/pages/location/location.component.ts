@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { MapOptions, tileLayer, latLng, Map } from 'leaflet';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -6,7 +6,8 @@ import { LocationService, QSApiService, StorageService } from '@core/services';
 import { IAddress, IAutocompleteResult, IBranches, IBranchList, IOrderInput } from '@core/models';
 import { environment } from '@environments/environment';
 
-import { take } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-location',
@@ -14,7 +15,7 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./location.component.scss'],
 })
 
-export class LocationComponent implements OnInit {
+export class LocationComponent implements OnInit, OnDestroy {
   constructor(
     public zone: NgZone,
     public route: ActivatedRoute,
@@ -27,6 +28,8 @@ export class LocationComponent implements OnInit {
       this.queryParams = queryParams;
     });
   }
+
+  private unsubscribe$ = new Subject<void>()
 
   map: Map | undefined = undefined
   mapOptions: MapOptions | null = null
@@ -42,9 +45,18 @@ export class LocationComponent implements OnInit {
   searchResults: IAutocompleteResult[] = []
   openBranches: IBranches[] = []
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   ngOnInit() {
-    this.locationService.devicePosition.subscribe(position => this.devicePosition = position);
-    this.locationService.currentPosition.subscribe(position => this.currentPosition = position);
+    this.locationService.devicePosition
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(position => this.devicePosition = position);
+    this.locationService.currentPosition
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(position => this.currentPosition = position);
 
     this.locationService.currentPosition
       .pipe(take(1))
@@ -70,25 +82,30 @@ export class LocationComponent implements OnInit {
         this.qsApiService.getAddress(position.coords.latitude, position.coords.longitude);
       });
 
-    this.qsApiService.branchList.subscribe(branchList => {
-      this.branchList = branchList;
+    this.qsApiService.branchList
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(branchList => {
+        this.branchList = branchList;
 
-      this.openBranches = branchList ?
-        branchList.branches.filter(branch => branch.businessHour.status.includes('open') && branch.flagNearMe)
-        : [];
-    });
-    this.qsApiService.currentAddress.subscribe(address => {
-      this.zone.run(() => this.currentAddress = address);
+        this.openBranches = branchList ?
+          branchList.branches.filter(branch => branch.businessHour.status.includes('open') && branch.flagNearMe)
+          : [];
+      });
 
-      if (this.queryParams.companyCode && this.queryParams.branchCode && address) {
-        const orderInputData = this.storageService.getItem(`order_${this.queryParams.companyCode}_${this.queryParams.branchCode}`);
+    this.qsApiService.currentAddress
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(address => {
+        this.zone.run(() => this.currentAddress = address);
 
-        if (orderInputData) {
-          this.orderInput = JSON.parse(orderInputData);
-          this.orderInput.deliveryAddress = `${address.addressName}, ${address.address}`;
+        if (this.queryParams.companyCode && this.queryParams.branchCode && address) {
+          const orderInputData = this.storageService.getItem(`order_${this.queryParams.companyCode}_${this.queryParams.branchCode}`);
+
+          if (orderInputData) {
+            this.orderInput = JSON.parse(orderInputData);
+            this.orderInput.deliveryAddress = `${address.addressName}, ${address.address}`;
+          }
         }
-      }
-    });
+      });
   }
 
   setNotes(notes: string) {
@@ -157,9 +174,9 @@ export class LocationComponent implements OnInit {
       );
   }
 
-  async goToRestaurant(branchCode: string) {
-    await this.router.navigate([`/${this.queryParams.companyCode || this.branchList?.companyCode}/home/${branchCode}`], { replaceUrl: true });
-    window.location.reload();
+  goToRestaurant(branchCode: string) {
+    this.router.navigate([`/${this.queryParams.companyCode || this.branchList?.companyCode}/home/${branchCode}`], { replaceUrl: true });
+    // window.location.reload();
   }
 
   continueOnClick() {
@@ -168,7 +185,7 @@ export class LocationComponent implements OnInit {
       this.qsApiService.validateRadius(this.currentPosition.coords.latitude, this.currentPosition.coords.longitude, this.queryParams.branchCode)
         .subscribe(
           result => {
-            if (!result.inRange) {
+            if (!result?.inRange) {
               this.hideCollapse = false;
               this.showOutOfReachError = true;
               return;

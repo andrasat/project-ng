@@ -13,6 +13,10 @@ export * from './promotion';
 export * from './saveOrderResult';
 export * from './userData';
 export * from './validateRadiusResult';
+export * from './contact';
+export * from './orderHistoryResult';
+export * from './orderHistoryLocalStorage';
+export * from './validatePaymentResult';
 // Inputs
 export * from './calculateTotalInput';
 export * from './orderInput';

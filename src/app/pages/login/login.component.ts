@@ -3,7 +3,8 @@ import { Router } from "@angular/router";
 
 import { AuthService, LocationService, QSApiService } from '@core/services';
 import { IBranchList } from "@core/models";
-import { Subscription } from "rxjs";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: 'app-login',
@@ -18,19 +19,25 @@ export class LoginComponent implements OnInit, OnDestroy {
     public qsApiService: QSApiService
   ) {}
 
+  private unsubscribe$ = new Subject<void>()
+
   branchList: IBranchList | undefined
-  observer: Subscription | undefined
 
   ngOnInit() {
-    this.observer = this.locationService.currentPosition.subscribe(position => {
-      this.qsApiService.getBranchList(position.coords.latitude, position.coords.longitude);
-    });
+    this.locationService.currentPosition
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(position => {
+        this.qsApiService.getBranchList(position.coords.latitude, position.coords.longitude);
+      });
 
-    this.qsApiService.branchList.subscribe(branchList => this.branchList = branchList);
+    this.qsApiService.branchList  
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(branchList => this.branchList = branchList);
   }
 
   ngOnDestroy() {
-    this.observer?.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   async loginHandler(type: string = 'default') {

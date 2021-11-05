@@ -24,7 +24,14 @@ export interface ISalesMenusInput {
   notes: string,
 }
 
+export interface ICustomOrderFormData {
+  desc: string,
+  value: string | null,
+}
+
 export interface IOrderInput {
+  additionalCustomerInfo?: ICustomOrderFormData[],
+  tableName?: string | null,
   type: string,
   typeName: string | null,
   fullName: string,
