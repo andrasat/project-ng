@@ -2,7 +2,7 @@ import { formatCurrency } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IExtras, IMenuPackagesInput, IMenus, IOrderInput, IPackages, ISalesMenusInput } from '@core/models';
-import { QSApiService, StorageService } from '@core/services';
+import { NavigationService, QSApiService, StorageService } from '@core/services';
 import { fromEvent } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
@@ -18,6 +18,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     public router: Router,
     public qsApiService: QSApiService,
     public storageService: StorageService,
+    public navigation: NavigationService,
   ) {
     route.params.subscribe(params => this.params = { ...this.params, ...params });
     route.parent?.params.subscribe(params => this.params = { ...this.params, ...params });
@@ -57,7 +58,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     if (orderInputData) {
       this.orderInput = JSON.parse(orderInputData);
     } else {
-      this.router.navigate(['../..'], {
+      this.navigation.back('../..', {
         relativeTo: this.route,
         queryParams: {
           orderMode: this.queryParams.orderMode,
@@ -222,7 +223,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     }
 
     if (this.queryParams.edit) {
-      return this.router.navigate(['../../checkout'], {
+      return this.navigation.back('../../checkout', {
         relativeTo: this.route,
         queryParams: {
           orderMode: this.queryParams.orderMode,
@@ -230,7 +231,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
       });;
     }
 
-    return this.router.navigate(['../..'], {
+    return this.navigation.back('../..', {
       relativeTo: this.route,
       queryParams: {
         orderMode: this.queryParams.orderMode,

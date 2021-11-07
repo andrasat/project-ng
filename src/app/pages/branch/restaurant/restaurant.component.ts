@@ -1,9 +1,9 @@
 import { formatCurrency } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, Query, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IBranchData, IBranchDataOrderModes, IBranches, IBranchList, ICustomOrderFormData, ICustomOrderModeForms, IMenuCategoryDetails, IMenuData, IMenus, IOrderInput, IPromotion } from '@core/models';
-import { LocationService, QSApiService, StorageService } from '@core/services';
+import { LocationService, QSApiService, StorageService, NavigationService } from '@core/services';
 import { NgbCollapseConfig } from '@ng-bootstrap/ng-bootstrap';
 
 import { Subject } from 'rxjs';
@@ -16,23 +16,18 @@ import { take, takeUntil } from 'rxjs/operators';
 })
 export class RestaurantComponent implements OnInit, OnDestroy {
   constructor(
-    public collapseConfig: NgbCollapseConfig,
     public route: ActivatedRoute,
     public router: Router,
     public qsApiService: QSApiService,
     public locationService: LocationService,
     public storageService: StorageService,
+    public navigation: NavigationService,
+    public collapseConfig: NgbCollapseConfig,
   ) {
     collapseConfig.animation = false;
 
-    route.params.subscribe(params => {
-      this.params = { ...this.params, ...params };
-    });
-
-    route.parent?.params.subscribe(params => {
-      this.params = { ...this.params, ...params };
-    });
-
+    route.params.subscribe(params => this.params = { ...this.params, ...params });
+    route.parent?.params.subscribe(params => this.params = { ...this.params, ...params });
     route.queryParams.subscribe(queryParams => {
       this.queryParams = queryParams;
 
@@ -477,7 +472,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
     this.qsApiService.getMenu(this.params.branchCode, selectedMode?.visitPurposeID!);
 
-    this.router.navigate([], {
+    this.navigation.navigate(undefined, {
       relativeTo: this.route,
       queryParams: {
         orderMode: this.selectedOrderMode,
@@ -488,13 +483,24 @@ export class RestaurantComponent implements OnInit, OnDestroy {
 
   goBack() {
     this.storageService.removeItem(`order_${this.params.companyCode}_${this.params.branchCode}`);
-    this.router.navigate([`..`], { relativeTo: this.route });
+    this.navigation.back('..', { relativeTo: this.route });
+  }
+
+  goToPromoPage() {
+    if (this.promotions.length === 0) return;
+
+    return this.navigation.navigate('../promotion', {
+      relativeTo: this.route,
+      queryParams: {
+        branchCode: this.params.branchCode,
+      },
+    });
   }
 
   goToMenu(menuID: number) {
     const selectedMode = this.orderModes.find(mode => mode.type === this.selectedOrderMode);
 
-    this.router.navigate([`menu/${menuID}`], {
+    return this.navigation.navigate(`menu/${menuID}`, {
       relativeTo: this.route,
       queryParams: {
         orderMode: this.queryParams.orderMode,
@@ -518,15 +524,17 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     }
   }
 
-  async goToRestaurant(branchCode: string) {
-    await this.router.navigate([`../${branchCode}`], { relativeTo: this.route, replaceUrl: true });
-    window.location.reload();
+  goToRestaurant(branchCode: string) {
+    this.qsApiService.resetMenu();
+    this.qsApiService.getBranchData(branchCode);
+
+    return this.navigation.navigate(`../${branchCode}`, { relativeTo: this.route, replaceUrl: true });
   }
 
   goToSearchMenu() {
     const selectedMode = this.orderModes.find(mode => mode.type === this.selectedOrderMode);
 
-    this.router.navigate([`search-menu`], {
+    this.navigation.navigate(`search-menu`, {
       relativeTo: this.route,
       queryParams: {
         orderMode: this.selectedOrderMode,
@@ -536,7 +544,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
   }
 
   goToCheckout() {
-    this.router.navigate([`checkout`], {
+    this.navigation.navigate(`checkout`, {
       relativeTo: this.route,
       queryParams: {
         orderMode: this.selectedOrderMode,

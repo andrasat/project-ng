@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AuthGuardService } from '@core/services';
 
 @NgModule({
   imports: [
@@ -35,7 +36,13 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('@pages/choose-contact/choose-contact.module' /* webpackChunkName: "choose-contact" */).then(m => m.ChooseContactModule),
       },
       {
+        path: 'faq',
+        pathMatch: 'full',
+        loadChildren: () => import('@pages/faq/faq.module' /* webpackChunkName: "faq" */).then(m => m.FAQModule),
+      },
+      {
         path: ':companyCode',
+        canActivate: [AuthGuardService],
         loadChildren: () => import('@pages/branch/branch.module' /* webpackChunkName: "branch" */).then(m => m.BranchModule),
       }
     ]),

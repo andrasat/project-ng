@@ -1,17 +1,9 @@
 export const environment = {
   production: true,
-  transID: '58280eb4ca0e7ef22b08814b8016006666626132353733313636393137666231626130383536623130386237633666336336353935666239396133353066366564353364633734653631383861343431637a3f774720a5b0bd49d588bd6635035ab606841bd2d92e8959a79bc0c880e89a01bfe154c6ff5085f36de922f11512',
-  apiQS: 'https://dev7.esb.co.id/api-ezo-dev',
-  bearerQS: 'zmxncbv1029384756',
-  usernameQS: 'ESBADMIN',
-  passwordQS: '14ecdbacbc51885a09c4d0592e685898',
-  mapboxToken: 'pk.eyJ1IjoiYW5kcmFzYXQiLCJhIjoiY2t1d2JvMzUyMjllODJvczdtbnBub2RqcyJ9.DZdpSQCcqxoopSpQcaZIpw',
-  firebase: {
-    apiKey: "AIzaSyCCgy-zg2xmHtux7dPv_1L8_v26eeIedtU",
-    authDomain: "esb-order-ng.firebaseapp.com",
-    projectId: "esb-order-ng",
-    storageBucket: "esb-order-ng.appspot.com",
-    messagingSenderId: "703837333144",
-    appId: "1:703837333144:web:fa0f3458a08e827dfe52ed"
-  },
+  apiQS: vars.QS_API, // 'https://dev7.esb.co.id/api-ezo-dev'
+  bearerQS: vars.QS_BEARER, // 'zmxncbv1029384756'
+  usernameQS: vars.QS_USERNAME, // 'ESBADMIN'
+  passwordQS: vars.QS_PASS, // '14ecdbacbc51885a09c4d0592e685898'
+  mapboxToken: vars.MAPBOX_TOKEN,
+  firebase: vars.FIREBASE,
 };

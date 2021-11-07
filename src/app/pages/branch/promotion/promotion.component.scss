@@ -1,0 +1,10 @@
+.promo-containers {
+  padding: 16px;
+}
+
+.promo-image-container {
+  padding: 8px 0;
+  & img {
+    width: 100%;
+  }
+}

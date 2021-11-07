@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { environment } from '@environments/environment';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject, Subscription } from 'rxjs';
+import { throwError, BehaviorSubject } from 'rxjs';
+import { environment } from '@environments/environment';
 
 import { catchError, debounceTime, map } from 'rxjs/operators';
 import {
@@ -25,6 +25,7 @@ import {
   IProfile,
   IOrderHistoryResult,
   IValidatePaymentResult,
+  ISaveAddressInput,
 } from '@core/models';
 import { separateAddress, utf8ToBase64 } from '@utils/index';
 
@@ -73,27 +74,27 @@ export class QSApiService {
     return throwError(error.error);
   }
 
-  private get(path: string, params: HttpParams = new HttpParams(), headers: HttpHeaders = new HttpHeaders()): Observable<any> {
-    return this.http.get(`${this.API_URL}${path}`, { params, headers })
+  private get<T>(path: string, params: HttpParams = new HttpParams(), headers: HttpHeaders = new HttpHeaders()) {
+    return this.http.get<T>(`${this.API_URL}${path}`, { params, headers })
       .pipe(catchError(this.formatErrors));
   }
 
-  private post(path: string, body: any = {}, headers: HttpHeaders = new HttpHeaders, params: HttpParams = new HttpParams()): Observable<any> {
-    return this.http.post(
+  private post<T>(path: string, body: any = {}, headers: HttpHeaders = new HttpHeaders, params: HttpParams = new HttpParams()) {
+    return this.http.post<T>(
       `${this.API_URL}${path}`,
       JSON.stringify(body),
       { headers, params },
     ).pipe(catchError(this.formatErrors));
   }
 
-  private delete(path: string, headers: HttpHeaders = new HttpHeaders): Observable<any> {
-    return this.http.delete(
+  private delete<T>(path: string, headers: HttpHeaders = new HttpHeaders) {
+    return this.http.delete<T>(
       `${this.API_URL}${path}`,
       { headers },
     ).pipe(catchError(this.formatErrors));
   }
 
-  // METHODS
+  // OTHER METHODS
 
   resetMenu() {
     this._menuSubject.next(undefined);
@@ -105,47 +106,47 @@ export class QSApiService {
 
   // QS API METHODS
 
-  getBranchList(lat: number = -6.2087634, long: number = 106.84559899999999): Subscription {
-    return this.get(`/web/qsv1/branch/${lat}/${long}`, undefined, new HttpHeaders({
+  getBranchList(lat: number, long: number) {
+    return this.get<IBranchList>(`/web/qsv1/branch/${lat}/${long}`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
     }))
-      .pipe(map((data: IBranchList) => data))
+      .pipe(map(data => data))
       .subscribe(branchList => this._branchListSubject.next(branchList));
   }
 
-  getBranchData(branchCode: string): Subscription {
-    return this.get('/web/qsv1/setting/branch', undefined, new HttpHeaders({
+  getBranchData(branchCode: string) {
+    return this.get<IBranchData>('/web/qsv1/setting/branch', undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
       'Data-Branch': branchCode,
     }))
-      .pipe(map((data: IBranchData) => data))
+      .pipe(map(data => data))
       .subscribe(branchData => this._branchDataSubject.next(branchData));
   }
 
-  getBrandList(lat: number = -6.2087634, long: number = 106.84559899999999): Subscription {
-    return this.get(`/web/qsv1/brand/${lat}/${long}`, undefined, new HttpHeaders({
+  getBrandList(lat: number, long: number) {
+    return this.get<IBrandList>(`/web/qsv1/brand/${lat}/${long}`, undefined, new HttpHeaders({
       authorization: `Basic ${this.BASIC_TOKEN}`,
     }))
-      .pipe(map((data: IBrandList) => data))
+      .pipe(map(data => data))
       .subscribe(
         brandList => this._brandListSubject.next(brandList),
         () => this._brandListSubject.next(brandListData), // use mock data because CORS error
       );
   }
 
-  getBrandData(lat: number = -6.2087634, long: number = 106.84559899999999, brandId: string): Subscription {
-    return this.get(`/web/qsv1/setting/brand/${lat}/${long}`, undefined, new HttpHeaders({
+  getBrandData(lat: number, long: number, brandId: string) {
+    return this.get<IBrandData>(`/web/qsv1/setting/brand/${lat}/${long}`, undefined, new HttpHeaders({
       authorization: `Basic ${this.BASIC_TOKEN}`,
       'Data-Brand': brandId,
     }))
-      .pipe(map((data: IBrandData) => data))
+      .pipe(map(data => data))
       .subscribe(
         brandData => this._brandDataSubject.next(brandData),
       );
   }
 
-  getPromotion(branchCode: string): Subscription {
-    return this.get(`/web/qsv1/promotion`, undefined, new HttpHeaders({
+  getPromotion(branchCode: string) {
+    return this.get<IPromotion[]>(`/web/qsv1/promotion`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
       'Data-Branch': branchCode,
     }))
@@ -153,8 +154,8 @@ export class QSApiService {
       .subscribe(promotion => this._promotionSubject.next(promotion));
   }
 
-  getMenu(branchCode: string, visitPurposeID: string): Subscription {
-    return this.get(`/web/qsv1/menu/${visitPurposeID}`, undefined, new HttpHeaders({
+  getMenu(branchCode: string, visitPurposeID: string) {
+    return this.get<IMenuData>(`/web/qsv1/menu/${visitPurposeID}`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
       'Data-Branch': branchCode,
     }))
@@ -162,11 +163,11 @@ export class QSApiService {
       .subscribe(menu => this._menuSubject.next(menu));
   }
 
-  getSearch(keyword: string): Observable<IAutocompleteResult[]> {
-    return this.get(`/web/qsv1/map/search/${encodeURIComponent(keyword)}`, undefined, new HttpHeaders({
+  getSearch(keyword: string) {
+    return this.get<any[]>(`/web/qsv1/map/search/${encodeURIComponent(keyword)}`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
     }))
-      .pipe(map((data: any[]) => {
+      .pipe(map(data => {
         return data.map<IAutocompleteResult>(each => ({
           placeId: each.placeId,
           description: each.description,
@@ -175,23 +176,22 @@ export class QSApiService {
       }));
   }
 
-  getAddress(lat: number, lon: number, branchCode = 'ABC'): Subscription {
-    return this.get(`/web/qsv1/map/address/${lat}/${lon}`, undefined, new HttpHeaders({
+  getAddress(lat: number, lon: number, branchCode = 'ABC') {
+    return this.get<IAddressResult>(`/web/qsv1/map/address/${lat}/${lon}`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
       'Data-Branch': branchCode,
     }))
       .pipe(
         debounceTime(500),
-        map((data: IAddressResult) => separateAddress(data.address))
+        map((data) => separateAddress(data.address))
       )
       .subscribe(
         address => this._currentAddressSubject.next(address),
       );
   }
 
-  getPlace(placeId: string): Observable<IPlaceResult> {
-    console.log('placeId: ', placeId);
-    return this.get(`/web/qsv1/map/place/${placeId}`, undefined, new HttpHeaders({
+  getPlace(placeId: string) {
+    return this.get<IPlaceResult>(`/web/qsv1/map/place/${placeId}`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
     }))
       .pipe(map(data => ({
@@ -200,27 +200,42 @@ export class QSApiService {
       })));
   }
 
-  saveAuth(userData: IUserDataInput): Observable<IUserData> {
-    return this.post('/web/v1/user/auth', {
+  saveAuth(userData: IUserDataInput) {
+    return this.post<IUserData>('/web/v1/user/auth', {
       ...userData,
       appID: 'esoqs',
     }, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
       'Content-Type': 'application/json',
     }))
-      .pipe(map((data: IUserData) => data));
+      .pipe(map(data => data));
   }
 
-  getProfile(token: string): Subscription {
-    return this.get('/web/v1/user/profile', undefined, new HttpHeaders({
+  getProfile(token: string) {
+    return this.get<IProfile>('/web/v1/user/profile', undefined, new HttpHeaders({
       authorization: `Bearer ${token}`,
     }))
       .pipe(map(data => data))
       .subscribe(profile => this._profileSubject.next(profile));
   }
 
-  getOrderHistory(token: string, orderIds: string[]): Observable<IOrderHistoryResult> {
-    return this.post('/web/v1/user/order', orderIds, new HttpHeaders({
+  saveAddress(data: ISaveAddressInput, token: string) {
+    return this.post<boolean>('/web/v1/user/address', {
+      ...data
+    }, new HttpHeaders({
+      authorization: `Bearer ${token}`,
+    }))
+      .pipe(map(data => data));
+  }
+
+  deleteAddress(lat: number, long: number, token: string) {
+    return this.delete<boolean>(`/web/v1/user/address/${lat}/${long}`, new HttpHeaders({
+      authorization: `Bearer ${token}`,
+    })).pipe(map(data => data));
+  }
+
+  getOrderHistory(token: string, orderIds: string[]) {
+    return this.post<IOrderHistoryResult>('/web/v1/user/order', orderIds, new HttpHeaders({
       authorization: `Bearer ${token}`,
     }), new HttpParams({
       fromObject: {
@@ -230,8 +245,8 @@ export class QSApiService {
     })).pipe(map(data => data));
   }
 
-  calculateTotal(calculateTotal: ICalculateTotalInput, branchCode: string): Observable<ICalculateTotalResult> {
-    return this.post('/web/qsv1/order/calculate-total', {
+  calculateTotal(calculateTotal: ICalculateTotalInput, branchCode: string) {
+    return this.post<ICalculateTotalResult>('/web/qsv1/order/calculate-total', {
       ...calculateTotal,
     }, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
@@ -241,8 +256,8 @@ export class QSApiService {
       .pipe(map(data => data));
   }
 
-  validateRadius(lat: number, long: number, branchCode: string): Observable<IValidateRadiusResult> {
-    return this.get(`/web/qsv1/map/distance/${lat}/${long}`, undefined, new HttpHeaders({
+  validateRadius(lat: number, long: number, branchCode: string) {
+    return this.get<IValidateRadiusResult>(`/web/qsv1/map/distance/${lat}/${long}`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
       'Data-Branch': branchCode,
     }))
@@ -250,31 +265,31 @@ export class QSApiService {
   }
 
   validatePromo(promotionCode: string, paymentMethodID: string) {
-    return this.post('/web/qsv1/promotion/validate-payment', {
+    return this.post<boolean>('/web/qsv1/promotion/validate-payment', {
       promotionCode,
       paymentMethodID,
     }, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
     }))
-      .pipe(map((data: boolean) => data));
+      .pipe(map(data => data));
   }
 
   validatePayment(orderID: string) {
-    return this.get(`/web/qsv1/payment/validate/${orderID}`, undefined, new HttpHeaders({
+    return this.get<IValidatePaymentResult>(`/web/qsv1/payment/validate/${orderID}`, undefined, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
     }))
-      .pipe(map((data: IValidatePaymentResult) => data))
+      .pipe(map(data => data))
       .subscribe(data => this._validatePaymentSubject.next(data));
   }
 
-  saveOrder(orderInput: IOrderInput, branchCode: string): Observable<ISaveOrderResult> {
-    return this.post('/web/qsv1/order', {
+  saveOrder(orderInput: IOrderInput, branchCode: string) {
+    return this.post<ISaveOrderResult>('/web/qsv1/order', {
       ...orderInput,
     }, new HttpHeaders({
       authorization: `Bearer ${this.BEARER_TOKEN}`,
       'Content-Type': 'application/json',
       'Data-Branch': branchCode,
     }))
-      .pipe(map((data: ISaveOrderResult) => data));
+      .pipe(map(data => data));
   }
 }

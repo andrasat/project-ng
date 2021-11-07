@@ -1,4 +1,5 @@
 .payment-header {
+  background-color: var(--grey-4);
   height: 120px;
   position: relative;
 
@@ -39,6 +40,7 @@
 }
 
 .step-number {
+  background-color: var(--grey);
   border-radius: 50%;
   color: var(--white);
   flex: 0 0 auto;

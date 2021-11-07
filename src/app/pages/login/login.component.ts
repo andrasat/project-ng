@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
 
-import { AuthService, LocationService, QSApiService } from '@core/services';
+import { AuthService, LocationService, NavigationService, QSApiService } from '@core/services';
 import { IBranchList } from "@core/models";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -14,7 +13,7 @@ import { takeUntil } from "rxjs/operators";
 export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     public locationService: LocationService,
-    public router: Router,
+    public navigation: NavigationService,
     public authService: AuthService,
     public qsApiService: QSApiService
   ) {}
@@ -33,6 +32,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.qsApiService.branchList  
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(branchList => this.branchList = branchList);
+
+    this.authService.isLoggedIn
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(isLoggedIn => {
+        if (isLoggedIn) this.navigation.navigate(`${this.branchList?.companyCode}`);
+      });
   }
 
   ngOnDestroy() {
@@ -50,8 +55,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         break;
       default:
         this.authService.signInWithoutProvider();
+        this.navigation.navigate(`/${this.branchList?.companyCode}`);
     }
-
-    this.router.navigate([`/${this.branchList?.companyCode}/home`]);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
 import { IBranchList } from '@core/models';
 import { LocationService, QSApiService } from '@core/services';
 
@@ -13,20 +13,36 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class BranchComponent implements OnInit, OnDestroy {
   constructor(
+    public route: ActivatedRoute,
     public router: Router,
     public locationService: LocationService,
     public qsApiService: QSApiService,
-  ) {}
+  ) {
+    route.params.subscribe(params => this.params = { ...this.params, ...params });
+  }
 
   private unsubscribe$ = new Subject<void>()
 
   branchList: IBranchList | undefined
   hideBottomNav = false
+  activeRoute: 'home' | 'promo' | 'history' | 'others' = 'home'
+
+  params: any = {}
 
   ngOnInit() {
-    if (this.router.url.includes('payment-confirmation')) {
+    this.setActiveRoute(this.router.url);
+
+    if (this.router.url.includes('promotion/')) {
       this.hideBottomNav = true;
     }
+
+    this.router.events
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(event => {
+        if (event instanceof NavigationEnd) {
+          this.setActiveRoute(event.url);
+        }
+      });
 
     this.locationService.currentPosition
       .pipe(takeUntil(this.unsubscribe$))
@@ -42,5 +58,17 @@ export class BranchComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  private setActiveRoute(routeUrl: string) {
+    if (routeUrl.includes(`/${this.params.companyCode}/promotion`)) {
+      this.activeRoute = 'promo';
+    } else if (routeUrl.includes(`/${this.params.companyCode}/order-history`)) {
+      this.activeRoute = 'history';
+    } else if (routeUrl.includes(`/${this.params.companyCode}/others`)) {
+      this.activeRoute = 'others';
+    } else {
+      this.activeRoute = 'home';
+    }
   }
 }

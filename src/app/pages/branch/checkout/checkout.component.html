@@ -1,4 +1,4 @@
-<div class="nav-back-icon" (click)="goBack()">
+<div class="nav-back-icon" backButton>
   <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
 </div>
 
@@ -99,7 +99,7 @@
   <div class="order-container">
     <div class="d-flex flex-row justify-content-between">
       <app-heading-5>MY ORDER</app-heading-5>
-      <app-heading-5 *ngIf="!!orderInput.salesMenus.length" color="tangerine" (click)="goBack()">ADD ORDER</app-heading-5>
+      <app-heading-5 *ngIf="!!orderInput.salesMenus.length" color="tangerine" (click)="goToRestaurant()">ADD ORDER</app-heading-5>
     </div>
 
     <ng-container *ngIf="!!orderInput.salesMenus.length">
@@ -135,7 +135,7 @@
 
     <ng-container *ngIf="!orderInput.salesMenus.length">
       <div class="add-order-button-container">
-        <button class="add-order-button" (click)="goBack()">
+        <button class="add-order-button" (click)="goToRestaurant()">
           <app-bodytext-14 [isBold]="true">+ ADD ITEM</app-bodytext-14>
         </button>
       </div>

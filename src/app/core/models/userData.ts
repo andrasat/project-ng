@@ -4,4 +4,5 @@ export interface IUserData {
   phoneNumber: string | null,
   imageUrl: string | null,
   token: string | null,
+  loginVia: 'google' | 'facebook' | null,
 }

@@ -10,6 +10,8 @@ import {
   QSApiService,
   StorageService,
   LocationService,
+  NavigationService,
+  AuthGuardService,
 } from "./services";
 
 @NgModule({
@@ -24,6 +26,8 @@ import {
     AuthService,
     StorageService,
     LocationService,
+    NavigationService,
+    AuthGuardService,
     {
       provide: APP_INITIALIZER,
       useFactory: (locationService: LocationService) => () => locationService.getInitialPosition(),

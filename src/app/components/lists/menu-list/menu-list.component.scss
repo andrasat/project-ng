@@ -3,16 +3,15 @@
 }
 
 .menu-image-container {
-  flex: 0 0 20%;
   border-radius: 6px;
   margin-right: 16px;
   height: 72px;
-  width: 72px;
+  min-width: 72px;
   overflow: hidden;
 }
 
 .menu-text-container {
-  flex: 0 0 70%;
+  flex: 1 0 70%;
 }
 
 .icon-list img {

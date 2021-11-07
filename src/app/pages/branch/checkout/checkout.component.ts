@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IBranchData, ICalculateTotalResult, IMenuData, IMenus, IOrderInput, IPromotion } from '@core/models';
-import { QSApiService, StorageService } from '@core/services';
+import { NavigationService, QSApiService, StorageService } from '@core/services';
 import { formatIDR } from '@utils/formatIDR';
 import { separateAddress, getExternalAppData } from '@utils/index';
 
 import { Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-checkout',
@@ -18,9 +18,9 @@ import { take, takeUntil } from 'rxjs/operators';
 export class CheckoutComponent implements OnInit, OnDestroy {
   constructor(
     public route: ActivatedRoute,
-    public router: Router,
     public qsApiService: QSApiService,
     public storageService: StorageService,
+    public navigation: NavigationService,
   ) {
     route.params.subscribe(params => this.params = { ...this.params, ...params });
     route.parent?.params.subscribe(params => this.params = { ...this.params, ...params });
@@ -83,7 +83,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         }, 3000);
       }
     } else {
-      this.goBack();
+      return this.navigation.back('..', {
+        queryParams: { orderMode: this.queryParams.orderMode },
+      });
     }
 
     this.qsApiService.getBranchData(this.params.branchCode);
@@ -321,7 +323,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   toPayment() {
-    this.router.navigate(['../payment'], {
+    this.navigation.navigate('../payment', {
       relativeTo: this.route,
       queryParams: {
         orderMode: this.queryParams.orderMode,
@@ -329,8 +331,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
   }
 
-  goBack() {
-    this.router.navigate(['..'], {
+  goToRestaurant() {
+    this.navigation.navigate('..', {
       relativeTo: this.route,
       queryParams: {
         orderMode: this.queryParams.orderMode,
@@ -339,7 +341,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   goToPromoDetail(promotion: IPromotion) {
-    this.router.navigate([`/${this.params.companyCode}/promotion/${promotion.promotionID}`], {
+    this.navigation.navigate(`/${this.params.companyCode}/promotion/${promotion.promotionID}`, {
       queryParams: {
         orderMode: this.queryParams.orderMode,
         companyCode: this.params.companyCode,
@@ -352,7 +354,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   goToContacts() {
-    this.router.navigate(['/contacts'], {
+    this.navigation.navigate('/contacts', {
       queryParams: {
         orderMode: this.queryParams.orderMode,
         companyCode: this.params.companyCode,
@@ -363,7 +365,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   goToMenu(menuID: number) {
-    this.router.navigate([`../menu/${menuID}`], {
+    this.navigation.navigate(`../menu/${menuID}`, {
       relativeTo: this.route,
       queryParams: {
         orderMode: this.queryParams.orderMode,
@@ -374,13 +376,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   goToHome() {
-    this.router.navigate(['../..'], {
+    this.navigation.navigate('../..', {
       relativeTo: this.route,
     });
   }
 
   goToSearchRestaurant() {
-    this.router.navigate(['/search-restaurant'], {
+    this.navigation.navigate('/search-restaurant', {
       queryParams: {
         companyCode: this.params.companyCode,
         branchCode: this.params.branchCode,
@@ -390,7 +392,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   goToSearchLocation() {
-    this.router.navigate(['/location'], {
+    this.navigation.navigate('/location', {
       queryParams: {
         companyCode: this.params.companyCode,
         branchCode: this.params.branchCode,

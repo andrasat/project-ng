@@ -1,1 +1,56 @@
-<div>Others</div>
+<div class="header-component header-shadow">
+  <app-bodytext-16 class="text-center" [isSemiBold]="true">Others</app-bodytext-16>
+</div>
+
+<div *ngIf="user && user.fullName !== 'As Guest'" class="profile-container d-flex flex-row">
+  <div class="avatar">
+    <img *ngIf="!!user.imageUrl else contactIcon" [src]="user.imageUrl" alt="User profile">
+
+    <ng-template #contactIcon>
+      <app-icon-contact color="grey"></app-icon-contact>
+    </ng-template>
+  </div>
+
+  <div class="profile-text d-flex flex-column">
+    <app-bodytext-16 [isSemiBold]="true" color="white">{{ user.fullName }}</app-bodytext-16>
+    <app-caption *ngIf="!!user.phoneNumber" color="white">{{ user.phoneNumber }}</app-caption>
+    <app-caption *ngIf="!!user.email" color="white">{{ user.email }}</app-caption>
+  </div>
+</div>
+
+<div *ngIf="!!user && user.loginVia" class="login-via d-flex flex-column justify-content-center">
+  <app-bodytext-14 color="white">Connected via {{ capitalizeWord(user.loginVia) }}</app-bodytext-14>
+</div>
+
+<div class="menu-setting-container">
+
+  <div class="d-flex flex-row justify-content-between align-items-center" (click)="goToContact()">
+    <app-bodytext-14>Contact List</app-bodytext-14>
+
+    <app-icon-chevron-right color="black"></app-icon-chevron-right>
+  </div>
+
+  <div class="mt-4 d-flex flex-row justify-content-between align-items-center" (click)="goToFAQ()">
+    <app-bodytext-14>FAQ</app-bodytext-14>
+
+    <app-icon-chevron-right color="black"></app-icon-chevron-right>
+  </div>
+
+  <div class="mt-4 d-flex flex-row justify-content-between align-items-center" (click)="goToAboutUs()">
+    <app-bodytext-14>About Us</app-bodytext-14>
+
+    <app-icon-chevron-right color="black"></app-icon-chevron-right>
+  </div>
+
+  <div class="mt-4 d-flex flex-row justify-content-between align-items-center" (click)="goToTNC()">
+    <app-bodytext-14>Terms & Conditions</app-bodytext-14>
+
+    <app-icon-chevron-right color="black"></app-icon-chevron-right>
+  </div>
+
+  <div class="mt-4 d-flex flex-row justify-content-between align-items-center">
+    <app-bodytext-14 color="tangerine">Log Out</app-bodytext-14>
+
+    <app-icon-chevron-right color="black"></app-icon-chevron-right>
+  </div>
+</div>

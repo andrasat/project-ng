@@ -1,6 +1,7 @@
 :host zxing-scanner::ng-deep {
   left: 0;
   top: 0;
+  position: relative;
 
   video {
     height: 100vh;

@@ -3,6 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgbAlertModule, NgbCarouselModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { ComponentsModule } from '@components/components.module';
 import { IconModule } from '@icons/icons.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { BranchRoutingModule } from './branch-routing.module';
 import { BranchComponent } from './branch.component';
@@ -13,7 +14,8 @@ import { MenuComponent } from './menu/menu.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { PromotionDetailComponent } from './promotion-detail/promotion-detail.component';
 import { PaymentComponent } from './payment/payment.component';
-import { PaymentConfirmationComponent } from './payment-confirmation/payment-confirmation.component';
+import { PromotionComponent } from './promotion/promotion.component';
+import { OthersComponent } from './others/others.component';
 
 @NgModule({
   imports: [
@@ -24,6 +26,7 @@ import { PaymentConfirmationComponent } from './payment-confirmation/payment-con
     NgbCollapseModule,
     ComponentsModule,
     IconModule,
+    DirectivesModule,
   ],
   declarations: [
     BranchComponent,
@@ -34,7 +37,8 @@ import { PaymentConfirmationComponent } from './payment-confirmation/payment-con
     CheckoutComponent,
     PromotionDetailComponent,
     PaymentComponent,
-    PaymentConfirmationComponent,
+    PromotionComponent,
+    OthersComponent,
   ],
 })
 export class BranchModule {}

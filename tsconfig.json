@@ -10,11 +10,11 @@
       "@core/*": [
         "src/app/core/*"
       ],
+      "@directives/*": [
+        "src/app/directives/*"
+      ],
       "@icons/*": [
         "src/app/icons/*"
-      ],
-      "@layouts/*": [
-        "src/app/layouts/*"
       ],
       "@pages/*": [
         "src/app/pages/*"

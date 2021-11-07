@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IBranchData, IBranchDataPaymentOnline, ICalculateTotalResult, IOrderHistoryLocalStorage, IOrderInput } from '@core/models';
-import { QSApiService, StorageService } from '@core/services';
+import { IBranchData, IBranchDataPaymentOnline, ICalculateTotalResult, IOrderInput } from '@core/models';
+import { NavigationService, QSApiService, StorageService } from '@core/services';
 import { NgbCollapseConfig } from '@ng-bootstrap/ng-bootstrap';
 import { formatIDR } from '@utils/formatIDR';
 import { Subject } from 'rxjs';
@@ -20,6 +20,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     public router: Router,
     public qsApiService: QSApiService,
     public storageService: StorageService,
+    public navigation: NavigationService,
     public collapseConfig: NgbCollapseConfig,
   ) {
     collapseConfig.animation = false;
@@ -56,7 +57,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
     if (orderInputData) {
       this.orderInput = JSON.parse(orderInputData);
     } else {
-      this.goBack();
+      return this.navigation.back('..');
     }
 
     this.qsApiService.getBranchData(this.params.branchCode);
@@ -119,8 +120,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
             return;
           }
 
-          this.router.navigate([`../payment-confirmation`], {
-            relativeTo: this.route,
+          this.navigation.navigate(`/payment-confirmation`, {
             queryParams: {
               paymentMethod: this.selectedPaymentMethod?.id,
               orderID: result.orderID,
@@ -128,7 +128,6 @@ export class PaymentComponent implements OnInit, OnDestroy {
           });
         },
         error => {
-          console.log(error);
           this.showAlertError = true;
           this.alertErrorMessage = error.message;
 
@@ -138,14 +137,5 @@ export class PaymentComponent implements OnInit, OnDestroy {
           }, 2500);
         },
       );
-  }
-
-  goBack() {
-    this.router.navigate(['..'], {
-      relativeTo: this.route,
-      queryParams: {
-        orderMode: this.queryParams.orderMode,
-      }
-    });
   }
 }

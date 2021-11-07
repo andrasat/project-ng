@@ -44,13 +44,6 @@ export class SearchMenuComponent implements OnInit {
     });
   }
 
-  goBack() {
-    this.router.navigate(['..'], {
-      relativeTo: this.route,
-      queryParams: { orderMode: this.queryParams.orderMode },
-    });
-  }
-
   goToMenu(menuID: number) {
     this.router.navigate([`../menu/${menuID}`], {
       relativeTo: this.route,

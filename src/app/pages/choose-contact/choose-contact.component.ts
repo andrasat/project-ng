@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IContact, IOrderInput, IProfile, IUserData } from '@core/models';
-import { QSApiService, StorageService } from '@core/services';
+import { NavigationService, QSApiService, StorageService } from '@core/services';
 import { NgbCollapseConfig } from '@ng-bootstrap/ng-bootstrap';
 
 import { Subject } from 'rxjs';
@@ -20,6 +20,7 @@ export class ChooseContactComponent implements OnInit, OnDestroy {
     public router: Router,
     public qsApiService: QSApiService,
     public storageService: StorageService,
+    public navigation: NavigationService,
     public collapseConfig: NgbCollapseConfig,
   ) {
     collapseConfig.animation = false;
@@ -85,11 +86,11 @@ export class ChooseContactComponent implements OnInit, OnDestroy {
 
   selectContact(contact: IContact) {
     if (!this.orderInput && this.queryParams.companyCode && this.queryParams.branchCode) {
-      return this.router.navigate([`/${this.queryParams.companyCode}/home/${this.queryParams.branchCode}`]);
+      return this.navigation.navigate(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}`);
     }
 
     if (!this.orderInput) {
-      return this.router.navigate(['/']);
+      return this.navigation.navigate('/');
     }
 
     this.orderInput.email = contact.contactEmail;
@@ -98,7 +99,7 @@ export class ChooseContactComponent implements OnInit, OnDestroy {
 
     this.storageService.setItem(`order_${this.queryParams.companyCode}_${this.queryParams.branchCode}`, JSON.stringify(this.orderInput));
 
-    return this.router.navigate([`/${this.queryParams.companyCode}/home/${this.queryParams.branchCode}/checkout`], {
+    return this.navigation.navigate(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}/checkout`, {
       queryParams: {
         orderMode: this.queryParams.orderMode,
       }
@@ -129,7 +130,7 @@ export class ChooseContactComponent implements OnInit, OnDestroy {
 
   goBack() {
     if (this.queryParams.from === 'checkout' && this.queryParams.companyCode && this.queryParams.branchCode) {
-      return this.router.navigate([`/${this.queryParams.companyCode}/home/${this.queryParams.branchCode}/checkout`], {
+      return this.navigation.back(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}/checkout`, {
         queryParams: {
           orderMode: this.queryParams.orderMode,
         }
@@ -137,9 +138,9 @@ export class ChooseContactComponent implements OnInit, OnDestroy {
     }
 
     if (this.queryParams.companyCode) {
-      return this.router.navigate([`/${this.queryParams.companyCode}/others`]);
+      return this.navigation.back(`/${this.queryParams.companyCode}/others`);
     }
 
-    return this.router.navigate(['/']);
+    return this.navigation.back();
   }
 }

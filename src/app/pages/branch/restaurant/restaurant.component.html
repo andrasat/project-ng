@@ -43,7 +43,7 @@
   </ng-container>
 
   <div class="promo-button-container">
-    <app-promo-button [text]="'You have ' + (promotions?.length || 0) + ' promos available'"></app-promo-button>
+    <app-promo-button [text]="'You have ' + (promotions?.length || 0) + ' promos available'" (clicked)="goToPromoPage()"></app-promo-button>
   </div>
 
   <ng-container *ngIf="!!menuData">

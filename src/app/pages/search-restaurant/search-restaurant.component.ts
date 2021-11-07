@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IBranches, IBranchList, IBrandData, IBrandList, IBrands } from '@core/models';
-import { LocationService, QSApiService } from '@core/services';
-import { Subject, Subscription } from 'rxjs';
+import { LocationService, NavigationService, QSApiService } from '@core/services';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -14,7 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 export class SearchRestaurantComponent implements OnInit, OnDestroy {
   constructor(
     public route: ActivatedRoute,
-    public router: Router,
+    public navigation: NavigationService,
     public locationService: LocationService,
     public qsApiService: QSApiService,
   ) {
@@ -64,7 +64,7 @@ export class SearchRestaurantComponent implements OnInit, OnDestroy {
     this.isSearchRestaurant = value;
   }
 
-  navigateOnClick() {
+  goBack() {
     if (this.isSelectRestaurant) {
       this.isSelectRestaurant = false;
       return;
@@ -75,12 +75,12 @@ export class SearchRestaurantComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.router.navigate([`/${this.params.companyCode}/home`]);
+    this.navigation.back(`/${this.params.companyCode}`);
   }
 
   goToBranchRestaurant(branchCode: string) {
     const sanitizedBranchCode = branchCode.includes(this.params.companyCode) ? branchCode.replace(`${this.params.companyCode}/`, '') : branchCode;
-    this.router.navigate([`/${this.params.companyCode}/home/${sanitizedBranchCode}`]);
+    this.navigation.navigate(`/${this.params.companyCode}/${sanitizedBranchCode}`);
   }
 
   onClickOutlets(brand: IBrands) {

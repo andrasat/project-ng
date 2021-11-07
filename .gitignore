@@ -40,6 +40,8 @@ yarn-error.log
 testem.log
 /typings
 /src/environments/*.json
+.env
+app-spec.yaml
 
 # System Files
 .DS_Store

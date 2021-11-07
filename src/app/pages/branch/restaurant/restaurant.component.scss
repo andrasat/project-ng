@@ -84,7 +84,8 @@
 .floating-button-container {
   position: fixed;
   bottom: 70px;
-  right: 10px;
+  padding: 0 16px;
+  max-width: 500px;
   width: 95%;
 }
 
@@ -191,6 +192,7 @@
   padding: 20px;
   min-height: 40%;
   width: 100%;
+  max-width: 500px;
 }
 
 .outlet-closed-image {

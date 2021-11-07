@@ -70,10 +70,4 @@ export class PaymentConfirmationComponent implements OnInit, OnDestroy {
 
       });
   }
-
-  goBack() {
-    this.router.navigate(['..'], {
-      relativeTo: this.route,
-    });
-  }
 }

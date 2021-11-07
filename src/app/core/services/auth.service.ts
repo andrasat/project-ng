@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { IUserData } from "@core/models";
 import { GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
-import { ReplaySubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { StorageService } from "./storage.service";
 import { QSApiService } from "./qs-api.service";
@@ -12,7 +12,7 @@ export class AuthService {
   constructor(
     public firebaseAuth: AngularFireAuth,
     public qsApiService: QSApiService,
-    public storageService: StorageService
+    public storageService: StorageService,
   ) {
     firebaseAuth.authState.subscribe(user => {
       if (user) {
@@ -23,13 +23,16 @@ export class AuthService {
           imageUrl: user.photoURL,
         }).subscribe(
           userData => {
+            const [userProviderData] = user.providerData;
+
             storageService.setItem('user', JSON.stringify({
               email: userData.email!,
               fullName: userData.fullName!,
               phoneNumber: userData.phoneNumber,
               imageUrl: userData.imageUrl,
               token: userData.token,
-            }));
+              loginVia: userProviderData ? userProviderData.providerId.replace('.com', '') : null,
+            } as IUserData));
             this._isLoggedInSubject.next(true);
           }
         );
@@ -37,7 +40,7 @@ export class AuthService {
     });
   }
 
-  private _isLoggedInSubject = new ReplaySubject<boolean>(1)
+  private _isLoggedInSubject = new BehaviorSubject<boolean>(false)
   isLoggedIn = this._isLoggedInSubject.asObservable()
 
   signInGoogle() {
@@ -54,7 +57,8 @@ export class AuthService {
       fullName: 'As Guest',
       phoneNumber: '',
       imageUrl: '',
-      token: ''
+      token: '',
+      loginVia: null,
     };
 
     this.storageService.setItem('user', JSON.stringify(userData));

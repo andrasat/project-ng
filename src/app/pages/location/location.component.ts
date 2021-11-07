@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { MapOptions, tileLayer, latLng, Map } from 'leaflet';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { LocationService, QSApiService, StorageService } from '@core/services';
+import { LocationService, NavigationService, QSApiService, StorageService } from '@core/services';
 import { IAddress, IAutocompleteResult, IBranches, IBranchList, IOrderInput } from '@core/models';
 import { environment } from '@environments/environment';
 
@@ -21,6 +21,7 @@ export class LocationComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public router: Router,
     public locationService: LocationService,
+    public navigation: NavigationService,
     public qsApiService: QSApiService,
     public storageService: StorageService,
   ) {
@@ -175,8 +176,7 @@ export class LocationComponent implements OnInit, OnDestroy {
   }
 
   goToRestaurant(branchCode: string) {
-    this.router.navigate([`/${this.queryParams.companyCode || this.branchList?.companyCode}/home/${branchCode}`], { replaceUrl: true });
-    // window.location.reload();
+    return this.navigation.navigate(`/${this.queryParams.companyCode || this.branchList?.companyCode}/${branchCode}`, { replaceUrl: true });
   }
 
   continueOnClick() {
@@ -193,7 +193,7 @@ export class LocationComponent implements OnInit, OnDestroy {
 
             this.storageService.setItem(`order_${this.queryParams.companyCode}_${this.queryParams.branchCode}`, JSON.stringify(this.orderInput));
 
-            this.router.navigate([`/${this.queryParams.companyCode}/home/${this.queryParams.branchCode}/checkout`], {
+            this.navigation.navigate(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}/checkout`, {
               queryParams: {
                 orderMode: this.orderInput.type,
               }
@@ -202,7 +202,7 @@ export class LocationComponent implements OnInit, OnDestroy {
           () => {
             this.storageService.setItem(`order_${this.queryParams.companyCode}_${this.queryParams.branchCode}`, JSON.stringify(this.orderInput));
 
-            this.router.navigate([`/${this.queryParams.companyCode}/home/${this.queryParams.branchCode}/checkout`], {
+            this.navigation.navigate(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}/checkout`, {
               queryParams: {
                 orderMode: this.orderInput.type,
               }
@@ -213,6 +213,6 @@ export class LocationComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.router.navigate([`/${this.queryParams.companyCode || this.branchList?.companyCode}/home`]);
+    this.navigation.navigate(`/${this.queryParams.companyCode || this.branchList?.companyCode}`);
   }
 }

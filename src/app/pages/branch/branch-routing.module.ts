@@ -12,7 +12,6 @@ import { SearchMenuComponent } from './search-menu/search-menu.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { PromotionDetailComponent } from './promotion-detail/promotion-detail.component';
 import { PaymentComponent } from './payment/payment.component';
-import { PaymentConfirmationComponent } from './payment-confirmation/payment-confirmation.component';
 
 @NgModule({
   imports: [
@@ -21,7 +20,7 @@ import { PaymentConfirmationComponent } from './payment-confirmation/payment-con
         path: '',
         component: BranchComponent,
         children: [{
-          path: 'home',
+          path: '',
           pathMatch: 'full',
           component: CompanyHomeComponent,
         }, {
@@ -41,27 +40,23 @@ import { PaymentConfirmationComponent } from './payment-confirmation/payment-con
           pathMatch: 'full',
           component: OthersComponent
         }, {
-          path: 'home/:branchCode',
+          path: ':branchCode',
           pathMatch: 'full',
           component: RestaurantComponent,
         }, {
-          path: 'home/:branchCode/checkout',
+          path: ':branchCode/checkout',
           pathMatch: 'full',
           component: CheckoutComponent,
         }, {
-          path: 'home/:branchCode/search-menu',
+          path: ':branchCode/search-menu',
           pathMatch: 'full',
           component: SearchMenuComponent,
         }, {
-          path: 'home/:branchCode/payment',
+          path: ':branchCode/payment',
           pathMatch: 'full',
           component: PaymentComponent,
         }, {
-          path: 'home/:branchCode/payment-confirmation',
-          pathMatch: 'full',
-          component: PaymentConfirmationComponent,
-        }, {
-          path: 'home/:branchCode/menu/:menuID',
+          path: ':branchCode/menu/:menuID',
           pathMatch: 'full',
           component: MenuComponent
         }]

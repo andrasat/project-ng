@@ -21,3 +21,4 @@ export * from './validatePaymentResult';
 export * from './calculateTotalInput';
 export * from './orderInput';
 export * from './userDataInput';
+export * from './saveAddressInput';
