@@ -427,8 +427,6 @@ export class RestaurantComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.hideCollapseContainer = true;
-
     const selectedMode = this.orderModes.find(mode => mode.type === this.selectedOrderMode);
     const orderInputData = this.storageService.getItem(`order_${this.params.companyCode}_${this.params.branchCode}`);
 
@@ -437,8 +435,11 @@ export class RestaurantComponent implements OnInit, OnDestroy {
       selectedDate.setHours(Number(this.selectedHour));
       selectedDate.setMinutes(Number(this.selectedMinute));
 
-      if (selectedDate.getTime() < Date.now()) return;
-      this.customOrderFormData = [{desc: 'Pickup Time', value: `${this.selectedHour}:${this.selectedMinute}`}];
+      if (selectedDate.getTime() < Date.now()) {
+        this.customOrderFormData = [{desc: 'Pickup Time', value: null}];
+      } else {
+        this.customOrderFormData = [{desc: 'Pickup Time', value: `${this.selectedHour}:${this.selectedMinute}`}];
+      }
     }
 
     if (orderInputData) {
@@ -474,6 +475,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
     this.qsApiService.getMenu(this.params.branchCode, selectedMode?.visitPurposeID!);
 
+    this.hideCollapseContainer = true;
     this.navigation.navigate(undefined, {
       relativeTo: this.route,
       queryParams: {
