@@ -32,6 +32,7 @@ export interface ICustomOrderFormData {
 export interface IOrderInput {
   additionalCustomerInfo?: ICustomOrderFormData[],
   tableName?: string | null,
+  salesMode?: string | null,
   type: string,
   typeName: string | null,
   fullName: string,

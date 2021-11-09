@@ -221,6 +221,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
             }
 
             this.orderInput!.type = selectedMode?.type!;
+            this.orderInput!.salesMode = this.queryParams.salesMode || null;
             this.orderInput!.typeName = selectedMode?.name || null;
             this.orderInput!.visitPurposeID = selectedMode?.visitPurposeID!;
 
@@ -242,6 +243,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
             this.orderInput = {
               type: selectedMode?.type!,
               tableName: this.queryParams.tableNumber,
+              salesMode: this.queryParams.salesMode,
               typeName: selectedMode?.name || null,
               amount: 0,
               deliveryAddress: this.queryParams.addr || '',

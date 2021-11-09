@@ -13,6 +13,7 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import { PromotionDetailComponent } from './promotion-detail/promotion-detail.component';
 import { PaymentComponent } from './payment/payment.component';
 import { AboutUsCompanyComponent } from './about-us-company/about-us-company.component';
+import { OrderDetailComponent } from './order-detail/order-detail.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,7 @@ import { AboutUsCompanyComponent } from './about-us-company/about-us-company.com
         }, {
           path: 'promotion',
           pathMatch: 'full',
-          component: PromotionComponent
+          component: PromotionComponent,
         }, {
           path: 'promotion/:promoID',
           pathMatch: 'full',
@@ -35,11 +36,15 @@ import { AboutUsCompanyComponent } from './about-us-company/about-us-company.com
         }, {
           path: 'order-history',
           pathMatch: 'full',
-          component: OrderHistoryComponent
+          component: OrderHistoryComponent,
+        }, {
+          path: 'order-detail/:orderID',
+          pathMatch: 'full',
+          component: OrderDetailComponent,
         }, {
           path: 'others',
           pathMatch: 'full',
-          component: OthersComponent
+          component: OthersComponent,
         }, {
           path: 'others/about-us',
           pathMatch: 'full',
@@ -63,7 +68,7 @@ import { AboutUsCompanyComponent } from './about-us-company/about-us-company.com
         }, {
           path: ':branchCode/menu/:menuID',
           pathMatch: 'full',
-          component: MenuComponent
+          component: MenuComponent,
         }]
       },
     ]),

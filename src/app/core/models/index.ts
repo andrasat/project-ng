@@ -19,6 +19,7 @@ export * from './orderHistoryLocalStorage';
 export * from './validatePaymentResult';
 export * from './faqData';
 export * from './tncData';
+export * from './validateMember';
 // Inputs
 export * from './calculateTotalInput';
 export * from './orderInput';

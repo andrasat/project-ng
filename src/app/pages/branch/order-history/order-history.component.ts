@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { IUserData } from '@core/models';
-import { AuthService, QSApiService, StorageService } from '@core/services';
+import { IOrderHistoryData, IUserData } from '@core/models';
+import {  QSApiService, StorageService } from '@core/services';
 
 @Component({
   selector: 'app-order-history',
@@ -13,13 +13,34 @@ export class OrderHistoryComponent implements OnInit {
     public storageService: StorageService,
   ) {}
 
+  orderHistoryToday: IOrderHistoryData[] = []
+  orderHistoryPast: IOrderHistoryData[] = []
+
   ngOnInit() {
     const userData = this.storageService.getItem('user');
+    const orderHistoryData = this.storageService.getItem('orderHistory');
     
-    if (userData) {
+    if (userData && orderHistoryData) {
       const user = JSON.parse(userData) as IUserData;
+      const orderHistory = JSON.parse(orderHistoryData) as string[];
       
-      // if (user.token) this.qsApiService.getOrderHistory(user.token, [])
+      if (user.token) {
+        this.qsApiService.getOrderHistory(user.token, orderHistory)
+          .subscribe(orderHistoryResult => {
+
+            orderHistoryResult.data.forEach(orderData => {
+              const transactionDate = new Date(orderData.transactionDate);
+              const currentDate = new Date();
+
+              if (transactionDate.getDate() >= currentDate.getDate()) {
+                this.orderHistoryToday.push(orderData);
+              } else {
+                this.orderHistoryPast.push(orderData);
+              }
+            });
+
+          });
+      }
     }
   }
 }

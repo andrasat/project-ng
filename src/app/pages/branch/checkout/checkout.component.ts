@@ -125,19 +125,28 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         result => this.calculateResult = result,
         error => {
           if (!this.showAlertError) {
-            const errorMessage = JSON.parse(error.message);
-            this.showAlertError = true;
+            let errorMessage = error.message;
 
-            switch(typeof errorMessage) {
-              case 'object':
-                const joinedString = Object.keys(errorMessage).reduce((message, key) => {
-                  return message === '' ? message + errorMessage[key] : `${message}, ${errorMessage[key]}`;
-                }, '');
-                this.alertErrorMessage = joinedString;
-                break;
-              case 'string':
-                this.alertErrorMessage = errorMessage;
-                break;
+            try {
+              errorMessage = JSON.parse(error.message);
+            } catch(_) {
+              errorMessage = error.message;
+            } finally {
+              this.showAlertError = true;
+
+              switch(typeof errorMessage) {
+                case 'object':
+                  const joinedString = Object.keys(errorMessage).reduce((message, key) => {
+                    return message === '' ? message + errorMessage[key] : `${message}, ${errorMessage[key]}`;
+                  }, '');
+                  this.alertErrorMessage = joinedString;
+                  break;
+                case 'string':
+                  this.alertErrorMessage = errorMessage;
+                  break;
+              }
+
+              setTimeout(() => this.showAlertError = false, 3000);
             }
           }
         },
@@ -239,7 +248,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           }
         },
       );
-    
+
+    this.navigation.navigate(undefined, {
+      queryParams: {
+        orderMode: this.queryParams.orderMode,
+      },
+    });
     this.hidePromoDeleteCollapse();
   }
 

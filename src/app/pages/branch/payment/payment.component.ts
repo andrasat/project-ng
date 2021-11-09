@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IBranchData, IBranchDataPaymentOnline, ICalculateTotalResult, IOrderInput } from '@core/models';
+import { IBranchData, IBranchDataPaymentOnline, ICalculateTotalResult, IOrderInput, IValidateMember } from '@core/models';
 import { NavigationService, QSApiService, StorageService } from '@core/services';
 import { NgbCollapseConfig } from '@ng-bootstrap/ng-bootstrap';
 import { formatIDR } from '@utils/formatIDR';
@@ -37,6 +37,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   orderInput: IOrderInput
   calculateResult: ICalculateTotalResult | undefined
   selectedPaymentMethod: IBranchDataPaymentOnline | undefined
+  validatedMember: IValidateMember | undefined
 
   hideCollapseContainer = true
   showAlertError = false
@@ -57,6 +58,15 @@ export class PaymentComponent implements OnInit, OnDestroy {
     if (orderInputData) {
       this.orderInput = JSON.parse(orderInputData);
       this.phoneFormControl.setValue(this.orderInput.phoneNumber);
+
+      if (this.queryParams.member) {
+        this.qsApiService.validateMember(this.params.branchCode, this.queryParams.member).subscribe(validatedMember => {
+          this.orderInput.memberID = this.queryParams.member;
+          this.validatedMember = validatedMember;
+
+          this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
+        });
+      }
     } else {
       return this.navigation.back('..');
     }

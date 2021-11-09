@@ -60,6 +60,7 @@ export class PaymentConfirmationComponent implements OnInit, OnDestroy {
 
           if (orderHistoryData) {
             orderHistory = JSON.parse(orderHistoryData) as string[];
+            orderHistory.push(this.queryParams.orderID);
           } else {
             orderHistory = [this.queryParams.orderID];
           }

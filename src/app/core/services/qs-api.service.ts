@@ -28,6 +28,7 @@ import {
   ISaveAddressInput,
   IFAQData,
   ITNCData,
+  IValidateMember,
 } from '@core/models';
 import { separateAddress, utf8ToBase64 } from '@utils/index';
 
@@ -290,6 +291,16 @@ export class QSApiService {
     }))
       .pipe(map(data => data))
       .subscribe(data => this._validatePaymentSubject.next(data));
+  }
+
+  validateMember(branchCode: string, memberID: string) {
+    return this.post<IValidateMember>('/web/qsv1/membership', {
+      key: memberID,
+    }, new HttpHeaders({
+      authorization: `Bearer ${this.BEARER_TOKEN}`,
+      'Data-Branch': branchCode,
+    }))
+      .pipe(map(data => data));
   }
 
   saveOrder(orderInput: IOrderInput, branchCode: string) {

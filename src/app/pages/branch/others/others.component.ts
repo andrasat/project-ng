@@ -48,8 +48,6 @@ export class OthersComponent implements OnInit {
         await this.authService.signInFacebook();
         break;
     }
-
-    window.location.reload();
   }
 
   goToContact() {
