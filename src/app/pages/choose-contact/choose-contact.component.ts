@@ -30,6 +30,7 @@ export class ChooseContactComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject<void>()
 
+  deleteContactClass: Record<string, boolean> = {}
   queryParams: any = {}
 
   user: IUserData | undefined
@@ -72,7 +73,7 @@ export class ChooseContactComponent implements OnInit, OnDestroy {
       .subscribe(profile => {
         this.currentProfile = profile;
 
-        if (profile) {
+        if (profile && this.orderInput) {
           const contactEmailControl = this.contactFormGroup.get('contactEmail');
           const saveContactControl = new FormControl(false);
 
@@ -84,18 +85,29 @@ export class ChooseContactComponent implements OnInit, OnDestroy {
       });
   }
 
+  setSaveContact() {
+    const saveContactVal = this.contactFormGroup.get('saveContact')?.value;
+    this.contactFormGroup.get('saveContact')?.setValue(!saveContactVal);
+  }
+
   selectContact(contact: IContact) {
     if (!this.orderInput && this.queryParams.companyCode && this.queryParams.branchCode) {
       return this.navigation.navigate(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}`);
     }
 
     if (!this.orderInput) {
-      return this.navigation.navigate('/');
+      this.contactFormGroup.controls['contactName'].setValue(contact.contactName);
+      this.contactFormGroup.controls['contactPhone'].setValue(contact.contactPhone);
+      this.contactFormGroup.controls['contactEmail'].setValue(contact.contactEmail);
+      this.hideCollapse = false;
+      return;
     }
 
     this.orderInput.email = contact.contactEmail;
     this.orderInput.fullName = contact.contactName;
     this.orderInput.phoneNumber = contact.contactPhone || '';
+    console.log(contact);
+    console.log(this.orderInput);
 
     this.storageService.setItem(`order_${this.queryParams.companyCode}_${this.queryParams.branchCode}`, JSON.stringify(this.orderInput));
 
@@ -106,10 +118,43 @@ export class ChooseContactComponent implements OnInit, OnDestroy {
     });
   }
 
+  confirmDeleteContact() {
+    this.deleteContactClass = {
+      show: true
+    };
+  }
+
+  hideConfirmDeleteContact() {
+    this.deleteContactClass = {
+      show: false
+    };
+  }
+
+  hideContactForm() {
+    this.hideCollapse = true;
+    this.contactFormGroup.reset();
+  }
+
+  deleteContact() {
+    const newContact = this.contactFormGroup.value;
+    const foundContactIndex = this.contactList.findIndex(contact => contact.contactName === newContact.contactName);
+
+    if (foundContactIndex >= 0) {
+      this.contactList.splice(foundContactIndex, 1);
+      this.storageService.setItem('contactList', JSON.stringify(this.contactList));
+    }
+
+    this.deleteContactClass = {
+      show: false
+    };
+    this.hideCollapse = true;
+    this.contactFormGroup.reset();
+  }
+
   saveContactList() {
     if (!this.contactFormGroup.valid) return;
 
-    const newContact = this.contactFormGroup.value;
+    const newContact = this.contactFormGroup.getRawValue();
     const foundContactIndex = this.contactList.findIndex(contact => contact.contactName === newContact.contactName);
 
     if (foundContactIndex >= 0) {

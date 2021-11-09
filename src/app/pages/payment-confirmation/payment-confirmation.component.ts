@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IOrderHistoryLocalStorage } from '@core/models';
-import { QSApiService, StorageService } from '@core/services';
+import { NavigationService, QSApiService, StorageService } from '@core/services';
 import { NgbCollapseConfig } from '@ng-bootstrap/ng-bootstrap';
 
 import { Subject } from 'rxjs';
@@ -19,6 +18,7 @@ export class PaymentConfirmationComponent implements OnInit, OnDestroy {
     public router: Router,
     public qsApiService: QSApiService,
     public storageService: StorageService,
+    public navigation: NavigationService,
     public collapseConfig: NgbCollapseConfig,
   ) {
     collapseConfig.animation = false;
@@ -54,19 +54,34 @@ export class PaymentConfirmationComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(validatePaymentResult => {
 
-        // if (validatePaymentResult) {
-        //   const orderHistoryData = this.storageService.getItem('orderHistory');
+        if (validatePaymentResult && validatePaymentResult.status === 'settlement') {
+          const orderHistoryData = this.storageService.getItem('orderHistory');
+          let orderHistory: string[] = [];
 
-        //   this.qsApiService.geto
+          if (orderHistoryData) {
+            orderHistory = JSON.parse(orderHistoryData) as string[];
+          } else {
+            orderHistory = [this.queryParams.orderID];
+          }
 
-        //   if (orderHistoryData) {
-        //     const orderHistory = JSON.parse(orderHistoryData);
-        //   } else {
-        //     const orderHistory: IOrderHistoryLocalStorage[] = [{ orderID: this.queryParams.orderID, status: validatePaymentResult?.status }]
-        //   }
+          this.storageService.setItem('orderHistory', JSON.stringify(orderHistory));
+          this.storageService.removeItem(`order_${this.queryParams.companyCode}_${this.queryParams.branchCode}`);
 
-        //   this.storageService.setItem('orderHistory', JSON.stringify())
-        // }
+          this.navigation.navigate('/payment-success', {
+            queryParams: {
+              orderID: this.queryParams.orderID,
+            },
+          });
+        }
+
+        if (validatePaymentResult && !!validatePaymentResult.errorMessage) {
+          this.navigation.navigate('/payment-failed', {
+            queryParams: {
+              companyCode: this.queryParams.companyCode,
+              branchCode: this.queryParams.branchCode,
+            },
+          });
+        }
 
       });
   }

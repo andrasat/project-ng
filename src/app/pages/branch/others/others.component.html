@@ -2,9 +2,35 @@
   <app-bodytext-16 class="text-center" [isSemiBold]="true">Others</app-bodytext-16>
 </div>
 
-<div *ngIf="user && user.fullName !== 'As Guest'" class="profile-container d-flex flex-row">
+<!-- GUEST LOGGEDIN -->
+<div *ngIf="!checkUserLogin()" class="login-container">
+  <div class="login-text">
+    <app-heading-3 color="white">
+      Better Experience by Logging in to Our Platform
+    </app-heading-3>
+  </div>
+
+  <div class="button-container">
+    <app-secondary-button
+      icon="assets/image/google-logo.png"
+      (clicked)="loginHandler('google')"
+      text="CONTINUE WITH GOOGLE">
+    </app-secondary-button>
+
+    <div class="separator"></div>
+
+    <app-secondary-button
+      icon="assets/image/facebook-logo.png"
+      (clicked)="loginHandler('facebook')"
+      text="CONTINUE WITH FACEBOOK">
+    </app-secondary-button>
+  </div>
+</div>
+
+<!-- USER LOGGEDIN -->
+<div *ngIf="checkUserLogin()" class="profile-container d-flex flex-row">
   <div class="avatar">
-    <img *ngIf="!!user.imageUrl else contactIcon" [src]="user.imageUrl" alt="User profile">
+    <img *ngIf="!!user?.imageUrl else contactIcon" [src]="user?.imageUrl" alt="User profile">
 
     <ng-template #contactIcon>
       <app-icon-contact color="grey"></app-icon-contact>
@@ -12,9 +38,9 @@
   </div>
 
   <div class="profile-text d-flex flex-column">
-    <app-bodytext-16 [isSemiBold]="true" color="white">{{ user.fullName }}</app-bodytext-16>
-    <app-caption *ngIf="!!user.phoneNumber" color="white">{{ user.phoneNumber }}</app-caption>
-    <app-caption *ngIf="!!user.email" color="white">{{ user.email }}</app-caption>
+    <app-bodytext-16 [isSemiBold]="true" color="white">{{ user?.fullName }}</app-bodytext-16>
+    <app-caption *ngIf="!!user?.phoneNumber" color="white">{{ user?.phoneNumber }}</app-caption>
+    <app-caption *ngIf="!!user?.email" color="white">{{ user?.email }}</app-caption>
   </div>
 </div>
 
@@ -24,7 +50,7 @@
 
 <div class="menu-setting-container">
 
-  <div class="d-flex flex-row justify-content-between align-items-center" (click)="goToContact()">
+  <div *ngIf="checkUserLogin()" class="d-flex flex-row justify-content-between align-items-center" (click)="goToContact()">
     <app-bodytext-14>Contact List</app-bodytext-14>
 
     <app-icon-chevron-right color="black"></app-icon-chevron-right>
@@ -48,7 +74,7 @@
     <app-icon-chevron-right color="black"></app-icon-chevron-right>
   </div>
 
-  <div class="mt-4 d-flex flex-row justify-content-between align-items-center">
+  <div *ngIf="checkUserLogin()" class="mt-4 d-flex flex-row justify-content-between align-items-center" (click)="logout()">
     <app-bodytext-14 color="tangerine">Log Out</app-bodytext-14>
 
     <app-icon-chevron-right color="black"></app-icon-chevron-right>

@@ -41,6 +41,26 @@ import { AuthGuardService } from '@core/services';
         loadChildren: () => import('@pages/faq/faq.module' /* webpackChunkName: "faq" */).then(m => m.FAQModule),
       },
       {
+        path: 'tnc',
+        pathMatch: 'full',
+        loadChildren: () => import('@pages/tnc/tnc.module' /* webpackChunkName: "tnc" */).then(m => m.TNCModule),
+      },
+      {
+        path: 'payment-confirmation',
+        pathMatch: 'full',
+        loadChildren: () => import('@pages/payment-confirmation/payment-confirmation.module' /* webpackChunkName: "payment-confirmation" */).then(m => m.PaymentConfirmationModule),
+      },
+      {
+        path: 'payment-success',
+        pathMatch: 'full',
+        loadChildren: () => import('@pages/payment-success/payment-success.module' /* webpackChunkName: "payment-success" */).then(m => m.PaymentSuccessModule),
+      },
+      {
+        path: 'payment-failed',
+        pathMatch: 'full',
+        loadChildren: () => import('@pages/payment-failed/payment-failed.module' /* webpackChunkName: "payment-failed" */).then(m => m.PaymentFailedModule),
+      },
+      {
         path: ':companyCode',
         canActivate: [AuthGuardService],
         loadChildren: () => import('@pages/branch/branch.module' /* webpackChunkName: "branch" */).then(m => m.BranchModule),

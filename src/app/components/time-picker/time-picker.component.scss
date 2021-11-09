@@ -67,16 +67,16 @@
 
 .hour-counter,
 .minute-counter {
-  position: fixed;
-  width: 40%;
+  position: absolute;
+  width: 45%;
   height: 50px;
   overflow: hidden;
 }
 
 .background-hour-counter,
 .background-minute-counter {
-  position: fixed;
-  width: 40%;
+  position: absolute;
+  width: 45%;
   height: 150px;
   overflow: hidden;
 }

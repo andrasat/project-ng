@@ -5,7 +5,9 @@
   </div>
 
   <div class="header-component header-shadow">
-    <app-bodytext-16 class="text-center" [isSemiBold]="true">Choose Contact</app-bodytext-16>
+    <app-bodytext-16 class="text-center" [isSemiBold]="true">
+      {{ orderInput ? 'Choose Contact' : 'Contact List'}}
+    </app-bodytext-16>
   </div>
 
   <div class="contact-list-container">
@@ -22,11 +24,33 @@
     [(ngbCollapse)]="hideCollapse"
     #collapseContact="ngbCollapse"
     class="collapse-container">
-    
+
+    <!-- Delete Contact Confirmation -->
+    <div class="delete-contact" [ngClass]="deleteContactClass">
+      <div class="d-flex flex-row justify-content-between">
+        &nbsp;
+        <div (click)="hideConfirmDeleteContact()">
+          <app-icon-close></app-icon-close>
+        </div>
+      </div>
+
+      <div class="mt-3 d-flex flex-column">
+        <img class="delete-contact-confirm-image" src="/assets/image/warning.png" alt="Confirm Delete">
+
+        <app-heading-3>Are you sure you want to remove this recipient info?</app-heading-3>
+
+        <div class="mt-3 d-flex flex-row justify-content-between">
+          <app-secondary-button class="half-size-button" [withBorder]="true" text="REMOVE" (clicked)="deleteContact()"></app-secondary-button>
+          <app-primary-button class="half-size-button" text="NO, KEEP INFO" (clicked)="hideConfirmDeleteContact()"></app-primary-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
     <div class="contact-form">
       <div class="d-flex flex-row justify-content-between">
         <app-heading-3 class="contact-form-title">Add New Recipient</app-heading-3>
-        <div (click)="collapseContact.toggle()">
+        <div (click)="hideContactForm()">
           <app-icon-close></app-icon-close>
         </div>
       </div>
@@ -91,19 +115,35 @@
 
         </div>
 
-        <div *ngIf="!!currentProfile && !!contactFormGroup.get('saveContact')" class="form-group">
-          <app-icon-checbox [color]="contactFormGroup.controls['saveContact'].value ? 'tangerine' : 'white'"></app-icon-checbox>
+        <div *ngIf="!!currentProfile && !!contactFormGroup.get('saveContact')" class="form-group d-flex flex-row align-content-center">
+
+          <div class="checkbox">
+            <app-icon-checbox [color]="contactFormGroup.controls['saveContact'].value ? 'tangerine' : 'white'"></app-icon-checbox>
+          </div>
 
           <input id="save-contact" type="checkbox" class="checkbox-input" formControlName="saveContact">
 
-          <label for="saveContact">
+          <label for="saveContact" (click)="setSaveContact()">
             <app-bodytext-14>Save contact</app-bodytext-14>
           </label>
         </div>
 
-        <div class="form-continue-button">
-          <app-primary-button text="CONTINUE" (clicked)="saveContactList()"></app-primary-button>
+        <div class="form-continue-button d-flex flex-row justify-content-between">
+          <!-- Contnue if from checkout -->
+          <app-primary-button
+            *ngIf="queryParams.from === 'checkout' else saveOrRemove"
+            class="full-size-button"
+            text="CONTINUE"
+            (clicked)="saveContactList()">
+          </app-primary-button>
+
+          <!-- Save or Remove contactlist -->
+          <ng-template #saveOrRemove>
+            <app-primary-button class="half-size-button" bgColor="red" text="DELETE" (clicked)="confirmDeleteContact()"></app-primary-button>
+            <app-primary-button class="half-size-button" text="SAVE" (clicked)="saveContactList()"></app-primary-button>
+          </ng-template>
         </div>
+
       </form>
 
     </div>

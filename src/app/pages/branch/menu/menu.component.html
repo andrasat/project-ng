@@ -43,7 +43,7 @@
       <div *ngFor="let packageData of menuPackage.packages" class="package" (click)="selectPackage(packageData)">
         <app-menu-package-list
           [package]="packageData"
-          [selected]="this.saleMenu.packages[0] && this.saleMenu.packages[0].menuID === packageData.menuID"
+          [selected]="getSelectedPackage(packageData)"
         ></app-menu-package-list>
       </div>
     </div>

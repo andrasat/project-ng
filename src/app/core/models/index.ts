@@ -17,6 +17,8 @@ export * from './contact';
 export * from './orderHistoryResult';
 export * from './orderHistoryLocalStorage';
 export * from './validatePaymentResult';
+export * from './faqData';
+export * from './tncData';
 // Inputs
 export * from './calculateTotalInput';
 export * from './orderInput';

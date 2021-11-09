@@ -7,10 +7,65 @@
   <div class="header-component header-shadow">
     <app-bodytext-16 class="text-center" [isSemiBold]="true">FAQ</app-bodytext-16>
 
-    <div class="mt-4 d-flex flex-row justify-content-evenly">
-      <div class="d-flex flex-column justify-content-center">
-        
+    <div class="mt-4 d-flex flex-row justify-content-around">
+
+      <div
+        *ngFor="let faq of faqData"
+        class="d-flex flex-column justify-content-center align-items-center"
+        (click)="selectFAQTab(faq)">
+        <div class="icon-container" [ngClass]="{active:selectedFAQ?.id === faq.id}">
+          <app-icon-question
+            *ngIf="faq.id === 'mostAsked'"
+            class="icon"
+            [height]="26"
+            [width]="26"
+            [color]="selectedFAQ?.id === faq.id ? 'white' : 'grey'">
+          </app-icon-question>
+
+          <app-icon-bag
+            *ngIf="faq.id === 'order'"
+            class="icon"
+            [height]="26"
+            [width]="26"
+            [color]="selectedFAQ?.id === faq.id ? 'white' : 'grey'">
+          </app-icon-bag>
+
+          <app-icon-credit-card
+            *ngIf="faq.id === 'payment'"
+            class="icon"
+            [height]="26"
+            [width]="26"
+            [color]="selectedFAQ?.id === faq.id ? 'white' : 'grey'">
+          </app-icon-credit-card>
+
+          <app-icon-contact
+            *ngIf="faq.id === 'account'"
+            class="icon"
+            [height]="26"
+            [width]="26"
+            [color]="selectedFAQ?.id === faq.id ? 'white' : 'grey'">
+          </app-icon-contact>
+        </div>
+
+        <app-caption
+          [isSemiBold]="selectedFAQ?.id === faq.id"
+          [color]="selectedFAQ?.id === faq.id ? 'black' : 'grey'">
+          {{ faq.name }}
+        </app-caption>
       </div>
+
     </div>
   </div>
+
+  <div>
+    <ng-container *ngFor="let faqList of selectedFAQ?.faqs">
+      <app-accordion
+        [title]="faqList.question">
+        <div class="context-text">
+          <app-bodytext-14 color="grey">{{ faqList.answer }}</app-bodytext-14>
+        </div>
+      </app-accordion>
+    </ng-container>
+  </div>
+
 </div>

@@ -6,6 +6,8 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/cor
 })
 export class ContactIconComponent implements OnInit, OnChanges {
   @Input() color: string
+  @Input() height: number = 24
+  @Input() width: number = 24
 
   fillColor: string
 
@@ -18,7 +20,7 @@ export class ContactIconComponent implements OnInit, OnChanges {
         this.fillColor = '#000000';
         break;
       case 'grey':
-        this.fillColor = '#E0E0E0';
+        this.fillColor = '#828282';
         break;
       case 'tangerine':
       default:
@@ -35,7 +37,7 @@ export class ContactIconComponent implements OnInit, OnChanges {
         this.fillColor = '#000000';
         break;
       case 'grey':
-        this.fillColor = '#E0E0E0';
+        this.fillColor = '#828282';
         break;
       case 'tangerine':
       default:

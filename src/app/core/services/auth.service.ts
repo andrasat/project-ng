@@ -14,6 +14,11 @@ export class AuthService {
     public qsApiService: QSApiService,
     public storageService: StorageService,
   ) {
+
+    const userData = this.storageService.getItem('user');
+
+    if (userData) this._isLoggedInSubject.next(true);
+
     firebaseAuth.authState.subscribe(user => {
       if (user) {
         qsApiService.saveAuth({

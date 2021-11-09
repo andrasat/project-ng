@@ -56,6 +56,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
     if (orderInputData) {
       this.orderInput = JSON.parse(orderInputData);
+      this.phoneFormControl.setValue(this.orderInput.phoneNumber);
     } else {
       return this.navigation.back('..');
     }
@@ -122,6 +123,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
           this.navigation.navigate(`/payment-confirmation`, {
             queryParams: {
+              companyCode: this.params.companyCode,
+              branchCode: this.params.branchCode,
               paymentMethod: this.selectedPaymentMethod?.id,
               orderID: result.orderID,
             }

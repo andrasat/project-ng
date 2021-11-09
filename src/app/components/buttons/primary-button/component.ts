@@ -9,6 +9,7 @@ export class PrimaryButtonComponent implements OnInit, OnChanges {
   @Input() text: string = ''
   @Input() disabled: boolean = false
   @Input() smallPadding: boolean = false
+  @Input() bgColor: string = ''
 
   @Output() public clicked: EventEmitter<void> = new EventEmitter()
 
@@ -18,6 +19,7 @@ export class PrimaryButtonComponent implements OnInit, OnChanges {
     this.classes = {
       'small-padding': this.smallPadding,
       'disabled': this.disabled,
+      [this.bgColor]: true,
     };
   }
 
@@ -25,6 +27,7 @@ export class PrimaryButtonComponent implements OnInit, OnChanges {
     this.classes = {
       'small-padding': changes.smallPadding?.currentValue,
       'disabled': changes.disabled?.currentValue,
+      [this.bgColor]: changes.bgColor?.currentValue,
     };
   }
 }

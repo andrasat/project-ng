@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
-import { throwError, BehaviorSubject } from 'rxjs';
+import { throwError, BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 
 import { catchError, debounceTime, map } from 'rxjs/operators';
@@ -26,10 +26,13 @@ import {
   IOrderHistoryResult,
   IValidatePaymentResult,
   ISaveAddressInput,
+  IFAQData,
+  ITNCData,
 } from '@core/models';
 import { separateAddress, utf8ToBase64 } from '@utils/index';
 
-import { brandListData } from '../mock/';
+import { brandListData, getFAQData, getTNCData } from '../mock/';
+import { IOrderData } from '@core/models/orderData';
 
 @Injectable()
 export class QSApiService {
@@ -234,6 +237,13 @@ export class QSApiService {
     })).pipe(map(data => data));
   }
 
+  getOrder(orderID: string) {
+    return this.get<IOrderData>(`/web/qsv1/order/${orderID}`, undefined, new HttpHeaders({
+      authorization: `Bearer ${this.BEARER_TOKEN}`,
+    }))
+      .pipe(map(data => data));
+  }
+
   getOrderHistory(token: string, orderIds: string[]) {
     return this.post<IOrderHistoryResult>('/web/v1/user/order', orderIds, new HttpHeaders({
       authorization: `Bearer ${token}`,
@@ -291,5 +301,19 @@ export class QSApiService {
       'Data-Branch': branchCode,
     }))
       .pipe(map(data => data));
+  }
+
+  getFAQData() {
+    return new Observable<IFAQData[]>(observe => {
+      observe.next(getFAQData());
+      observe.complete();
+    });
+  }
+
+  getTNCData() {
+    return new Observable<ITNCData[]>(observe => {
+      observe.next(getTNCData());
+      observe.complete();
+    });
   }
 }

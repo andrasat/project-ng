@@ -6,6 +6,8 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/cor
 })
 export class BagIconComponent implements OnInit, OnChanges {
   @Input() color: string
+  @Input() height: number = 72
+  @Input() width: number = 72
 
   fillColor: string
 

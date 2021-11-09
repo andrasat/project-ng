@@ -110,7 +110,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
         sellPrice: this.menu?.sellPrice!,
         imageUrl: this.menu?.imageUrl!,
         qty: foundMenu ? foundMenu.qty : 0,
-        packages: defaultPackages || [],
+        packages: foundMenu ? foundMenu.packages : (defaultPackages || []),
         extras: [],
         notes: '',
       };
@@ -119,17 +119,32 @@ export class MenuComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getSelectedPackage(packageData: IPackages) {
+    const existingPackageIndex = this.saleMenu.packages.findIndex(p => p.menuID === packageData.menuID);
+
+    if (existingPackageIndex >= 0) return true;
+    return false;
+  }
+
   selectPackage(packageData: IPackages) {
-    this.saleMenu = {
-      ...this.saleMenu,
-      packages: [{
-        menuGroupID: packageData.menuGroupID,
-        menuID: packageData.menuID,
-        menuName: packageData.menuName,
-        sellPrice: packageData.sellPrice,
-        qty: 1,
-      }],
-    };
+    const existingPackageIndex = this.saleMenu.packages.findIndex(p => p.menuGroupID === packageData.menuGroupID);
+
+    if (existingPackageIndex >= 0) {
+      this.saleMenu.packages[existingPackageIndex].menuID = packageData.menuID;
+      this.saleMenu.packages[existingPackageIndex].menuName = packageData.menuName;
+      this.saleMenu.packages[existingPackageIndex].sellPrice = packageData.sellPrice;
+    } else {
+      this.saleMenu = {
+        ...this.saleMenu,
+        packages: [...this.saleMenu.packages, {
+          menuGroupID: packageData.menuGroupID,
+          menuID: packageData.menuID,
+          menuName: packageData.menuName,
+          sellPrice: packageData.sellPrice,
+          qty: 1,
+        }],
+      };
+    }
   }
 
   addExtras(extra: IExtras) {

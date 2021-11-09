@@ -43,6 +43,7 @@ import {
 
 import { TimePickerComponent } from './time-picker/time-picker.component';
 import { LabelComponent } from './label/label.component';
+import { AccordionComponent } from './accordion/accordion.component';
 
 @NgModule({
   imports: [
@@ -75,6 +76,7 @@ import { LabelComponent } from './label/label.component';
     MenuPackageListComponent,
     ContactListComponent,
     LabelComponent,
+    AccordionComponent,
   ],
   exports: [
     CommonModule,
@@ -103,6 +105,7 @@ import { LabelComponent } from './label/label.component';
     MenuPackageListComponent,
     ContactListComponent,
     LabelComponent,
+    AccordionComponent,
   ]
 })
 export class ComponentsModule {}

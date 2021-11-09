@@ -63,8 +63,10 @@ export class TimePickerComponent implements OnInit, OnChanges, AfterViewInit, On
         return String(hourAgo);
       }
     }).sort((a,b) => Number(a) - Number(b));
+  
+    const currentStringHour = String(currentHour).length < 2 ? `0${currentHour}` : String(currentHour);
 
-    return [...fiveHourAgo ,String(currentHour), ...fiveHourAhead];
+    return [...fiveHourAgo , currentStringHour, ...fiveHourAhead];
   }
 
   private _getTransitionEndEventName() {

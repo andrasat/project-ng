@@ -6,6 +6,8 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/cor
 })
 export class DeliveryBikeIconComponent implements OnInit, OnChanges {
   @Input() color: string
+  @Input() height = 72
+  @Input() width = 72
 
   fillColor: string
 

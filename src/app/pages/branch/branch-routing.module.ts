@@ -12,6 +12,7 @@ import { SearchMenuComponent } from './search-menu/search-menu.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { PromotionDetailComponent } from './promotion-detail/promotion-detail.component';
 import { PaymentComponent } from './payment/payment.component';
+import { AboutUsCompanyComponent } from './about-us-company/about-us-company.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,10 @@ import { PaymentComponent } from './payment/payment.component';
           path: 'others',
           pathMatch: 'full',
           component: OthersComponent
+        }, {
+          path: 'others/about-us',
+          pathMatch: 'full',
+          component: AboutUsCompanyComponent,
         }, {
           path: ':branchCode',
           pathMatch: 'full',

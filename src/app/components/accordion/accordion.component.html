@@ -1,0 +1,16 @@
+<div class="accordion">
+
+  <div class="accordion-title d-flex flex-row justify-content-between" (click)="toggleContent()">
+    <app-bodytext-14 class="title-text">{{ title }}</app-bodytext-14>
+
+    <app-icon-chevron-down
+      class="chevron-icon"
+      [ngClass]="{active: contentOpened}"
+      color="black">
+    </app-icon-chevron-down>
+  </div>
+
+  <div class="accordion-content" [ngClass]="{active: contentOpened}">
+    <ng-content></ng-content>
+  </div>
+</div>

@@ -16,6 +16,7 @@ import { PromotionDetailComponent } from './promotion-detail/promotion-detail.co
 import { PaymentComponent } from './payment/payment.component';
 import { PromotionComponent } from './promotion/promotion.component';
 import { OthersComponent } from './others/others.component';
+import { AboutUsCompanyComponent } from './about-us-company/about-us-company.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { OthersComponent } from './others/others.component';
     PaymentComponent,
     PromotionComponent,
     OthersComponent,
+    AboutUsCompanyComponent,
   ],
 })
 export class BranchModule {}

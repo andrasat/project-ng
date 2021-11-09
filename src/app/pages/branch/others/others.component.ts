@@ -31,8 +31,25 @@ export class OthersComponent implements OnInit {
     }
   }
 
+  checkUserLogin() {
+    return this.user && !!this.user.token;
+  }
+
   capitalizeWord(word: string) {
     return capitalize(word);
+  }
+
+  async loginHandler(type: string = 'default') {
+    switch(type) {
+      case 'google':
+        await this.authService.signInGoogle();
+        break;
+      case 'facebook':
+        await this.authService.signInFacebook();
+        break;
+    }
+
+    window.location.reload();
   }
 
   goToContact() {
@@ -46,7 +63,9 @@ export class OthersComponent implements OnInit {
   }
 
   goToAboutUs() {
-    return this.navigation.navigate('/about-us');
+    return this.navigation.navigate('about-us', {
+      relativeTo: this.route,
+    });
   }
 
   goToTNC() {
@@ -55,6 +74,7 @@ export class OthersComponent implements OnInit {
 
   async logout() {
     await this.authService.signOut();
+    window.location.reload();
     return;
   }
 }

@@ -18,4 +18,8 @@
   &.disabled {
     background-color: var(--grey-4);
   }
+
+  &.red {
+    background-color: var(--red-1);
+  }
 }
