@@ -31,8 +31,8 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     route.queryParams.subscribe(queryParams => {
       this.queryParams = queryParams;
 
-      if (queryParams.orderMode) {
-        this.selectedOrderMode = queryParams.orderMode;
+      if (queryParams.mode) {
+        this.selectedOrderMode = queryParams.mode;
       }
     });
   }
@@ -88,7 +88,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     this.qsApiService.getBranchData(this.params.branchCode);
     this.qsApiService.getPromotion(this.params.branchCode);
 
-    if (this.queryParams.orderMode === 'delivery' && this.queryParams.lat && this.queryParams.lng) {
+    if (this.queryParams.mode === 'delivery' && this.queryParams.lat && this.queryParams.lng) {
       this.locationService.updateCurrentPosition({
         coords: {
           accuracy: 0,
@@ -125,6 +125,11 @@ export class RestaurantComponent implements OnInit, OnDestroy {
       .subscribe(branchData => {
         this.branchData = branchData;
 
+        if (branchData && this.params.branchCode !== branchData.branchCode) {
+          this.navigation.navigate('/not-found');
+          return; 
+        }
+
         const today = branchData?.businessHour.find(hour => hour.isCurrentDay);
         this.businessHourText = `${branchData?.businessHour[0].day} - ${branchData?.businessHour[branchData?.businessHour.length - 1].day} ${today?.startTime} - ${today?.endTime}`;
         this.showOutletClosed = typeof branchData?.isOpen !== 'undefined' ? !branchData?.isOpen : undefined;
@@ -154,12 +159,12 @@ export class RestaurantComponent implements OnInit, OnDestroy {
           return mode;
         }) : [];
 
-        if (branchData && this.queryParams.orderMode) {
-          const selectedMode = this.orderModes.find(mode => mode.type === this.queryParams.orderMode);
+        if (branchData && this.queryParams.mode) {
+          const selectedMode = this.orderModes.find(mode => mode.type === this.queryParams.mode || mode.name === this.queryParams.mode);
           const orderInputData = this.storageService.getItem(`order_${this.params.companyCode}_${this.params.branchCode}`);
 
           // adjust custom order mode with query params
-          if (this.queryParams.orderMode === 'custom' && selectedMode && selectedMode.forms) {
+          if (selectedMode && selectedMode.forms) {
             this.customOrderModeForm = selectedMode.forms;
             this.customOrderFormGroup = new FormGroup(selectedMode.forms.reduce((formObject, form) => {
               return {
@@ -188,35 +193,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
           if (orderInputData) {
             this.orderInput = JSON.parse(orderInputData) as IOrderInput;
 
-            // decide if there is additionalCustomerInfo, hide custom form at open page
-            if (this.orderInput.additionalCustomerInfo && selectedMode && selectedMode.forms) {
-              let mandatoryFlagCounter = 0;
-              const mandatoryFlagCount = selectedMode.forms?.filter(form => form.flagMandatory > 0).length;
-
-              const hideCollapseContainer = this.orderInput.additionalCustomerInfo.reduce((result, formData) => {
-                if (mandatoryFlagCounter === mandatoryFlagCount || mandatoryFlagCount === 0) {
-                  return true;
-                }
-
-                const foundForm = selectedMode.forms?.find(form => form.inputLabelEn === formData.desc);
-
-                if (foundForm && foundForm.flagMandatory > 0 && formData.value) {
-                  mandatoryFlagCounter++;
-                  return result;
-                }
-
-                return result;
-              }, false);
-
-              mandatoryFlagCounter = 0;
-
-              if (hideCollapseContainer) {
-                this.hideCollapseContainer = true;
-                this.qsApiService.getMenu(this.params.branchCode, selectedMode?.visitPurposeID!);
-              }
-            }
-
-            if (this.queryParams.orderMode === 'dineIn' && this.queryParams.tableNumber) {
+            if (this.queryParams.mode === 'dineIn' && this.queryParams.tableNumber) {
               this.orderInput.tableName = this.queryParams.tableNumber;
             }
 
@@ -332,6 +309,10 @@ export class RestaurantComponent implements OnInit, OnDestroy {
         this.popularMenus = popularMenuList || [];
         this.priceChoppedMenus = priceChoppedMenuList || [];
       });
+  }
+
+  getActiveOrderMode(mode: string, name?: string) {
+    return mode === this.selectedOrderMode || name === this.selectedOrderMode;
   }
 
   getOrderModeText(mode: string, name?: string) {
@@ -479,7 +460,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     this.navigation.navigate(undefined, {
       relativeTo: this.route,
       queryParams: {
-        orderMode: this.selectedOrderMode,
+        mode: this.selectedOrderMode,
       },
       queryParamsHandling: 'merge',
     });
@@ -507,7 +488,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     return this.navigation.navigate(`menu/${menuID}`, {
       relativeTo: this.route,
       queryParams: {
-        orderMode: this.queryParams.orderMode,
+        mode: this.queryParams.mode,
         visitPurposeID: selectedMode?.visitPurposeID!,
       },
     });
@@ -541,7 +522,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     this.navigation.navigate(`search-menu`, {
       relativeTo: this.route,
       queryParams: {
-        orderMode: this.selectedOrderMode,
+        mode: this.selectedOrderMode,
         visitPurposeID: selectedMode?.visitPurposeID!,
       },
     });
@@ -551,7 +532,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     this.navigation.navigate(`checkout`, {
       relativeTo: this.route,
       queryParams: {
-        orderMode: this.selectedOrderMode,
+        mode: this.selectedOrderMode,
       }
     });
   }

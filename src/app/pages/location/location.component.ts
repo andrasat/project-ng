@@ -195,7 +195,7 @@ export class LocationComponent implements OnInit, OnDestroy {
 
             this.navigation.navigate(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}/checkout`, {
               queryParams: {
-                orderMode: this.orderInput.type,
+                mode: this.orderInput.type,
               }
             });
           },
@@ -204,7 +204,7 @@ export class LocationComponent implements OnInit, OnDestroy {
 
             this.navigation.navigate(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}/checkout`, {
               queryParams: {
-                orderMode: this.orderInput.type,
+                mode: this.orderInput.type,
               }
             });
           }

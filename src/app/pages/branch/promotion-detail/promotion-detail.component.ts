@@ -35,9 +35,9 @@ export class PromotionDetailComponent implements OnInit {
   }
 
   goBack() {
-    if (this.queryParams.from === 'checkout' && this.queryParams.companyCode && this.queryParams.branchCode && this.queryParams.orderMode) {
+    if (this.queryParams.from === 'checkout' && this.queryParams.companyCode && this.queryParams.branchCode && this.queryParams.mode) {
       return this.navigation.back(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}/checkout`, {
-        queryParams: { orderMode: this.queryParams.orderMode },
+        queryParams: { mode: this.queryParams.mode },
       });
     }
 
@@ -57,10 +57,10 @@ export class PromotionDetailComponent implements OnInit {
   }
 
   applyPromoCode() {
-    if (this.queryParams.from === 'checkout' && this.queryParams.companyCode && this.queryParams.branchCode && this.queryParams.orderMode) {
+    if (this.queryParams.from === 'checkout' && this.queryParams.companyCode && this.queryParams.branchCode && this.queryParams.mode) {
       return this.navigation.navigate(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}/checkout`, {
         queryParams: {
-          orderMode: this.queryParams.orderMode,
+          mode: this.queryParams.mode,
           applyPromoCode: this.queryParams.promoCode,
         },
       });

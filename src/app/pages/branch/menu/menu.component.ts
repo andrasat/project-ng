@@ -61,7 +61,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
       this.navigation.back('../..', {
         relativeTo: this.route,
         queryParams: {
-          orderMode: this.queryParams.orderMode,
+          mode: this.queryParams.mode,
         }
       });
     }
@@ -241,7 +241,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
       return this.navigation.back('../../checkout', {
         relativeTo: this.route,
         queryParams: {
-          orderMode: this.queryParams.orderMode,
+          mode: this.queryParams.mode,
         }
       });;
     }
@@ -249,7 +249,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     return this.navigation.back('../..', {
       relativeTo: this.route,
       queryParams: {
-        orderMode: this.queryParams.orderMode,
+        mode: this.queryParams.mode,
       }
     });
   }

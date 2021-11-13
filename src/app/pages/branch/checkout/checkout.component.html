@@ -14,7 +14,7 @@
   </ngb-alert>
 
   <!-- DELIVERY MODE -->
-  <div *ngIf="queryParams.orderMode === 'delivery'" class="section-container">
+  <div *ngIf="queryParams.mode === 'delivery'" class="section-container">
     <div class="d-flex flex-row justify-content-between">
       <app-heading-5>DELIVER TO</app-heading-5>
       <app-heading-5 *ngIf="!!orderInput.deliveryAddress" color="tangerine" (click)="goToSearchLocation()">EDIT</app-heading-5>
@@ -44,9 +44,9 @@
   </div>
 
   <!-- OTHER MODE -->
-  <div *ngIf="queryParams.orderMode !== 'delivery'" class="section-container">
+  <div *ngIf="queryParams.mode !== 'delivery'" class="section-container">
     <div class="d-flex flex-row justify-content-between">
-      <app-heading-5>{{ getOrderModeTitleText(queryParams.orderMode) }}</app-heading-5>
+      <app-heading-5>{{ getOrderModeTitleText(queryParams.mode) }}</app-heading-5>
       <app-heading-5 color="tangerine" (click)="goToHome()">EDIT</app-heading-5>
     </div>
 

@@ -168,7 +168,7 @@
             *ngFor="let mode of orderModes"
             class="mode-button"
             #orderModeButton
-            [ngClass]="{ active: mode.type === selectedOrderMode}"
+            [ngClass]="{ active: getActiveOrderMode(mode.type, mode.name)}"
             (click)="selectOrderMode(mode)">
 
             <span class="mode-text">

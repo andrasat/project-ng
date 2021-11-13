@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
 import { IBranchList } from '@core/models';
-import { LocationService, QSApiService } from '@core/services';
+import { LocationService, NavigationService, QSApiService } from '@core/services';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -16,6 +16,7 @@ export class BranchComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public router: Router,
     public locationService: LocationService,
+    public navigation: NavigationService,
     public qsApiService: QSApiService,
   ) {
     route.params.subscribe(params => this.params = { ...this.params, ...params });
@@ -52,7 +53,16 @@ export class BranchComponent implements OnInit, OnDestroy {
 
     this.qsApiService.branchList
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(branchList => this.branchList = branchList);
+      .subscribe(branchList => {
+        this.branchList = branchList;
+
+        if (branchList && this.params.companyCode !== branchList.companyCode) {
+          this.navigation.navigate('/not-found');
+          return;
+        }
+      });
+    
+    return;
   }
 
   ngOnDestroy() {

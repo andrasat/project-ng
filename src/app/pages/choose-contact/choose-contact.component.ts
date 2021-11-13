@@ -113,7 +113,7 @@ export class ChooseContactComponent implements OnInit, OnDestroy {
 
     return this.navigation.navigate(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}/checkout`, {
       queryParams: {
-        orderMode: this.queryParams.orderMode,
+        mode: this.queryParams.mode,
       }
     });
   }
@@ -177,7 +177,7 @@ export class ChooseContactComponent implements OnInit, OnDestroy {
     if (this.queryParams.from === 'checkout' && this.queryParams.companyCode && this.queryParams.branchCode) {
       return this.navigation.back(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}/checkout`, {
         queryParams: {
-          orderMode: this.queryParams.orderMode,
+          mode: this.queryParams.mode,
         }
       });
     }

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthGuardService } from '@core/services';
+import { NotFoundComponent } from '@pages/not-found/not-found.component';
 
 @NgModule({
   imports: [
@@ -61,9 +62,18 @@ import { AuthGuardService } from '@core/services';
         loadChildren: () => import('@pages/payment-failed/payment-failed.module' /* webpackChunkName: "payment-failed" */).then(m => m.PaymentFailedModule),
       },
       {
+        path: 'not-found',
+        pathMatch: 'full',
+        component: NotFoundComponent,
+      },
+      {
         path: ':companyCode',
         canActivate: [AuthGuardService],
         loadChildren: () => import('@pages/branch/branch.module' /* webpackChunkName: "branch" */).then(m => m.BranchModule),
+      },
+      {
+        path: '**',
+        redirectTo: '/not-found',
       }
     ]),
   ],

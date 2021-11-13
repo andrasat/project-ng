@@ -84,7 +84,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }
     } else {
       return this.navigation.back('..', {
-        queryParams: { orderMode: this.queryParams.orderMode },
+        queryParams: { mode: this.queryParams.mode },
       });
     }
 
@@ -251,7 +251,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.navigation.navigate(undefined, {
       queryParams: {
-        orderMode: this.queryParams.orderMode,
+        mode: this.queryParams.mode,
       },
     });
     this.hidePromoDeleteCollapse();
@@ -340,7 +340,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.navigation.navigate('../payment', {
       relativeTo: this.route,
       queryParams: {
-        orderMode: this.queryParams.orderMode,
+        mode: this.queryParams.mode,
       }
     });
   }
@@ -349,7 +349,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.navigation.navigate('..', {
       relativeTo: this.route,
       queryParams: {
-        orderMode: this.queryParams.orderMode,
+        mode: this.queryParams.mode,
       }
     });
   }
@@ -357,7 +357,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   goToPromoDetail(promotion: IPromotion) {
     this.navigation.navigate(`/${this.params.companyCode}/promotion/${promotion.promotionID}`, {
       queryParams: {
-        orderMode: this.queryParams.orderMode,
+        mode: this.queryParams.mode,
         companyCode: this.params.companyCode,
         branchCode: this.params.branchCode,
         title: promotion.notes,
@@ -370,7 +370,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   goToContacts() {
     this.navigation.navigate('/contacts', {
       queryParams: {
-        orderMode: this.queryParams.orderMode,
+        mode: this.queryParams.mode,
         companyCode: this.params.companyCode,
         branchCode: this.params.branchCode,
         from: 'checkout',
@@ -382,7 +382,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.navigation.navigate(`../menu/${menuID}`, {
       relativeTo: this.route,
       queryParams: {
-        orderMode: this.queryParams.orderMode,
+        mode: this.queryParams.mode,
         visitPurposeID: this.orderInput.visitPurposeID,
         edit: true,
       }
