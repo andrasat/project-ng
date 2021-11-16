@@ -85,10 +85,11 @@ export class BranchComponent implements OnInit, OnDestroy {
     }
 
     if (
-      this.router.url.includes('promotion/') ||
-      this.router.url.includes('order-history/')
+      /(.*promotion\/.+)|(.*order-history\/.+)/.test(routeUrl)
     ) {
       this.hideBottomNav = true;
+    } else {
+      this.hideBottomNav = false;
     }
   }
 }
