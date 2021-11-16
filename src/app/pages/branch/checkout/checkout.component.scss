@@ -1,17 +1,3 @@
-:host .alert-custom::ng-deep {
-  background-color: var(--red-1);
-  border-radius: 6px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  top: 5vh;
-  left: 5vw;
-  width: 90%;
-
-  & button span {
-    color: var(--white);
-  }
-}
-
 .checkout-container {
   padding: 16px 0 80px;
 }
@@ -82,7 +68,12 @@
   padding: 16px;
 }
 
-.add-order-button {
+.add-more-voucher-container {
+  padding: 16px 16px 0;
+}
+
+.add-order-button,
+.add-mode-voucher-button {
   background-color: transparent;
   border: 1px dashed var(--tangerine);
   border-radius: 6px;
@@ -100,12 +91,6 @@
   overflow-y: hidden;
   min-width: 100vw;
   padding-right: 10vw;
-
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .carousel-child-menu-list {
@@ -160,12 +145,6 @@
 .promo-list {
   overflow-x: scroll;
   overflow-y: hidden;
-
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .promo {

@@ -1,0 +1,63 @@
+<div class="page-container">
+
+  <div class="nav-back-icon" (click)="goBack()">
+    <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
+  </div>
+
+  <div class="header-component header-shadow">
+    <app-bodytext-16 class="text-center" [isSemiBold]="true">About Us</app-bodytext-16>
+  </div>
+
+  <div class="content">
+
+    <div class="ismaya-logo">
+      <img [src]="branchData?.thumbnailImageUrl" [alt]="branchData?.branchCode" width="80px" height="80px">
+    </div>
+
+    <app-heading-3>{{ branchData?.brandName }}</app-heading-3>
+    <app-caption color="grey">{{ branchData?.branchName }}</app-caption>
+
+    <div class="mt-3">
+      <app-bodytext-14>
+        <span [innerHTML]="getBranchDescription()"></span>
+      </app-bodytext-14>
+    </div>
+
+    <div class="mt-4 d-flex flex-row">
+      <img class="web-icons" src="/assets/image/instagram.png" alt="go to instagram">
+      <img class="web-icons" src="/assets/image/twitter.png" alt="go to twitter">
+      <img class="web-icons" src="/assets/image/facebook.png" alt="go to facebook">
+      <img class="web-icons" src="/assets/image/web.png" alt="go to ismaya web">
+    </div>
+
+    <div class="mt-4">
+      <app-heading-5>
+        ADDRESS
+      </app-heading-5>
+
+      <app-bodytext-14 [isSemiBold]="true">
+        {{ branchData?.branchName }}
+      </app-bodytext-14>
+
+      <app-caption color="grey">
+        {{ branchData?.address }}
+      </app-caption>
+
+      <app-caption [isSemiBold]="true">
+        {{ branchData?.phone }}
+      </app-caption>
+    </div>
+
+    <div class="mt-4">
+      <app-heading-5>
+        OPERATIONAL HOURS
+      </app-heading-5>
+
+      <app-caption color="grey" [fontSize]="12">
+        <span [innerHTML]="getBusinessHourText()"></span>
+      </app-caption>
+    </div>
+
+  </div>
+
+</div>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IMenuData, IMenus } from '@core/models';
-import { QSApiService } from '@core/services';
+import { NavigationService, QSApiService } from '@core/services';
 
 @Component({
   selector: 'app-search-menu',
@@ -12,8 +12,8 @@ import { QSApiService } from '@core/services';
 export class SearchMenuComponent implements OnInit {
   constructor(
     public route: ActivatedRoute,
-    public router: Router,
     public qsApiService: QSApiService,
+    public navigation: NavigationService,
   ) {
     route.params.subscribe(params => this.params = params);
     route.queryParams.subscribe(queryParams => this.queryParams = queryParams);
@@ -45,12 +45,18 @@ export class SearchMenuComponent implements OnInit {
   }
 
   goToMenu(menuID: number) {
-    this.router.navigate([`../menu/${menuID}`], {
+    this.navigation.navigate(`../menu/${menuID}`, {
       relativeTo: this.route,
       queryParams: {
         mode: this.queryParams.mode,
         visitPurposeID: this.queryParams.visitPurposeID,
       },
+    });
+  }
+
+  goBack() {
+    this.navigation.navigate('..', {
+      relativeTo: this.route,
     });
   }
 

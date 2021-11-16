@@ -175,7 +175,7 @@ export class QSApiService {
         return data.map<IAutocompleteResult>(each => ({
           placeId: each.placeId,
           description: each.description,
-          displayName: each.description.split(', ')[0],
+          displayName: separateAddress(each.description).addressName,
         }));
       }));
   }
@@ -219,7 +219,18 @@ export class QSApiService {
     return this.get<IProfile>('/web/v1/user/profile', undefined, new HttpHeaders({
       authorization: `Bearer ${token}`,
     }))
-      .pipe(map(data => data))
+      .pipe(map(data => {
+        return {
+          ...data,
+          addresses: data.addresses.map(address => {
+            const separatedAddress = separateAddress(address.addressDescription);
+            return {
+              ...address,
+              displayName: separatedAddress.addressName,
+            };
+          })
+        };
+      }))
       .subscribe(profile => this._profileSubject.next(profile));
   }
 
@@ -228,6 +239,7 @@ export class QSApiService {
       ...data
     }, new HttpHeaders({
       authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     }))
       .pipe(map(data => data));
   }
@@ -248,10 +260,11 @@ export class QSApiService {
   getOrderHistory(token: string, orderIds: string[]) {
     return this.post<IOrderHistoryResult>('/web/v1/user/order', orderIds, new HttpHeaders({
       authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     }), new HttpParams({
       fromObject: {
         page: 1,
-        limit: 3,
+        limit: 5,
       },
     })).pipe(map(data => data));
   }

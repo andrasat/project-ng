@@ -16,6 +16,10 @@
 
 <div class="restaurant-container">
 
+  <ngb-alert type="custom" *ngIf="showAlertError">
+    <app-bodytext-14 color="white">{{ alertErrorMessage }}</app-bodytext-14>
+  </ngb-alert>
+
   <div class="d-flex flex-row align-items-center">
     <app-caption [isSemiBold]="true">{{ getOrderModeText(selectedOrderMode) }} from</app-caption>
     <app-icon-chevron-down class="ml-2" [width]="10"></app-icon-chevron-down>
@@ -27,7 +31,7 @@
       <a [href]="'tel:' + branchData?.phone">
         <img src="/assets/image/phone.svg" alt="Call restaurant">
       </a>
-      <img class="ml-3" src="/assets/image/info.svg" alt="Restaurant info">
+      <img class="ml-3" src="/assets/image/info.svg" alt="Restaurant info" (click)="goToAboutRestaurant()">
     </div>
   </div>
 
@@ -150,110 +154,115 @@
   class="collapse-container"
 >
 
+  <div class="collapse-background-overlay" (click)="clickOnCollapseOverlay()"></div>
+
   <!-- Select Order Mode -->
   <ng-container *ngIf="showOutletClosed === false && showMenuDrawer === false">
-    <div class="order-mode" >
-      <div class="d-flex flex-row justify-content-between">
-        <app-heading-3 class="order-mode-title">How would you like to order today?</app-heading-3>
-        <div (click)="goBack()">
-          <app-icon-close></app-icon-close>
-        </div>
-      </div>
+    <div class="order-mode">
 
-      <div class="d-flex flex-column mt-3">
-        <app-caption>METHOD</app-caption>
-
-        <div class="mode-container d-flex flex-row">
-          <button
-            *ngFor="let mode of orderModes"
-            class="mode-button"
-            #orderModeButton
-            [ngClass]="{ active: getActiveOrderMode(mode.type, mode.name)}"
-            (click)="selectOrderMode(mode)">
-
-            <span class="mode-text">
-              {{ getOrderModeText(mode.type, mode.name) }} 
-            </span>
-            <span class="mode-icon">
-              <app-icon-delivery-bike *ngIf="mode.type === 'delivery'" [color]="mode.type === selectedOrderMode ? 'white' : 'grey'"></app-icon-delivery-bike>
-              <app-icon-bag *ngIf="mode.type === 'takeAway'" [color]="mode.type === selectedOrderMode ? 'white' : 'grey'"></app-icon-bag>
-            </span>
-
-          </button>
-        </div>
-
-        <!-- Take Away -->
-        <div *ngIf="selectedOrderMode === 'takeAway'" class="d-flex flex-column">
-          <app-caption>TIME</app-caption>
-
-          <app-time-picker
-            (selectedHourChanged)="onSelectedHour($event)"
-            (selectedMinuteChanged)="onSelectedMinute($event)"
-          ></app-time-picker>
-
-        </div>
-
-        <!-- Dine In -->
-        <div *ngIf="selectedOrderMode === 'dineIn'" class="d-flex flex-column">
-          <div *ngIf="!!tableNumberControl" class="form-group">
-            <label for="tableNumber">
-              Please input your table number
-            </label>
-            <input
-              type="text"
-              class="form-control"
-              id="tableNumber"
-              placeholder="Table Number"
-              [formControl]="tableNumberControl"
-              [required]="true"/>
-            <div *ngIf="tableNumberControl.errors?.['required']" class="is-invalid">
-              <app-caption color="red">Table number is required</app-caption>
-            </div>
+      <div class="order-mode-scroller">
+        <div class="d-flex flex-row justify-content-between">
+          <app-heading-3 class="order-mode-title">How would you like to order today?</app-heading-3>
+          <div (click)="goBack()">
+            <app-icon-close></app-icon-close>
           </div>
         </div>
 
-        <!-- Custom Order -->
-        <div *ngIf="!!customOrderModeForm && customOrderFormGroup" class="d-flex flex-column">
-          <form [formGroup]="customOrderFormGroup">
-            <div
-              *ngFor="let form of customOrderModeForm"
-              class="form-group">
-              
-              <ng-container *ngIf="!form.inputID.includes('pickuptime')">
-                <input
-                  type="text"
-                  class="form-control"
-                  [id]="form.inputID"
-                  [placeholder]="form.inputLabelEn"
-                  [formControlName]="form.inputID"
-                  [required]="form.flagMandatory > 0"
-                  [autofocus]="form.flagMandatory > 0" />
-                <div
-                  *ngIf="!!customOrderFormGroup.get(form.inputID)?.errors?.['required']"
-                  class="is-invalid">
-                  <app-caption color="red">{{ form.inputLabelEn }} is required!</app-caption>
-                </div>
-              </ng-container>
+        <div class="d-flex flex-column mt-3">
+          <app-caption>METHOD</app-caption>
 
-              <!-- Pickup time -->
-              <ng-container *ngIf="form.inputID.includes('pickuptime')">
-                <label>{{ form.inputLabelEn }}</label>
-                <app-time-picker
-                  (selectedHourChanged)="onSelectedHour($event)"
-                  (selectedMinuteChanged)="onSelectedMinute($event)"
-                ></app-time-picker>
-              </ng-container>
+          <div class="mode-container d-flex flex-row flex-wrap">
+            <button
+              *ngFor="let mode of orderModes"
+              class="mode-button"
+              #orderModeButton
+              [ngClass]="{ active: getActiveOrderMode(mode.type, mode.name)}"
+              (click)="selectOrderMode(mode)">
 
+              <span class="mode-text">
+                {{ getOrderModeText(mode.type, mode.name) }} 
+              </span>
+              <span class="mode-icon">
+                <app-icon-delivery-bike *ngIf="mode.type === 'delivery'" [color]="mode.type === selectedOrderMode ? 'white' : 'grey'"></app-icon-delivery-bike>
+                <app-icon-bag *ngIf="mode.type === 'takeAway'" [color]="mode.type === selectedOrderMode ? 'white' : 'grey'"></app-icon-bag>
+              </span>
+
+            </button>
+          </div>
+
+          <!-- Take Away (HIDE FOR NOW) -->
+          <!-- <div *ngIf="selectedOrderMode === 'takeAway'" class="d-flex flex-column">
+            <app-caption>TIME</app-caption>
+
+            <app-time-picker
+              (selectedHourChanged)="onSelectedHour($event)"
+              (selectedMinuteChanged)="onSelectedMinute($event)"
+            ></app-time-picker>
+
+          </div> -->
+
+          <!-- Dine In -->
+          <div *ngIf="selectedOrderMode === 'dineIn'" class="d-flex flex-column">
+            <div *ngIf="!!tableNumberControl" class="form-group">
+              <label for="tableNumber">
+                Please input your table number
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="tableNumber"
+                placeholder="Table Number"
+                [formControl]="tableNumberControl"
+                [required]="true"/>
+              <div *ngIf="tableNumberControl.errors?.['required']" class="is-invalid">
+                <app-caption color="red">Table number is required</app-caption>
+              </div>
             </div>
-          </form>
-        </div>
+          </div>
 
-        <app-primary-button
-          *ngIf="selectedOrderMode !== ''"
-          class="mt-3"
-          text="CONTINUE"
-          (clicked)="clickContinueOrderMode()"
-        ></app-primary-button>
+          <!-- Custom Order -->
+          <div *ngIf="!!customOrderModeForm && customOrderFormGroup" class="d-flex flex-column">
+            <form [formGroup]="customOrderFormGroup">
+              <div
+                *ngFor="let form of customOrderModeForm"
+                class="form-group">
+                
+                <ng-container *ngIf="!form.inputID.includes('pickuptime')">
+                  <input
+                    type="text"
+                    class="form-control"
+                    [id]="form.inputID"
+                    [placeholder]="form.inputLabelEn"
+                    [formControlName]="form.inputID"
+                    [required]="form.flagMandatory > 0"
+                    [autofocus]="form.flagMandatory > 0" />
+                  <div
+                    *ngIf="!!customOrderFormGroup.get(form.inputID)?.errors?.['required']"
+                    class="is-invalid">
+                    <app-caption color="red">{{ form.inputLabelEn }} is required!</app-caption>
+                  </div>
+                </ng-container>
+
+                <!-- Pickup time -->
+                <ng-container *ngIf="form.inputID.includes('pickuptime')">
+                  <label>{{ form.inputLabelEn }}</label>
+                  <app-time-picker
+                    (selectedHourChanged)="onSelectedHour($event)"
+                    (selectedMinuteChanged)="onSelectedMinute($event)"
+                  ></app-time-picker>
+                </ng-container>
+
+              </div>
+            </form>
+          </div>
+
+          <app-primary-button
+            *ngIf="selectedOrderMode !== ''"
+            class="mt-3"
+            text="CONTINUE"
+            (clicked)="clickContinueOrderMode()"
+          ></app-primary-button>
+        </div>
       </div>
     </div>
   </ng-container>

@@ -32,6 +32,7 @@ import {
   PrimaryButtonComponent,
   SecondaryButtonComponent,
   PromoButtonComponent,
+  OvalButtonComponent,
 } from './buttons';
 
 import {
@@ -70,6 +71,7 @@ import { AccordionComponent } from './accordion/accordion.component';
     PrimaryButtonComponent,
     SecondaryButtonComponent,
     PromoButtonComponent,
+    OvalButtonComponent,
     TimePickerComponent,
     MenuListComponent,
     MenuExtraListComponent,
@@ -99,6 +101,7 @@ import { AccordionComponent } from './accordion/accordion.component';
     PrimaryButtonComponent,
     SecondaryButtonComponent,
     PromoButtonComponent,
+    OvalButtonComponent,
     TimePickerComponent,
     MenuListComponent,
     MenuExtraListComponent,

@@ -14,6 +14,8 @@ import { PromotionDetailComponent } from './promotion-detail/promotion-detail.co
 import { PaymentComponent } from './payment/payment.component';
 import { AboutUsCompanyComponent } from './about-us-company/about-us-company.component';
 import { OrderDetailComponent } from './order-detail/order-detail.component';
+import { AboutUsRestaurantComponent } from './about-us-restaurant/about-us-restaurant.component';
+import { FeedbackComponent } from './feedback/feedback.component';
 
 @NgModule({
   imports: [
@@ -38,9 +40,13 @@ import { OrderDetailComponent } from './order-detail/order-detail.component';
           pathMatch: 'full',
           component: OrderHistoryComponent,
         }, {
-          path: 'order-detail/:orderID',
+          path: 'order-history/:orderID',
           pathMatch: 'full',
           component: OrderDetailComponent,
+        }, {
+          path: 'order-history/:orderID/feedback',
+          pathMatch: 'full',
+          component: FeedbackComponent,
         }, {
           path: 'others',
           pathMatch: 'full',
@@ -53,6 +59,10 @@ import { OrderDetailComponent } from './order-detail/order-detail.component';
           path: ':branchCode',
           pathMatch: 'full',
           component: RestaurantComponent,
+        }, {
+          path: ':branchCode/about-us',
+          pathMatch: 'full',
+          component: AboutUsRestaurantComponent,
         }, {
           path: ':branchCode/checkout',
           pathMatch: 'full',

@@ -1,5 +1,5 @@
-<div class="image-container">
-  <img [src]="menu?.imageUrl || 'https://via.placeholder.com/280'" alt="menu image">
+<div *ngIf="!!menu?.imageUrl" class="image-container">
+  <img [src]="menu?.imageUrl" alt="menu image">
 </div>
 
 <div class="close-icon-container" (click)="goBack()">

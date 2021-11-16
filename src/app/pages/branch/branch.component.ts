@@ -33,7 +33,10 @@ export class BranchComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.setActiveRoute(this.router.url);
 
-    if (this.router.url.includes('promotion/')) {
+    if (
+      this.router.url.includes('promotion/') ||
+      this.router.url.includes('order-history/')
+    ) {
       this.hideBottomNav = true;
     }
 
@@ -79,6 +82,13 @@ export class BranchComponent implements OnInit, OnDestroy {
       this.activeRoute = 'others';
     } else {
       this.activeRoute = 'home';
+    }
+
+    if (
+      this.router.url.includes('promotion/') ||
+      this.router.url.includes('order-history/')
+    ) {
+      this.hideBottomNav = true;
     }
   }
 }

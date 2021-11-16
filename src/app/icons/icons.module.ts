@@ -20,6 +20,7 @@ import { ContactIconComponent } from './contact/component';
 import { CheckboxIconComponent } from './checkbox/component';
 import { QuestionIconComponent } from './question/component';
 import { CreditCardIconComponent } from './credit-card/component';
+import { StarIconComponent } from './star/component';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { CreditCardIconComponent } from './credit-card/component';
     CheckboxIconComponent,
     QuestionIconComponent,
     CreditCardIconComponent,
+    StarIconComponent,
   ],
   exports: [
     ArrowLeftIconComponent,
@@ -66,6 +68,7 @@ import { CreditCardIconComponent } from './credit-card/component';
     CheckboxIconComponent,
     QuestionIconComponent,
     CreditCardIconComponent,
+    StarIconComponent,
   ]
 })
 export class IconModule {}

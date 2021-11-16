@@ -34,6 +34,7 @@ export interface IOrderInput {
   tableName?: string | null,
   salesMode?: string | null,
   type: string,
+  orderType: string,
   typeName: string | null,
   fullName: string,
   email: string,

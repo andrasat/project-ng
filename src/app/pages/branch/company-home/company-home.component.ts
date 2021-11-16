@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
-import { IAddress, IBranchList } from '@core/models';
+import { IAddress, IBranches, IBranchList } from '@core/models';
 import { LocationService, NavigationService, QSApiService } from '@core/services';
 
 import { take, takeUntil } from 'rxjs/operators';
@@ -56,6 +56,10 @@ export class CompanyHomeComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  goToAboutCompany() {
+    this.navigation.navigate('others/about-us', { relativeTo: this.route });
+  }
+
   goToSearchRestaurant() {
     this.navigation.navigate('/search-restaurant', { queryParams: { companyCode: this.branchList?.companyCode } });
   }
@@ -64,7 +68,11 @@ export class CompanyHomeComponent implements OnInit, OnDestroy {
     this.navigation.navigate('/location', { queryParams: { companyCode: this.branchList?.companyCode } });
   }
 
-  goToBranchRestaurant(branchCode: string) {
-    this.navigation.navigate(`${branchCode}`, { relativeTo: this.route });
+  goToBranchRestaurant(branch: IBranches) {
+    if (!branch.flagNearMe || branch.businessHour.status === 'closed') {
+      return;
+    }
+
+    this.navigation.navigate(`${branch.branchCode}`, { relativeTo: this.route });
   }
 }

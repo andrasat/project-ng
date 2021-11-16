@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { NavigationService } from '@core/services';
 
 @Component({
   selector: 'app-about-us-company',
@@ -7,5 +9,17 @@ import { Component } from '@angular/core';
 })
 
 export class AboutUsCompanyComponent {
-  constructor() { }
+  constructor(
+    public route: ActivatedRoute,
+    public navigation: NavigationService,
+  ) {
+    route.params.subscribe(params => this.params = { ...this.params, ...params });
+    route.parent?.params.subscribe(params => this.params = { ...this.params, ...params });
+  }
+
+  params: any = {}
+
+  goBack() {
+    this.navigation.back(`/${this.params.companyCode}`);
+  }
 }

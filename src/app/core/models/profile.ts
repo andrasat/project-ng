@@ -1,7 +1,8 @@
 export interface IProfileAddress {
   latitude: string,
   longitude: string,
-  description: string,
+  addressDescription: string,
+  displayName: string,
   notes: string,
 }
 

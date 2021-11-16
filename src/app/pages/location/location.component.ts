@@ -2,8 +2,8 @@ import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { MapOptions, tileLayer, latLng, Map } from 'leaflet';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { LocationService, NavigationService, QSApiService, StorageService } from '@core/services';
-import { IAddress, IAutocompleteResult, IBranches, IBranchList, IOrderInput } from '@core/models';
+import { AuthService, LocationService, NavigationService, QSApiService, StorageService } from '@core/services';
+import { IAddress, IAutocompleteResult, IBranches, IBranchList, IOrderInput, IProfile, IProfileAddress, ISaveAddressInput, IUserData } from '@core/models';
 import { environment } from '@environments/environment';
 
 import { take, takeUntil } from 'rxjs/operators';
@@ -23,6 +23,7 @@ export class LocationComponent implements OnInit, OnDestroy {
     public locationService: LocationService,
     public navigation: NavigationService,
     public qsApiService: QSApiService,
+    public authService: AuthService,
     public storageService: StorageService,
   ) {
     route.queryParams.subscribe(queryParams => {
@@ -38,13 +39,16 @@ export class LocationComponent implements OnInit, OnDestroy {
 
   hideCollapse = true
   showOutOfReachError = false
+  isLoggedIn = false
   branchList: IBranchList | undefined
   currentAddress: IAddress | undefined
+  user: IUserData | undefined
   orderInput: IOrderInput
   devicePosition: GeolocationPosition
   currentPosition: GeolocationPosition
   searchResults: IAutocompleteResult[] = []
   openBranches: IBranches[] = []
+  savedAddresses: IProfileAddress[] = []
 
   ngOnDestroy() {
     this.unsubscribe$.next();
@@ -107,10 +111,82 @@ export class LocationComponent implements OnInit, OnDestroy {
           }
         }
       });
+
+    this.qsApiService.profile
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(profile => {
+
+        if (profile) this.savedAddresses = [...profile.addresses];
+      });
+
+    this.authService.isLoggedIn
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(isLoggedIn => {
+        this.isLoggedIn = isLoggedIn;
+        const userData = this.storageService.getItem('user');
+
+        if (isLoggedIn && userData) {
+          const user = JSON.parse(userData) as IUserData;
+          this.user = user;
+
+          if (user.token) this.qsApiService.getProfile(user.token);
+        }
+      });
+  }
+
+  openCollapse() {
+    this.hideCollapse = false;
   }
 
   setNotes(notes: string) {
-    this.orderInput.deliveryAddressInfo = notes;
+    this.storageService.setItem('deliveryAddressInfo', notes);
+
+    if (this.queryParams.companyCode && this.queryParams.branchCode && this.orderInput) {
+      this.orderInput.deliveryAddressInfo = notes;
+      this.storageService.setItem(`order_${this.queryParams.companyCode}_${this.queryParams.branchCode}`, JSON.stringify(this.orderInput));
+    }
+  }
+
+  saveFavouriteAddress(data: IAutocompleteResult) {
+    this.hideCollapse = true;
+
+    this.qsApiService.getPlace(data.placeId)
+      .subscribe(place => {
+        this.locationService.updateCurrentPosition({
+            coords: {
+              accuracy: 0,
+              altitude: null,
+              altitudeAccuracy: null,
+              heading: null,
+              speed: null,
+              latitude: place.lat,
+              longitude: place.long,
+            },
+            timestamp: Date.now(),
+          });
+
+          this.map?.panTo(latLng(place.lat, place.long));
+
+          if (this.user && this.user.token) {
+            const notes = this.storageService.getItem('deliveryAddressInfo');
+            const addressData = {
+              description: data.description,
+              latitude: String(place.lat),
+              longitude: String(place.long),
+              notes: notes || '',
+            } as ISaveAddressInput;
+
+            this.qsApiService.saveAddress(addressData, this.user.token)
+              .subscribe(() => this.qsApiService.getProfile(this.user!.token!));
+          }
+      });
+  }
+
+  deleteFavouriteAddress(data: IProfileAddress) {
+    if (this.user && this.user.token) {
+      this.qsApiService.deleteAddress(Number(data.latitude), Number(data.longitude), this.user.token)
+        .subscribe(() => this.qsApiService.getProfile(this.user!.token!));
+    }
   }
 
   onMapReady(map: Map) {
@@ -147,8 +223,31 @@ export class LocationComponent implements OnInit, OnDestroy {
 
   onChangeSearch(keyword: string) {
     this.qsApiService.getSearch(keyword).subscribe(results => {
-      this.searchResults = [...results];
+      this.searchResults = results.reduce((filteredResults: IAutocompleteResult[], nextAddress) => {
+        const foundFavAddress = this.savedAddresses.find(address => address.addressDescription === nextAddress.description);
+        if (foundFavAddress) return filteredResults;
+        return [...filteredResults, nextAddress];
+      }, []);
     });
+  }
+
+  onSelectFavouriteLocation(data: IProfileAddress) {
+    this.hideCollapse = true;
+
+    this.locationService.updateCurrentPosition({
+      coords: {
+        accuracy: 0,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        speed: null,
+        latitude: Number(data.latitude),
+        longitude: Number(data.longitude),
+      },
+      timestamp: Date.now(),
+    });
+
+    this.map?.panTo(latLng(Number(data.latitude), Number(data.longitude)));
   }
 
   onSelectLocation(data: IAutocompleteResult) {
@@ -177,6 +276,19 @@ export class LocationComponent implements OnInit, OnDestroy {
 
   goToRestaurant(branchCode: string) {
     return this.navigation.navigate(`/${this.queryParams.companyCode || this.branchList?.companyCode}/${branchCode}`, { replaceUrl: true });
+  }
+
+  goBack() {
+    if (this.queryParams.companyCode && this.queryParams.branchCode && this.queryParams.from) {
+      this.navigation.back(`/${this.queryParams.companyCode}/${this.queryParams.branchCode}/checkout`, {
+        queryParams: {
+          mode: this.orderInput.type,
+        }
+      });
+      return;
+    }
+
+    this.navigation.back(`/${this.queryParams.companyCode || this.branchList?.companyCode}`);
   }
 
   continueOnClick() {

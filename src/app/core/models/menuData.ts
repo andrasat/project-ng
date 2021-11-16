@@ -25,6 +25,8 @@ export interface IExtras {
   maxExtraQty: number,
   notes: string,
   flagSoldOut: boolean,
+  // 
+  qty?: number,
 }
 
 export interface IMenuPackages {

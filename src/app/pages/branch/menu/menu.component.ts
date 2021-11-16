@@ -31,7 +31,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
   queryParams: any = {}
   menu: IMenus | undefined;
   saleMenu: ISalesMenusInput
-  counter = 0
+  counter = 1
   orderInput: IOrderInput
   totalAmount = 0
 
@@ -103,13 +103,13 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
       const foundMenu = this.orderInput.salesMenus.find(m => m.menuID === this.menu?.menuID!);
 
-      this.counter = foundMenu ? foundMenu.qty : 0;
+      this.counter = foundMenu ? foundMenu.qty : 1;
       this.saleMenu = {
         menuID: this.menu?.menuID!,
         menuName: this.menu?.menuName!,
         sellPrice: this.menu?.sellPrice!,
         imageUrl: this.menu?.imageUrl!,
-        qty: foundMenu ? foundMenu.qty : 0,
+        qty: this.counter,
         packages: foundMenu ? foundMenu.packages : (defaultPackages || []),
         extras: [],
         notes: '',

@@ -45,7 +45,8 @@ export class RestaurantComponent implements OnInit, OnDestroy {
   tableNumberControl: FormControl | undefined
 
   hideCollapseContainer = false
-  showMenuDrawer = false;
+  showAlertError = false
+  showMenuDrawer = false
   showOutletClosed: boolean | undefined
   customOrderModeForm: ICustomOrderModeForms[] | undefined
   customOrderFormData: ICustomOrderFormData[] | undefined
@@ -54,6 +55,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
   selectedMinute = ''
   businessHourText = ''
   displayTotalAmount = ''
+  alertErrorMessage = ''
 
   menuData: IMenuData | undefined
   branchData: IBranchData | undefined
@@ -95,12 +97,14 @@ export class RestaurantComponent implements OnInit, OnDestroy {
           altitude: null,
           altitudeAccuracy: null,
           heading: null,
-          latitude: this.queryParams.lat,
-          longitude: this.queryParams.lng,
+          latitude: Number(this.queryParams.lat),
+          longitude: Number(this.queryParams.lng),
           speed: null,
         },
         timestamp: Date.now(),
       });
+
+      this.qsApiService.getAddress(Number(this.queryParams.lat), Number(this.queryParams.lng));
     }
 
     this.locationService.currentPosition
@@ -185,9 +189,16 @@ export class RestaurantComponent implements OnInit, OnDestroy {
                 const [customButton] = queryList.filter(button => button.nativeElement.className.includes('active'));
                 customButton.nativeElement.scrollIntoView({ behavior: 'smooth' });
               });
-          } else {
+          } else if(selectedMode) {
             this.hideCollapseContainer = true;
             this.qsApiService.getMenu(this.params.branchCode, selectedMode?.visitPurposeID!);
+          } else {
+            this.showAlertError = true;
+            this.alertErrorMessage = 'Mode not found for this outlet, Please select another order mode';
+
+            setTimeout(() => {
+              this.showAlertError = false;
+            }, 3000);
           }
 
           if (orderInputData) {
@@ -197,7 +208,12 @@ export class RestaurantComponent implements OnInit, OnDestroy {
               this.orderInput.tableName = this.queryParams.tableNumber;
             }
 
+            if (this.queryParams.mode === 'delivery' && this.queryParams.addr) {
+              this.orderInput.deliveryAddress = this.queryParams.addr;
+            }
+
             this.orderInput!.type = selectedMode?.type!;
+            this.orderInput!.orderType = selectedMode?.type!;
             this.orderInput!.salesMode = this.queryParams.salesMode || null;
             this.orderInput!.typeName = selectedMode?.name || null;
             this.orderInput!.visitPurposeID = selectedMode?.visitPurposeID!;
@@ -219,6 +235,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
           } else {
             this.orderInput = {
               type: selectedMode?.type!,
+              orderType: selectedMode?.type!,
               tableName: this.queryParams.tableNumber,
               salesMode: this.queryParams.salesMode,
               typeName: selectedMode?.name || null,
@@ -289,7 +306,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
 
               return menus;
             }, [])
-            : menusByCategoryDetail;
+            : [];
 
           return [...list, ...recommendationMenus];
         }, []);
@@ -384,6 +401,26 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     this.showMenuDrawer = false;
   }
 
+  clickOnCollapseOverlay() {
+    // Order Mode selection
+    if (this.showOutletClosed === false && this.showMenuDrawer === false) {
+      this.navigation.back('..', { relativeTo: this.route });
+      return;
+    }
+
+    // Outled closed
+    if (this.showOutletClosed === true && this.showMenuDrawer === false) {
+      this.navigation.back('..', { relativeTo: this.route });
+      return;
+    }
+
+    if (this.showMenuDrawer) {
+      this.hideCollapseContainer = true;
+      this.showMenuDrawer = false;
+      return;
+    }
+  }
+
   clickContinueOrderMode() {
     if (this.selectedOrderMode === '') {
       this.goBack();
@@ -411,21 +448,23 @@ export class RestaurantComponent implements OnInit, OnDestroy {
     const selectedMode = this.orderModes.find(mode => mode.type === this.selectedOrderMode);
     const orderInputData = this.storageService.getItem(`order_${this.params.companyCode}_${this.params.branchCode}`);
 
-    if (selectedMode?.type === 'takeAway') {
-      const selectedDate = new Date();
-      selectedDate.setHours(Number(this.selectedHour));
-      selectedDate.setMinutes(Number(this.selectedMinute));
+    // TAKE AWAY MODE (HIDE FOR NOW)
+    // if (selectedMode?.type === 'takeAway') {
+    //   const selectedDate = new Date();
+    //   selectedDate.setHours(Number(this.selectedHour));
+    //   selectedDate.setMinutes(Number(this.selectedMinute));
 
-      if (selectedDate.getTime() < Date.now()) {
-        this.customOrderFormData = [{desc: 'Pickup Time', value: null}];
-      } else {
-        this.customOrderFormData = [{desc: 'Pickup Time', value: `${this.selectedHour}:${this.selectedMinute}`}];
-      }
-    }
+    //   if (selectedDate.getTime() < Date.now()) {
+    //     this.customOrderFormData = [{desc: 'Pickup Time', value: null}];
+    //   } else {
+    //     this.customOrderFormData = [{desc: 'Pickup Time', value: `${this.selectedHour}:${this.selectedMinute}`}];
+    //   }
+    // }
 
     if (orderInputData) {
       this.orderInput = JSON.parse(orderInputData);
       this.orderInput!.type = selectedMode?.type!;
+      this.orderInput!.orderType = selectedMode?.type!;
       this.orderInput!.typeName = selectedMode?.type! === 'custom' && selectedMode?.name ? selectedMode?.name : null;
       this.orderInput!.visitPurposeID = selectedMode?.visitPurposeID!;
       this.orderInput!.additionalCustomerInfo = this.customOrderFormData;
@@ -434,6 +473,7 @@ export class RestaurantComponent implements OnInit, OnDestroy {
         additionalCustomerInfo: this.customOrderFormData,
         tableName: this.tableNumberControl?.value,
         type: selectedMode?.type!,
+        orderType: selectedMode?.type!,
         typeName: selectedMode?.name || null,
         amount: 0,
         deliveryAddress: '',
@@ -463,12 +503,18 @@ export class RestaurantComponent implements OnInit, OnDestroy {
         mode: this.selectedOrderMode,
       },
       queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
   }
 
   goBack() {
-    this.storageService.removeItem(`order_${this.params.companyCode}_${this.params.branchCode}`);
     this.navigation.back('..', { relativeTo: this.route });
+  }
+
+  goToAboutRestaurant() {
+    return this.navigation.navigate('about-us', {
+      relativeTo: this.route
+    });
   }
 
   goToPromoPage() {

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 
 @Component({
   selector: 'app-link',
@@ -6,4 +6,5 @@ import { Component } from "@angular/core";
   styleUrls: ['./link.component.scss'],
 })
 export class LinkComponent {
+  @Output() public clicked: EventEmitter<void> = new EventEmitter()
 }

@@ -24,6 +24,8 @@ export interface ISalesMenusOrderData {
   statusName: string,
   packages: IPackages[],
   extras: IExtras[]
+  // 
+  imageUrl?: string,
 }
 
 export interface ISalesPayment {

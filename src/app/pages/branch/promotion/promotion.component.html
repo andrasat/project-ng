@@ -8,6 +8,6 @@
 
 <div *ngIf="!!promotions.length" class="promo-containers">
   <div *ngFor="let promotion of promotions;index as i" class="promo-image-container" (click)="goToPromoDetail(promotion)">
-    <img [src]="'/assets/image/placeholder-promo-'+i+'.jpg'" [alt]="promotion.promotionCode">
+    <img [src]="getPromoImagePlaceholder(i)" [alt]="promotion.promotionCode">
   </div>
 </div>

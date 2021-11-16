@@ -1,6 +1,6 @@
 <div class="page-container">
 
-  <div class="nav-back-icon" backButton>
+  <div class="nav-back-icon" (click)="goBack()">
     <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
   </div>
 
@@ -31,12 +31,13 @@
       </app-heading-5>
 
       <app-bodytext-14 [isSemiBold]="true">
-        Bintaro Jaya Xchange
+        Gandaria City Mall
       </app-bodytext-14>
 
       <app-caption color="grey">
-        Bintaro Jaya Cbd, Blok O, Jl. Sektor VII No.2, 
-        Tangerang Selatan, Banten, 15227
+        Gandaria 8 Office Tower Lantai 29 #A & D
+        Jl. Sultan Iskandar Muda RT.10/RW.6, Kby. Lama Utara,
+        Kec. Kby. Lama, Kota Jakarta Selatan, DKI Jakarta 12240, Indonesia
       </app-caption>
 
       <app-caption [isSemiBold]="true">
@@ -46,14 +47,29 @@
 
     <div class="mt-4">
       <app-heading-5>
-        OPERATIONAL HOURS
+        OUR BRANDS
       </app-heading-5>
 
-      <app-caption>
-        Mon - Fri 08.00 - 21.00
-        <br/>
-        Sat - Sun 08.00 - 23.00
-      </app-caption>
+      <div class="d-flex flex-row">
+        <div class="d-flex flex-column mr-4">
+          <app-caption>A/A Bar</app-caption>
+          <app-caption>Blackbyrd</app-caption>
+          <app-caption>Djamu Djamu</app-caption>
+          <app-caption>Djournal Coffee</app-caption>
+          <app-caption>Kitchenette</app-caption>
+          <app-caption>Mr.Fox</app-caption>
+          <app-caption>Osteria Gia</app-caption>
+        </div>
+        <div class="d-flex flex-column">
+          <app-caption>Pizza E Birra</app-caption>
+          <app-caption>Publik Markette</app-caption>
+          <app-caption>Sejuice Me</app-caption>
+          <app-caption>SKYE</app-caption>
+          <app-caption>Sushi Groove</app-caption>
+          <app-caption>The People’s Cafe</app-caption>
+          <app-caption>Tokyo Belly</app-caption>
+        </div>
+      </div>
     </div>
 
   </div>

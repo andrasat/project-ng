@@ -1,0 +1,69 @@
+<div class="nav-back-icon" (click)="goBack()">
+  <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
+</div>
+
+<div class="header-component">
+  <app-bodytext-16 class="text-center" [isSemiBold]="true">Send Feedback</app-bodytext-16>
+</div>
+
+<div class="feedback-container d-flex flex-column justify-content-center align-items-center">
+
+  <div class="star-rate-container text-center">
+    <app-bodytext-14>Rate our service</app-bodytext-14>
+
+    <div class="mt-3 d-flex flex-row">
+      <app-icon-star (click)="setStarRate(1)" [color]="starRate > 0 ? 'tangerine' : 'none'" [width]="48" [height]="48"></app-icon-star>
+      <app-icon-star (click)="setStarRate(2)" [color]="starRate > 1 ? 'tangerine' : 'none'" [width]="48" [height]="48"></app-icon-star>
+      <app-icon-star (click)="setStarRate(3)" [color]="starRate > 2 ? 'tangerine' : 'none'" [width]="48" [height]="48"></app-icon-star>
+      <app-icon-star (click)="setStarRate(4)" [color]="starRate > 3 ? 'tangerine' : 'none'" [width]="48" [height]="48"></app-icon-star>
+      <app-icon-star (click)="setStarRate(5)" [color]="starRate > 4 ? 'tangerine' : 'none'" [width]="48" [height]="48"></app-icon-star>
+    </div>
+  </div>
+
+  <div *ngIf="this.starRate > 0" class="notes-container">
+
+    <div>
+      <app-caption color="grey">What went well?</app-caption>
+
+      <div class="mt-2 d-flex flex-row flex-wrap">
+        <div class="oval-button">
+          <app-oval-button [selected]="selectedWhatWentWell === 'Taste'" text="Taste" (clicked)="selectWhatWentWell('Taste')"></app-oval-button>
+        </div>
+
+        <div class="oval-button">
+          <app-oval-button [selected]="selectedWhatWentWell === 'Price'" text="Price" (clicked)="selectWhatWentWell('Price')"></app-oval-button>
+        </div>
+
+        <div class="oval-button">
+          <app-oval-button [selected]="selectedWhatWentWell === 'Item\' Condition'" text="Item's Condition" (clicked)="selectWhatWentWell('Item\' Condition')"></app-oval-button>
+        </div>
+
+        <div class="oval-button">
+          <app-oval-button [selected]="selectedWhatWentWell === 'Order Time'" text="Order Time" (clicked)="selectWhatWentWell('Order Time')"></app-oval-button>
+        </div>
+
+        <div class="oval-button">
+          <app-oval-button [selected]="selectedWhatWentWell === 'Service'" text="Service" (clicked)="selectWhatWentWell('Service')"></app-oval-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <app-caption color="grey">Any other word for us?</app-caption>
+
+      <div class="mt-2">
+        <textarea
+          #notesInput
+          class="text-area"
+          placeholder="Notes"
+        ></textarea>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="button-container">
+  <app-primary-button text="SUBMIT"></app-primary-button>
+</div>

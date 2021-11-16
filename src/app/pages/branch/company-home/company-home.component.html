@@ -17,7 +17,7 @@
 <div class="company-container">
   <app-heading-3>
     {{ branchList?.companyName }}
-    <img class="float-right" src="/assets/image/info.svg" [alt]="branchList?.companyName || 'info-icon'">
+    <img class="float-right" src="/assets/image/info.svg" [alt]="branchList?.companyName || 'info-icon'" (click)="goToAboutCompany()">
   </app-heading-3>
 
   <app-bodytext-14>Food & Beverage chain with +500 outlets in South-East Asia</app-bodytext-14>
@@ -53,13 +53,13 @@
   >
     <app-heading-5>{{ branchList?.nearMeBranchCount }} OUTLETS NEARBY</app-heading-5>
 
-    <div *ngFor="let branch of branchList?.branches" class="branch-container" (click)="goToBranchRestaurant(branch.branchCode)">
+    <div *ngFor="let branch of branchList?.branches" class="branch-container" (click)="goToBranchRestaurant(branch)">
       <app-restaurant-card
         [restaurantName]="branch.branchName"
         [restaurantPlace]="branch.branchName"
         [restaurantDistance]="branch.distanceText"
         [thumbnailImage]="branch.thumbnailImageUrl"
-        [isClosed]="branch.businessHour.status === 'closed'">
+        [isClosed]="branch.businessHour.status === 'closed' || !branch.flagNearMe">
       </app-restaurant-card>
     </div>
   </div>

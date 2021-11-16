@@ -111,12 +111,6 @@
   overflow-y: hidden;
   padding-top: 16px;
   padding-bottom: 48px;
-
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .recommended-outlet {
@@ -160,5 +154,5 @@
 .address-description {
   margin-top: 6px;
   max-width: 400px;
-  width: 80vw;
+  width: 75vw;
 }

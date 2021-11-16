@@ -12,4 +12,5 @@ export class RestaurantCardComponent {
   @Input() restaurantDistance: string
   @Input() isClosed: boolean = false
   @Input() showDistanceBelow: boolean = false
+  @Input() showChevron: boolean = false
 }

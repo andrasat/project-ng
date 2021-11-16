@@ -7,6 +7,10 @@
   letter-spacing: 1px;
   padding: 2px 4px;
 
+  &.wide-padding {
+    padding: 2px 16px;
+  }
+
   &.completed {
     color: var(--white);
     background-color: var(--green);

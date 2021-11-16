@@ -20,7 +20,25 @@
   --green: #02d87d;
   --ocean: #00acad;
   --blue: #0054c0;
+  --cobalt-blue: #0154c0;
   --blue-purple: #33377e;
+}
+
+// Custom alert ng-bootstrap
+.alert-custom {
+  background-color: var(--red-1);
+  border-radius: 6px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  margin: 0 10px;
+  top: 5vh;
+  width: 95%;
+  max-width: 480px;
+  z-index: 3000;
+
+  & button span {
+    color: var(--white);
+  }
 }
 
 .page-container {
@@ -43,11 +61,46 @@
   }
 }
 
+.footer-component {
+  position: relative;
+  min-height: 50px;
+  padding: 20px;
+  width: 100%;
+
+  &.footer-shadow {
+    box-shadow: 0 0 5px 0 var(--grey);
+  }
+}
+
 .nav-back-icon {
   position: absolute;
   left: 20px;
   top: 20px;
   z-index: 2010;
+}
+
+.nav-close-icon {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 2010;
+}
+
+html,
+body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+textarea {
+  resize: none;
 }
 
 h1,

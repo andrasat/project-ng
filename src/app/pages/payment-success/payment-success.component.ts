@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IOrderData } from '@core/models/orderData';
-import { QSApiService } from '@core/services';
+import { NavigationService, QSApiService } from '@core/services';
 import { formatIDR } from '@utils/formatIDR';
 
 @Component({
@@ -14,6 +14,7 @@ export class PaymentSuccessComponent implements OnInit {
   constructor(
     public route: ActivatedRoute,
     public qsApiService: QSApiService,
+    public navigation: NavigationService,
   ) {
     route.queryParams.subscribe(queryParams => this.queryParams = queryParams);
   }
@@ -40,6 +41,6 @@ export class PaymentSuccessComponent implements OnInit {
   }
 
   goToOrderDetail() {
-    
+    return this.navigation.navigate(`/${this.orderData?.companyCode}/order-history/${this.queryParams.orderID}`);
   }
 }

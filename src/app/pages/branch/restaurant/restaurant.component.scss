@@ -65,12 +65,6 @@
   overflow-y: hidden;
   min-width: 100vw;
   padding-right: 10vw;
-
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .carousel-child-menu-container {
@@ -117,17 +111,34 @@
   z-index: 100;
 }
 
+.collapse-background-overlay {
+  background: transparent;
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
 // Order Mode
 
 .order-mode {
+  background: transparent;
+  position: absolute;
+  bottom: 0;
+  max-height: 95vh;
+  width: 100%;
+  z-index: 200;
+}
+
+.order-mode-scroller {
   background: var(--white);
   border-radius: 12px;
-  position: fixed;
-  bottom: 0;
-  padding: 20px;
+  position: relative;
+  padding: 20px 16px;
   min-height: 40%;
-  max-width: 500px;
   width: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .order-mode-title {
@@ -137,20 +148,14 @@
 .mode-container {
   padding: 16px 0;
   overflow-x: scroll;
-
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .mode-button {
   border: none;
   border-radius: 6px;
   color: var(--grey-3);
+  margin: 8px;
   flex: 1 0 auto;
-  margin-right: 10px;
   position: relative;
   height: 80px;
   width: 150px;
@@ -158,10 +163,6 @@
   &.active {
     color: var(--white);
     background-color: var(--tangerine);
-  }
-
-  &:last-of-type {
-    margin-right: 0;
   }
 }
 
@@ -190,9 +191,9 @@
   position: fixed;
   bottom: 0;
   padding: 20px;
-  min-height: 40%;
   width: 100%;
   max-width: 500px;
+  z-index: 200;
 }
 
 .outlet-closed-image {
@@ -205,12 +206,6 @@
   overflow-y: hidden;
   padding-top: 16px;
   padding-bottom: 48px;
-
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .recommended-outlet {
@@ -238,6 +233,7 @@
   min-height: 40vh;
   max-height: 95vh;
   width: 100%;
+  z-index: 200;
 }
 
 .menu-drawer-scroller {
@@ -245,7 +241,7 @@
   border-radius: 12px;
   position: relative;
   padding: 20px 0;
-  min-height: 40%;
+  min-height: 40vh;
   width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;

@@ -1,4 +1,4 @@
-<div class="nav-back-icon" backButton>
+<div class="nav-back-icon" (click)="goToRestaurant()">
   <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
 </div>
 
@@ -197,9 +197,15 @@
     <ng-container *ngIf="!!orderInput.vouchers.length">
       <div *ngFor="let voucherCode of orderInput.vouchers" class="mt-2 d-flex flex-row justify-content-between align-items-center">
         <app-bodytext-14 [isSemiBold]="true">{{ voucherCode }}</app-bodytext-14>
-        <img src="/assets/image/trash.svg" alt="Delete Promo" (click)="showPromoDeleteCollapse()">
+        <img src="/assets/image/trash.svg" alt="Delete Promo" (click)="showVoucherDeleteCollapse(voucherCode)">
       </div>
     </ng-container>
+
+    <div class="add-more-voucher-container">
+      <button class="add-mode-voucher-button" (click)="showVoucherFormCollapse()">
+        <app-bodytext-14 [isBold]="true">+ ADD MORE VOUCHER</app-bodytext-14>
+      </button>
+    </div>
   </div>
 
   <div class="section-container">

@@ -9,18 +9,21 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 export class LabelComponent implements OnInit, OnChanges {
   @Input() text: string = ''
   @Input() type: string = ''
+  @Input() widePadding: boolean = false
 
   currentClasses: Record<string, boolean> = {}
 
   ngOnInit() {
     this.currentClasses = {
       [this.type]: true,
+      'wide-padding': this.widePadding,
     };
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.currentClasses = {
-      [changes.type?.currentValue]: true
+      [changes.type?.currentValue]: true,
+      'wide-padding': changes.widePadding?.currentValue,
     };
   }
 }

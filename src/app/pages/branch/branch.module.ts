@@ -4,6 +4,7 @@ import { NgbAlertModule, NgbCarouselModule, NgbCollapseModule } from '@ng-bootst
 import { ComponentsModule } from '@components/components.module';
 import { IconModule } from '@icons/icons.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { QrCodeModule } from 'ng-qrcode';
 
 import { BranchRoutingModule } from './branch-routing.module';
 import { BranchComponent } from './branch.component';
@@ -17,13 +18,16 @@ import { PaymentComponent } from './payment/payment.component';
 import { PromotionComponent } from './promotion/promotion.component';
 import { OthersComponent } from './others/others.component';
 import { AboutUsCompanyComponent } from './about-us-company/about-us-company.component';
+import { AboutUsRestaurantComponent } from './about-us-restaurant/about-us-restaurant.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { OrderDetailComponent } from './order-detail/order-detail.component';
+import { FeedbackComponent } from './feedback/feedback.component';
 
 @NgModule({
   imports: [
     BranchRoutingModule,
     ReactiveFormsModule,
+    QrCodeModule,
     NgbAlertModule,
     NgbCarouselModule,
     NgbCollapseModule,
@@ -43,8 +47,10 @@ import { OrderDetailComponent } from './order-detail/order-detail.component';
     PromotionComponent,
     OthersComponent,
     AboutUsCompanyComponent,
+    AboutUsRestaurantComponent,
     OrderHistoryComponent,
     OrderDetailComponent,
+    FeedbackComponent,
   ],
 })
 export class BranchModule {}

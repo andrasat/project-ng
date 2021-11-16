@@ -1,0 +1,23 @@
+.primary-button {
+  text-align: center;
+  background-color: var(--white);
+  border: 1px solid var(--grey-4);
+  border-radius: 35px;
+  color: var(--black);
+  font-family: "Poppins", sans-serif;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 1px;
+  padding: 14px 20px;
+  width: 100%;
+
+  &.small-padding {
+    padding: 7px 0;
+  }
+
+  &.selected {
+    background-color: var(--tangerine);
+    color: var(--white);
+  }
+}

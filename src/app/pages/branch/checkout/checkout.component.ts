@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { IBranchData, ICalculateTotalResult, IMenuData, IMenus, IOrderInput, IPromotion } from '@core/models';
-import { NavigationService, QSApiService, StorageService } from '@core/services';
+import { LocationService, NavigationService, QSApiService, StorageService } from '@core/services';
 import { formatIDR } from '@utils/formatIDR';
 import { separateAddress, getExternalAppData } from '@utils/index';
 
@@ -21,6 +21,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     public qsApiService: QSApiService,
     public storageService: StorageService,
     public navigation: NavigationService,
+    public locationService: LocationService,
   ) {
     route.params.subscribe(params => this.params = { ...this.params, ...params });
     route.parent?.params.subscribe(params => this.params = { ...this.params, ...params });
@@ -60,9 +61,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const orderInputData = this.storageService.getItem(`order_${this.params.companyCode}_${this.params.branchCode}`);
+    const deliveryAddressInfo = this.storageService.getItem('deliveryAddressInfo');
 
     if (orderInputData) {
       this.orderInput = JSON.parse(orderInputData);
+      this.orderInput.deliveryAddressInfo = deliveryAddressInfo;
+      this.orderInput.email = this.queryParams.email || '';
+      this.orderInput.memberID = this.queryParams.member || '';
 
       if (this.externalAppData) {
         this.orderInput.email = this.externalAppData.email || '';
@@ -82,6 +87,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           this.alertErrorMessage = '';
         }, 3000);
       }
+
+      this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
     } else {
       return this.navigation.back('..', {
         queryParams: { mode: this.queryParams.mode },
@@ -92,24 +99,56 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.qsApiService.getPromotion(this.params.branchCode);
     this.qsApiService.getMenu(this.params.branchCode, this.orderInput.visitPurposeID);
 
+    this.locationService.currentPosition
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(position => {
+        this.qsApiService.getAddress(position.coords.latitude, position.coords.longitude, this.params.branchCode);
+      });
     this.qsApiService.branchData
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(branchData => this.branchData = branchData);
     this.qsApiService.promotion
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(promotions => this.promotions = promotions);
+    this.qsApiService.currentAddress
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(address => {
+        this.orderInput.deliveryAddress = `${address?.addressName}, ${address?.address}` || '';
+
+        this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
+      });
     this.qsApiService.menu
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(menu => {
         this.menuData = menu;
 
-        this.menusAddMore = menu?.menuCategories.reduce((menuList: IMenus[], menuCategory) => {
+        const allMenus = menu?.menuCategories.reduce((menuList: IMenus[], menuCategory) => {
+          const menuListByDetail = menuCategory.menuCategoryDetails.reduce((menus: IMenus[], menuCategoryDetail) => {
+            return [...menus, ...menuCategoryDetail.menus];
+          }, []);
+          return [...menuList, ...menuListByDetail];
+        }, []) || [];
 
+        this.menusAddMore = menu?.menuCategories.reduce((menuList: IMenus[], menuCategory) => {
           const menuListByDetail = menuCategory.menuCategoryDetails.reduce((menus: IMenus[], menuCategoryDetail) => {
             return [...menus, ...menuCategoryDetail.menus];
           }, []);
 
-          return [...menuList, ...menuListByDetail].splice(0, 10);
+          const relatedMenuIds = this.orderInput.salesMenus.reduce((menuIds: number[], saleMenu) => {
+            const foundMenu = menuListByDetail.find(menuData => menuData.menuID === saleMenu.menuID);
+            if (foundMenu) return [...menuIds, ...foundMenu.relatedMenus.map(data => data.menuID)];
+            return menuIds;
+          }, []);
+
+          const relatedMenus = allMenus.reduce((filteredMenus: IMenus[], menuData) => {
+            if (relatedMenuIds.includes(menuData.menuID)) {
+              return [...filteredMenus, menuData];
+            }
+
+            return filteredMenus;
+          }, []);
+
+          return [...menuList, ...relatedMenus];
         }, []) || [];
       });
 
@@ -146,7 +185,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                   break;
               }
 
-              setTimeout(() => this.showAlertError = false, 3000);
+              setTimeout(() => {
+                this.showAlertError = false;
+                this.alertErrorMessage = '';
+              }, 3000);
             }
           }
         },
@@ -253,13 +295,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       queryParams: {
         mode: this.queryParams.mode,
       },
+      replaceUrl: true,
     });
+
     this.hidePromoDeleteCollapse();
   }
 
   removeVoucherCode() {
     const foundVoucherToDeleteIndex = this.orderInput.vouchers.findIndex(voucherCode => voucherCode === this.selectedVoucherToDelete);
-    if (foundVoucherToDeleteIndex >= 0) {
+    if (foundVoucherToDeleteIndex < 0) {
       this.hideVoucherDeleteCollapse();
       return;
     }
@@ -296,12 +340,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     if (!this.promoCodeControl.valid) return;
 
     this.orderInput.promotionCode = this.promoCodeControl.value;
-
-    this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
     this.qsApiService.calculateTotal({ ...this.orderInput, orderType: this.orderInput.type }, this.params.branchCode)
       .subscribe(
         result => {
           this.calculateResult = result;
+          this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
 
           this.hidePromoFormCollapse();
         },
@@ -313,7 +356,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   applyVoucherCode() {
     if (!this.voucherCodeControl.valid) return;
-
     const foundVoucher = this.orderInput.vouchers.find(voucherCode => voucherCode === this.voucherCodeControl.value);
 
     if (foundVoucher) {
@@ -322,11 +364,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     this.orderInput.vouchers = [ ...this.orderInput.vouchers, this.voucherCodeControl.value ];
-    this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
     this.qsApiService.calculateTotal({ ...this.orderInput, orderType: this.orderInput.type }, this.params.branchCode)
       .subscribe(
         result => {
           this.calculateResult = result;
+          this.storageService.setItem(`order_${this.params.companyCode}_${this.params.branchCode}`, JSON.stringify(this.orderInput));
 
           this.hideVoucherFormCollapse();
         },
