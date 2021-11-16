@@ -12,13 +12,15 @@
     <app-bodytext-14 class="" [isBold]="true">{{ menuTitle }}</app-bodytext-14>
 
     <div class="price-container d-flex flex-row">
-      <app-caption
-        *ngIf="discountedPriceDisplay !== ''"
-        [isStrikethrough]="true"
-        [fontSize]="9"
-        color="grey">
-        {{ priceDisplay }}
-      </app-caption>
+      <div class="mr-2">
+        <app-caption
+          *ngIf="discountedPriceDisplay !== ''"
+          [isStrikethrough]="true"
+          [fontSize]="9"
+          color="grey">
+          {{ priceDisplay }}
+        </app-caption>
+      </div>
       <app-caption
         [fontSize]="12"
         [isSemiBold]="true">

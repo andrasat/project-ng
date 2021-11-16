@@ -19,12 +19,14 @@
     <app-heading-3>{{ menu?.menuName }}</app-heading-3>
 
     <div class="d-flex flex-row align-items-center">
-      <app-caption
-        *ngIf="menu?.sellPrice !== menu?.originalSellPrice"
-        color="grey"
-        [isStrikethrough]="true">
-        {{ priceDisplay }}
-      </app-caption>
+      <div class="mr-2">
+        <app-caption
+          *ngIf="menu?.sellPrice !== menu?.originalSellPrice"
+          color="grey"
+          [isStrikethrough]="true">
+          {{ priceDisplay }}
+        </app-caption>
+      </div>
       <app-bodytext-14 [isSemiBold]="true">
         {{ discountedPriceDisplay || priceDisplay }}
       </app-bodytext-14>
