@@ -1,0 +1,121 @@
+<div class="nav-back-icon" backButton>
+  <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
+</div>
+
+<div class="header-component header-shadow text-center">
+  <app-bodytext-16 [isSemiBold]="true">Payment Method</app-bodytext-16>
+</div>
+
+<div class="total-payment-container">
+  <ngb-alert type="custom" *ngIf="showAlertError">
+    <app-bodytext-14 color="white">{{ alertErrorMessage }}</app-bodytext-14>
+  </ngb-alert>
+
+  <app-caption>Total Payment</app-caption>
+
+  <div class="d-flex flex-row justify-content-between align-items-end">
+    <app-heading-3>{{ formatToCurrency(calculateResult?.grandTotal || 0) }}</app-heading-3>
+    <app-link (click)="showPaymentDetail()">VIEW DETAIL</app-link>
+  </div>
+</div>
+
+<div class="payment-method-container d-flex flex-column justify-content-evenly">
+  <div *ngFor="let paymentMethod of branchData?.payment?.online" class="payment-method">
+    <app-payment-card
+      [payment]="paymentMethod"
+      [selected]="selectedPaymentMethod?.id === paymentMethod.id"
+      (radioClick)="selectPayment(paymentMethod)">
+
+      <ng-container paymentContent>
+        <div *ngIf="selectedPaymentMethod?.id === paymentMethod.id" class="payment-content">
+          <app-bodytext-14>{{ selectedPaymentMethod?.description || '' }}</app-bodytext-14>
+
+          <div *ngIf="!!selectedPaymentMethod?.needPhoneInput" class="form-group">
+            <label for="phone">
+              <app-caption [fontSize]="12">Mobile Number</app-caption>
+            </label>
+            <input id="phone" type="text" class="form-control" [formControl]="phoneFormControl">
+
+            <div class="validation-container">
+              <app-caption *ngIf="!!phoneFormControl.errors?.['pattern']" color="red">Please provide a valid mobile number</app-caption>
+            </div>
+          </div>
+
+          <div class="mt-3 d-flex flex-row" (click)="clickConfirmTnC(paymentMethod)">
+            <div class="tnc-checkbox-icon">
+              <app-icon-checbox [color]="confirmTnC ? 'tangerine' : 'white'"></app-icon-checbox>
+            </div>
+
+            <app-caption>
+              By placing an order, you agree to the <strong>Terms and Conditions</strong>
+            </app-caption>
+          </div>
+
+          <div class="mt-3">
+            <app-primary-button [text]="'PAY ' + formatToCurrency(calculateResult?.grandTotal || 0)" (clicked)="confirmPayment()"></app-primary-button>
+          </div>
+        </div>
+      </ng-container>
+
+    </app-payment-card>
+  </div>
+</div>
+
+<div
+  [(ngbCollapse)]="hideCollapseContainer"
+  #collapse="ngbCollapse"
+  class="collapse-container">
+
+  <div class="payment-detail">
+    <div class="d-flex flex-row justify-content-between">
+      <app-heading-3>Payment Detail</app-heading-3>
+      <div (click)="collapse.toggle()">
+        <app-icon-close></app-icon-close>
+      </div>
+    </div>
+
+    <div class="mt-4 d-flex flex-row justify-content-between">
+      <app-bodytext-14>Subtotal</app-bodytext-14>
+      <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(calculateResult?.subtotal || 0) }}</app-bodytext-14>
+    </div>
+
+    <div *ngIf="validatedMember" class="d-flex flex-row justify-content-between">
+      <app-bodytext-14>Membership Applied</app-bodytext-14>
+      <app-bodytext-14 [isSemiBold]="true">{{ validatedMember.email }}</app-bodytext-14>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between">
+      <div class="d-flex flex-row align-items-center">
+        <app-bodytext-14>Additional Charge</app-bodytext-14>
+        <img class="ml-1" src="/assets/image/info.svg" alt="additional charge" width="13px">
+      </div>
+      <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(calculateResult?.pb1 || 0) }}</app-bodytext-14>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between">
+      <app-bodytext-14>Delivery</app-bodytext-14>
+      <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(calculateResult?.deliveryCost || 0) }}</app-bodytext-14>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between">
+      <app-bodytext-14>Tax</app-bodytext-14>
+      <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(calculateResult?.additionalTax || 0) }}</app-bodytext-14>
+    </div>
+
+    <div *ngIf="orderInput.promotionCode" class="d-flex flex-row justify-content-between">
+      <app-bodytext-14>Promo Code</app-bodytext-14>
+      <app-bodytext-14 [isSemiBold]="true" color="tangerine">-{{ formatToCurrency(calculateResult?.discountTotal || 0) }}</app-bodytext-14>
+    </div>
+
+    <div *ngIf="!!orderInput.vouchers.length" class="d-flex flex-row justify-content-between">
+      <app-bodytext-14>Voucher Code</app-bodytext-14>
+      <app-bodytext-14 [isSemiBold]="true" color="tangerine">-{{ formatToCurrency(calculateResult?.voucherTotal || 0) }}</app-bodytext-14>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="payment-total d-flex flex-row justify-content-end align-items-center">
+      <span class="total-text">Total</span> <app-heading-3>{{ formatToCurrency(calculateResult?.grandTotal || 0) }}</app-heading-3>
+    </div>
+  </div>
+</div>

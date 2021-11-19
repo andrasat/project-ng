@@ -1,0 +1,57 @@
+<div class="page-container">
+
+  <div class="nav-back-icon">
+    <a routerLink="..">
+      <app-icon-arrow-left color="white"></app-icon-arrow-left>
+    </a>
+  </div>
+
+  <div class="background-image"></div>
+
+  <div class="main-container">
+
+    <div class="text-container">
+      <div class="text-heading">
+        <app-heading-1 color="white">
+          Welcome to <br/>
+          {{ branchList?.companyName || '&nbsp;' }}
+        </app-heading-1>
+      </div>
+
+      <app-bodytext-14 color="white">
+        Lorem ipsum estibulum et nulla sed ex
+        lobortis laoreet in in metus. Donec
+        consequat, 
+        velit in mollis
+      </app-bodytext-14>
+    </div>
+
+    <div class="button-container">
+
+      <div class="buttons">
+        <app-secondary-button
+          icon="assets/image/google-logo.png"
+          (clicked)="loginHandler('google')"
+          text="CONTINUE WITH GOOGLE">
+        </app-secondary-button>
+      </div>
+
+      <div class="buttons">
+        <app-secondary-button
+          icon="assets/image/facebook-logo.png"
+          (clicked)="loginHandler('facebook')"
+          text="CONTINUE WITH FACEBOOK">
+        </app-secondary-button>
+      </div>
+
+      <div class="buttons">
+        <app-secondary-button
+          (clicked)="loginHandler()"
+          [transparent]="true"
+          text="CONTINUE WITHOUT LOGIN">
+        </app-secondary-button>
+      </div>
+
+    </div>
+  </div>
+</div>

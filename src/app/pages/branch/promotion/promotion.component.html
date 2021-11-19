@@ -1,0 +1,13 @@
+<div class="nav-back-icon" backButton>
+  <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
+</div>
+
+<div class="header-component header-shadow">
+  <app-bodytext-16 class="text-center" [isSemiBold]="true">Promotion</app-bodytext-16>
+</div>
+
+<div *ngIf="!!promotions.length" class="promo-containers">
+  <div *ngFor="let promotion of promotions;index as i" class="promo-image-container" (click)="goToPromoDetail(promotion)">
+    <img [src]="getPromoImagePlaceholder(i)" [alt]="promotion.promotionCode">
+  </div>
+</div>

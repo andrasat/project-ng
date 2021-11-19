@@ -1,0 +1,31 @@
+<div class="menu-card d-flex flex-column ">
+  <div class="image-container">
+    <div class="out-of-stock-overlay" *ngIf="isOutOfStock">
+      <div class="out-of-stock-text">
+        <app-caption color="white" [isBold]="true">Out of Stock</app-caption>
+      </div>
+    </div>
+    <img class="image" [src]="cardImage || 'https://via.placeholder.com/140'" [alt]="cardImageAlt">
+  </div>
+
+  <div class="text-container">
+    <app-bodytext-14 class="" [isBold]="true">{{ menuTitle }}</app-bodytext-14>
+
+    <div class="price-container d-flex flex-row">
+      <div class="mr-2">
+        <app-caption
+          *ngIf="discountedPriceDisplay !== ''"
+          [isStrikethrough]="true"
+          [fontSize]="9"
+          color="grey">
+          {{ priceDisplay }}
+        </app-caption>
+      </div>
+      <app-caption
+        [fontSize]="12"
+        [isSemiBold]="true">
+        {{ discountedPriceDisplay || priceDisplay }}
+      </app-caption>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<div class="search-input-group input-group flex-nowrap">
+  <input
+    #input
+    type="text"
+    class="form-control search-input"
+    [placeholder]="placeholder"
+    aria-describedby="addon-wrapping"
+    (focus)="focusEvent.emit($event)"
+    (focusout)="focusOutEvent.emit($event)">
+</div>

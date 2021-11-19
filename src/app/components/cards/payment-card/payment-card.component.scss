@@ -1,0 +1,16 @@
+.payment-card {
+  border: 1px solid var(--grey-6);
+  border-radius: 6px;
+  padding: 16px;
+  transition: height 500ms;
+}
+
+.payment-icon {
+  height: 40px;
+  width: 40px;
+}
+
+.payment-text {
+  margin-left: 12px;
+  flex: 1 0 auto;
+}

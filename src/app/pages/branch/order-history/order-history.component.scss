@@ -1,0 +1,25 @@
+.section-container {
+  padding: 16px;
+  border-bottom: 8px solid var(--grey-6);
+}
+
+.order-history-container {
+  border: 1px solid var(--grey-5);
+  border-radius: 6px;
+  padding: 10px 0;
+  margin: 16px 0;
+}
+
+.order-history-header {
+  border-bottom: 1px solid var(--grey-5);
+  padding: 0 16px 10px;
+}
+
+.order-history-content {
+  padding: 10px 16px 0;
+}
+
+.order-history-content-text {
+  flex: 1 0 auto;
+  margin-left: 16px;
+}

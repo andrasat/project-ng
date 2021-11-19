@@ -1,0 +1,20 @@
+.promo-button {
+  background-image: url("/assets/image/promo-button-background.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  text-align: center;
+  background-color: var(--tangerine);
+  border-radius: 6px;
+  color: var(--white);
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 16.5px;
+  letter-spacing: 1px;
+  padding: 14px 16px 14px 0;
+  width: 100%;
+}
+
+.chevron-right {
+  float: right;
+}

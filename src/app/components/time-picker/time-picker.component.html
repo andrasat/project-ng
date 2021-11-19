@@ -1,0 +1,64 @@
+<div class="time-picker">
+
+  <!-- Overlays -->
+  <div class="hour-overlay" #hourOverlay></div>
+  <div class="minute-overlay" #minuteOverlay></div>
+
+  <div class="selected-time">
+    <div class="hour-container">
+      <div class="hour-counter">
+        <span
+          *ngFor="let hour of hourList;index as i"
+          #selectedHour
+          class="hour-time selected-hour-time"
+          [ngClass]="transitionClass"
+          [style.transform]="'translateY('+ hourTranslateY +'px)'">
+          {{ hour }}
+        </span>
+      </div>
+    </div>
+    <div class="separator">
+      :
+    </div>
+    <div class="minute-container">
+      <div class="minute-counter">
+        <span
+          *ngFor="let minute of minuteList;index as i"
+          class="minute-time selected-minute-time"
+          [ngClass]="transitionClass"
+          [style.transform]="'translateY('+ minuteTranslateY +'px)'">
+          {{ minute }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="background-time">
+    <div class="hour-container">
+      <div class="background-hour-counter">
+        <span
+          *ngFor="let hour of hourList"
+          class="background-hour-time"
+          [ngClass]="transitionClass"
+          [style.transform]="'translateY('+ backgroundHourTranslateY +'px)'">
+          {{ hour }}
+        </span>
+      </div>
+    </div>
+    <div class="separator">
+      &nbsp;
+    </div>
+    <div class="minute-container">
+      <div class="background-minute-counter">
+        <span
+          *ngFor="let minute of minuteList"
+          class="background-minute-time"
+          [ngClass]="transitionClass"
+          [style.transform]="'translateY('+ backgroundMinuteTranslateY +'px)'">
+          {{ minute }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,379 @@
+<ngb-carousel *ngIf="images" [showNavigationArrows]="false">
+  <ng-template ngbSlide *ngFor="let image of images; let i = index">
+    <div class="image-container">
+      <img [src]="image" [alt]="'promo-image-'+i">
+    </div>
+  </ng-template>
+</ngb-carousel>
+
+<div *ngIf="hideCollapseContainer" class="nav-back-icon" (click)="goBack()">
+  <app-icon-arrow-left color="white"></app-icon-arrow-left>
+</div>
+
+<div class="search-icon-container" (click)="goToSearchMenu()">
+  <img src="/assets/image/search-circle.svg" alt="search restaurants">
+</div>
+
+<div class="restaurant-container">
+
+  <ngb-alert type="custom" *ngIf="showAlertError">
+    <app-bodytext-14 color="white">{{ alertErrorMessage }}</app-bodytext-14>
+  </ngb-alert>
+
+  <div class="d-flex flex-row align-items-center">
+    <app-caption [isSemiBold]="true">{{ getOrderModeText(selectedOrderMode) }} from</app-caption>
+    <app-icon-chevron-down class="ml-2" [width]="10"></app-icon-chevron-down>
+  </div>
+
+  <div class="d-flex flex-row justify-content-between align-items-center">
+    <app-heading-3>{{ branchData?.branchName || '&nbsp;' }}</app-heading-3>
+    <div class="restaurant-title-icon">
+      <a [href]="'tel:' + branchData?.phone">
+        <img src="/assets/image/phone.svg" alt="Call restaurant">
+      </a>
+      <img class="ml-3" src="/assets/image/info.svg" alt="Restaurant info" (click)="goToAboutRestaurant()">
+    </div>
+  </div>
+
+  <ng-container *ngIf="branchData?.isOpen">
+    <app-caption>{{ branchData?.address || '&nbsp;' }}</app-caption>
+    <app-caption color="grey">Open {{ businessHourText }}</app-caption>
+  </ng-container>
+
+  <ng-container *ngIf="!branchData?.isOpen">
+    <span class="closed-label">
+      <strong>CLOSED</strong> • Open Tomorrow
+    </span>
+  </ng-container>
+
+  <div class="promo-button-container">
+    <app-promo-button [text]="'You have ' + (promotions?.length || 0) + ' promos available'" (clicked)="goToPromoPage()"></app-promo-button>
+  </div>
+
+  <ng-container *ngIf="!!menuData">
+
+    <!-- Popular Section -->
+    <div
+      *ngIf="!!popularMenus.length"
+      class="section-container"
+      id="popular-menu">
+      <app-heading-5 color="grey">POPULAR</app-heading-5>
+
+      <div class="carousel-menu-list d-flex flex-row justify-content-evenly align-items-center">
+        <div *ngFor="let menu of popularMenus" class="carousel-child-menu-container" (click)="goToMenu(menu.menuID)">
+          <app-menu-card
+            [menuTitle]="menu.menuName"
+            [menuPrice]="menu.originalSellPrice"
+            [menuDiscountPrice]="menu.sellPrice"
+            [cardImage]="menu.imageUrl"
+            [isOutOfStock]="menu.flagSoldOut"
+          ></app-menu-card>
+        </div>
+      </div>
+    </div>
+    <!-- Popular Section -->
+
+    <!-- Price Chopped Section -->
+    <div
+      *ngIf="!!priceChoppedMenus.length"
+      class="section-container"
+      id="price-chopped-menu">
+      <app-heading-5 color="grey">PRICE CHOPPED</app-heading-5>
+
+      <div class="carousel-menu-list d-flex flex-row justify-content-evenly align-items-center">
+        <div *ngFor="let menu of priceChoppedMenus" class="carousel-child-menu-container" (click)="goToMenu(menu.menuID)">
+          <app-menu-card
+            [menuTitle]="menu.menuName"
+            [menuPrice]="menu.originalSellPrice"
+            [menuDiscountPrice]="menu.sellPrice"
+            [cardImage]="menu.imageUrl"
+            [isOutOfStock]="menu.flagSoldOut"
+          ></app-menu-card>
+        </div>
+      </div>
+    </div>
+    <!-- Price Chopped Section -->
+
+    <!-- Menu List -->
+    <ng-container *ngFor="let menuCategories of menuData?.menuCategories">
+      <div
+        *ngFor="let menuCategoryDetail of menuCategories.menuCategoryDetails"
+        class="section-container"
+        [id]="getFragmentId(menuCategoryDetail.menuCategoryDetailDesc)">
+        <app-heading-5 color="grey">{{ menuCategories.menuCategoryDesc + ' - ' + menuCategoryDetail.menuCategoryDetailDesc }}</app-heading-5>
+
+        <div class="menu-list">
+
+          <ng-container *ngFor="let menu of menuCategoryDetail.menus">
+
+            <div (click)="goToMenu(menu.menuID)">
+              <app-menu-list
+                [menu]="menu"
+              ></app-menu-list>
+            </div>
+
+          </ng-container>
+
+        </div>
+      </div>
+    </ng-container>
+    <!-- Menu List -->
+
+  </ng-container>
+
+</div>
+
+<div class="floating-button-container">
+  <div class="menu-button">
+    <app-primary-button
+      [smallPadding]="true"
+      text="MENU"
+      (clicked)="clickOpenMenuDrawer()"
+    ></app-primary-button>
+  </div>
+
+  <div *ngIf="!!orderInput?.salesMenus?.length" class="checkout-button">
+    <app-primary-button [smallPadding]="true" (clicked)="goToCheckout()">
+      <div class="checkout-text d-flex flex-row justify-content-between align-items-center">
+        <div>
+          <app-caption color="white">{{ orderInput?.salesMenus?.length }} item(s)</app-caption>
+          <app-bodytext-14 color="white" [isBold]="true">{{ displayTotalAmount }}</app-bodytext-14>
+        </div>
+
+        <div>
+          CHECK OUT
+        </div>
+      </div>
+    </app-primary-button>
+  </div>
+</div>
+
+<div
+  [(ngbCollapse)]="hideCollapseContainer"
+  #collapsOrderMode="ngbCollapse"
+  class="collapse-container"
+>
+
+  <div class="collapse-background-overlay" (click)="clickOnCollapseOverlay()"></div>
+
+  <!-- Select Order Mode -->
+  <ng-container *ngIf="showOutletClosed === false && showMenuDrawer === false">
+    <div class="order-mode">
+
+      <div class="order-mode-scroller">
+        <div class="d-flex flex-row justify-content-between">
+          <app-heading-3 class="order-mode-title">How would you like to order today?</app-heading-3>
+          <div (click)="goBack()">
+            <app-icon-close></app-icon-close>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column mt-3">
+          <app-caption>METHOD</app-caption>
+
+          <div class="mode-container d-flex flex-row flex-wrap">
+            <button
+              *ngFor="let mode of orderModes"
+              class="mode-button"
+              #orderModeButton
+              [ngClass]="{ active: getActiveOrderMode(mode.type, mode.name)}"
+              (click)="selectOrderMode(mode)">
+
+              <span class="mode-text">
+                {{ getOrderModeText(mode.type, mode.name) }} 
+              </span>
+              <span class="mode-icon">
+                <app-icon-delivery-bike *ngIf="mode.type === 'delivery'" [color]="mode.type === selectedOrderMode ? 'white' : 'grey'"></app-icon-delivery-bike>
+                <app-icon-bag *ngIf="mode.type === 'takeAway'" [color]="mode.type === selectedOrderMode ? 'white' : 'grey'"></app-icon-bag>
+              </span>
+
+            </button>
+          </div>
+
+          <!-- Take Away (HIDE FOR NOW) -->
+          <!-- <div *ngIf="selectedOrderMode === 'takeAway'" class="d-flex flex-column">
+            <app-caption>TIME</app-caption>
+
+            <app-time-picker
+              (selectedHourChanged)="onSelectedHour($event)"
+              (selectedMinuteChanged)="onSelectedMinute($event)"
+            ></app-time-picker>
+
+          </div> -->
+
+          <!-- Dine In -->
+          <div *ngIf="selectedOrderMode === 'dineIn'" class="d-flex flex-column">
+            <div *ngIf="!!tableNumberControl" class="form-group">
+              <label for="tableNumber">
+                Please input your table number
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="tableNumber"
+                placeholder="Table Number"
+                [formControl]="tableNumberControl"
+                [required]="true"/>
+              <div *ngIf="tableNumberControl.errors?.['required']" class="is-invalid">
+                <app-caption color="red">Table number is required</app-caption>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Order -->
+          <div *ngIf="!!customOrderModeForm && customOrderFormGroup" class="d-flex flex-column">
+            <form [formGroup]="customOrderFormGroup">
+              <div
+                *ngFor="let form of customOrderModeForm"
+                class="form-group">
+                
+                <ng-container *ngIf="!form.inputID.includes('pickuptime')">
+                  <input
+                    type="text"
+                    class="form-control"
+                    [id]="form.inputID"
+                    [placeholder]="form.inputLabelEn"
+                    [formControlName]="form.inputID"
+                    [required]="form.flagMandatory > 0"
+                    [autofocus]="form.flagMandatory > 0" />
+                  <div
+                    *ngIf="!!customOrderFormGroup.get(form.inputID)?.errors?.['required']"
+                    class="is-invalid">
+                    <app-caption color="red">{{ form.inputLabelEn }} is required!</app-caption>
+                  </div>
+                </ng-container>
+
+                <!-- Pickup time -->
+                <ng-container *ngIf="form.inputID.includes('pickuptime')">
+                  <label>{{ form.inputLabelEn }}</label>
+                  <app-time-picker
+                    (selectedHourChanged)="onSelectedHour($event)"
+                    (selectedMinuteChanged)="onSelectedMinute($event)"
+                  ></app-time-picker>
+                </ng-container>
+
+              </div>
+            </form>
+          </div>
+
+          <app-primary-button
+            *ngIf="selectedOrderMode !== ''"
+            class="mt-3"
+            text="CONTINUE"
+            (clicked)="clickContinueOrderMode()"
+          ></app-primary-button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+
+  <!-- Outlet closed -->
+  <ng-container *ngIf="showOutletClosed === true && showMenuDrawer === false">
+    <div class="outlet-closed">
+      <div class="d-flex flex-row justify-content-between">
+        &nbsp;
+        <div (click)="goBack()">
+          <app-icon-close></app-icon-close>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column mt-3">
+        <img class="outlet-closed-image" src="/assets/image/outlet-closed.png" alt="outlet closed">
+        <app-heading-3>Sorry, Outlet is Closed</app-heading-3>
+
+        <app-bodytext-14 *ngIf="!!openBranches.length">But worry not, you can order from this outlet instead:</app-bodytext-14>
+        <div *ngIf="!!openBranches.length" class="recommended-outlet-list d-flex flex-row">
+          <div *ngFor="let branch of openBranches" class="recommended-outlet" (click)="goToRestaurant(branch.branchCode)">
+            <app-restaurant-card
+              [restaurantName]="branch.branchName"
+              [restaurantPlace]="branch.branchName"
+              [restaurantDistance]="branch.distanceText"
+              [thumbnailImage]="branch.thumbnailImageUrl"
+              [showDistanceBelow]="true"
+            ></app-restaurant-card>
+          </div>
+        </div>
+
+        <app-bodytext-14 *ngIf="!openBranches.length">Your item will be saved in your cart, and you can checkout late</app-bodytext-14>
+        <div *ngIf="!openBranches.length" class="outlet-closed-button">
+          <app-primary-button (clicked)="goBack()" text="OK, I UNDERSTAND"></app-primary-button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Menu Drawer -->
+  <ng-container *ngIf="showMenuDrawer">
+    <div class="menu-drawer">
+
+      <div class="menu-drawer-scroller">
+        <div class="header-drawer d-flex flex-row justify-content-between">
+          &nbsp;
+          <div (click)="closeCollapse()">
+            <app-icon-close></app-icon-close>
+          </div>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="drawer-text-container">
+          <app-heading-5 color="grey">RECOMMENDATION</app-heading-5>
+
+          <div class="mt-3 d-flex flex-row justify-content-between" (click)="goToFragment('popular-menu')">
+            <app-bodytext-14>Popular</app-bodytext-14>
+
+            <div class="d-flex flex-row align-items-center">
+              <span class="mr-2">
+                <app-bodytext-14>{{ this.popularMenus.length }}</app-bodytext-14>
+              </span>
+              <app-icon-chevron-right color="black"></app-icon-chevron-right>
+            </div>
+          </div>
+
+          <div class="mt-3 d-flex flex-row justify-content-between" (click)="goToFragment('price-chopped-menu')">
+            <app-bodytext-14>Price Chopped</app-bodytext-14>
+
+            <div class="d-flex flex-row align-items-center">
+              <span class="mr-2">
+                <app-bodytext-14>{{ this.priceChoppedMenus.length }}</app-bodytext-14>
+              </span>
+              <app-icon-chevron-right color="black"></app-icon-chevron-right>
+            </div>
+          </div>
+        </div>
+
+        <div class="separator"></div>
+
+        <ng-container *ngIf="!!menuData">
+          <ng-container *ngFor="let menuCategory of menuData?.menuCategories">
+
+            <div class="drawer-text-container">
+              <app-heading-5 color="grey">{{ menuCategory.menuCategoryDesc }}</app-heading-5>
+
+              <ng-container *ngFor="let menuCategoryDetail of menuCategory.menuCategoryDetails">
+                <div class="mt-3 d-flex flex-row justify-content-between" (click)="goToFragment(menuCategoryDetail.menuCategoryDetailDesc)">
+                  <app-bodytext-14>{{ menuCategoryDetail.menuCategoryDetailDesc }}</app-bodytext-14>
+
+                  <div class="d-flex flex-row align-items-center">
+                    <span class="mr-2">
+                      <app-bodytext-14>
+                        {{ menuCategoryDetail.menus.length }}
+                      </app-bodytext-14>
+                    </span>
+                    <app-icon-chevron-right color="black"></app-icon-chevron-right>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="separator"></div>
+
+          </ng-container>
+        </ng-container>
+      </div>
+
+    </div>
+  </ng-container>
+
+</div>

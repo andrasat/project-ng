@@ -1,0 +1,26 @@
+.search-box-container {
+  position: relative;
+  top: -10px;
+  left: 10%;
+  width: 90%;
+}
+
+.brand-list-container {
+  padding: 16px;
+}
+
+.brand-container {
+  flex: 1 0 21%;
+  width: 80px;
+  padding: 9px;
+}
+
+.brand-image {
+  height: 60px;
+  width: 60px;
+}
+
+.branch-container {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--grey);
+}

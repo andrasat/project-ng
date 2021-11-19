@@ -1,0 +1,24 @@
+<div class="page-container">
+
+  <div class="nav-back-icon" backButton>
+    <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
+  </div>
+
+  <div class="header-component header-shadow">
+    <app-bodytext-16 class="text-center" [isSemiBold]="true">TERMS & CONDITIONS</app-bodytext-16>
+  </div>
+
+  <div class="tnc-container">
+    <ng-container *ngFor="let tnc of tncData">
+       <div class="mt-4">
+         <app-heading-5>{{ tnc.title }}</app-heading-5>
+
+         <app-bodytext-14>{{ tnc.description }}</app-bodytext-14>
+       </div>
+    </ng-container>
+  </div>
+
+  <div class="button-container">
+    <app-primary-button text="OK, I UNDERSTAND" (clicked)="clickToContinue()"></app-primary-button>
+  </div>
+</div>

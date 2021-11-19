@@ -1,0 +1,151 @@
+<div class="page-container">
+
+  <div class="nav-back-icon" (click)="goBack()">
+    <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
+  </div>
+
+  <div class="header-component header-shadow">
+    <app-bodytext-16 class="text-center" [isSemiBold]="true">
+      {{ orderInput ? 'Choose Contact' : 'Contact List'}}
+    </app-bodytext-16>
+  </div>
+
+  <div class="contact-list-container">
+     <div *ngFor="let contact of contactList" class="contact" (click)="selectContact(contact)">
+       <app-contact-list [contact]="contact"></app-contact-list>
+     </div>
+  </div>
+
+  <div class="add-new-recipient">
+    <app-primary-button text="+ ADD NEW RECIPIENT" (clicked)="collapseContact.toggle()" ></app-primary-button>
+  </div>
+
+  <div
+    [(ngbCollapse)]="hideCollapse"
+    #collapseContact="ngbCollapse"
+    class="collapse-container">
+
+    <!-- Delete Contact Confirmation -->
+    <div class="delete-contact" [ngClass]="deleteContactClass">
+      <div class="d-flex flex-row justify-content-between">
+        &nbsp;
+        <div (click)="hideConfirmDeleteContact()">
+          <app-icon-close></app-icon-close>
+        </div>
+      </div>
+
+      <div class="mt-3 d-flex flex-column">
+        <img class="delete-contact-confirm-image" src="/assets/image/warning.png" alt="Confirm Delete">
+
+        <app-heading-3>Are you sure you want to remove this recipient info?</app-heading-3>
+
+        <div class="mt-3 d-flex flex-row justify-content-between">
+          <app-secondary-button class="half-size-button" [withBorder]="true" text="REMOVE" (clicked)="deleteContact()"></app-secondary-button>
+          <app-primary-button class="half-size-button" text="NO, KEEP INFO" (clicked)="hideConfirmDeleteContact()"></app-primary-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="contact-form">
+      <div class="d-flex flex-row justify-content-between">
+        <app-heading-3 class="contact-form-title">Add New Recipient</app-heading-3>
+        <div (click)="hideContactForm()">
+          <app-icon-close></app-icon-close>
+        </div>
+      </div>
+
+      <form [formGroup]="contactFormGroup">
+        <div class="form-group">
+          <label for="contactName">
+            <app-caption color="grey">Name</app-caption>
+          </label>
+
+          <input id="contact-name" class="form-control" type="text" formControlName="contactName">
+
+          <div class="validation-container">
+            <app-caption
+              *ngIf="contactFormGroup.controls['contactName'].errors?.['required']"
+              color="red">
+              Name is required
+            </app-caption>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contactPhone">
+            <app-caption color="grey">Mobile Number</app-caption>
+          </label>
+
+          <input id="contact-phone" class="form-control" type="text" formControlName="contactPhone">
+
+          <div class="validation-container">
+            <app-caption
+              *ngIf="contactFormGroup.controls['contactPhone'].errors?.['pattern']"
+              color="red">
+              Please provide a valid phone number
+            </app-caption>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contactEmail">
+            <app-caption color="grey">E-mail</app-caption>
+          </label>
+
+          <input id="contact-email" class="form-control" type="email" formControlName="contactEmail">
+
+          <div class="validation-container">
+            <app-caption
+              *ngIf="contactFormGroup.controls['contactEmail'].errors?.['required']"
+              color="red">
+              Email is required
+            </app-caption>
+            <app-caption
+              *ngIf="contactFormGroup.controls['contactEmail'].errors?.['email']"
+              color="red">
+              Please provide a valid email
+            </app-caption>
+          </div>
+
+          <div class="email-info d-flex flex-row">
+            <img class="info-icon" src="/assets/image/info.svg" alt="email information">
+            <app-caption color="grey">This email is used to send the invoice of this order</app-caption>
+          </div>
+
+        </div>
+
+        <div *ngIf="!!currentProfile && !!contactFormGroup.get('saveContact')" class="form-group d-flex flex-row align-content-center">
+
+          <div class="checkbox">
+            <app-icon-checbox [color]="contactFormGroup.controls['saveContact'].value ? 'tangerine' : 'white'"></app-icon-checbox>
+          </div>
+
+          <input id="save-contact" type="checkbox" class="checkbox-input" formControlName="saveContact">
+
+          <label for="saveContact" (click)="setSaveContact()">
+            <app-bodytext-14>Save contact</app-bodytext-14>
+          </label>
+        </div>
+
+        <div class="form-continue-button d-flex flex-row justify-content-between">
+          <!-- Contnue if from checkout -->
+          <app-primary-button
+            *ngIf="queryParams.from === 'checkout' else saveOrRemove"
+            class="full-size-button"
+            text="CONTINUE"
+            (clicked)="saveContactList()">
+          </app-primary-button>
+
+          <!-- Save or Remove contactlist -->
+          <ng-template #saveOrRemove>
+            <app-primary-button class="half-size-button" bgColor="red" text="DELETE" (clicked)="confirmDeleteContact()"></app-primary-button>
+            <app-primary-button class="half-size-button" text="SAVE" (clicked)="saveContactList()"></app-primary-button>
+          </ng-template>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>

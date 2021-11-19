@@ -1,0 +1,60 @@
+<div class="page-container">
+
+  <div class="nav-back-icon">
+    <a routerLink="..">
+      <app-icon-arrow-left color="white"></app-icon-arrow-left>
+    </a>
+  </div>
+
+  <zxing-scanner
+    (scanFailure)="scanFailureHandler"
+    (scanError)="scanErrorHandler($event)"
+    (scanSuccess)="scanSuccessHandler($event)"
+    (camerasFound)="camerasFoundHandler($event)"
+    (permissionResponse)="hasPermissionHandler($event)"
+  ></zxing-scanner>
+
+  <div *ngIf="!!cameraError" class="scanner-container">
+    <div class="camera-error-container">
+      <app-bodytext-14 [isBold]=true color="white">
+        Your device does not have a camera system
+        <br/>
+        or please give the permission to access your camera
+      </app-bodytext-14>
+    </div>
+  </div>
+
+  <div *ngIf="!cameraError" class="scanner-container d-flex flex-column">
+
+    <!-- Scanner Box -->
+    <div class="top-section flex-grow-1">
+      <div class="text-container">
+        <app-bodytext-14 [isBold]=true color="white">
+          Place the QR code inside
+          <br/>
+          the area and scanning will start automatically
+        </app-bodytext-14>
+      </div>
+    </div>
+
+    <div class="middle-section">
+      <div class="left-column"></div>
+      <div class="middle-column">
+        <img src="assets/image/scanner-box.png" alt="QR Code Scanner">
+      </div>
+      <div class="right-column"></div>
+    </div>
+
+    <div class="bottom-section flex-grow-1">
+      <div *ngIf="!!scanError" class="scan-error-container">
+        <app-caption [isSemiBold]="true" color="red" >
+          Can&apos;t detect QR code.
+          <br/>
+          Please scan it in a brighter area
+        </app-caption>
+      </div>
+    </div>
+    <!-- Scanner Box -->
+
+  </div>
+</div>

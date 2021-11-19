@@ -1,0 +1,78 @@
+:host zxing-scanner::ng-deep {
+  left: 0;
+  top: 0;
+  position: relative;
+
+  video {
+    height: 100vh;
+    width: 100%;
+  }
+}
+
+.scanner-container {
+  background-color: rgba($color: #000000, $alpha: 0.7);
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+}
+
+.camera-error-container {
+  position: relative;
+  left: 10%;
+  top: 20vh;
+  text-align: center;
+  width: 80%;
+}
+
+.top-section {
+  background-color: rgba($color: #000000, $alpha: 0.7);
+  position: relative;
+}
+
+.middle-section {
+  display: flex;
+  height: 250px;
+
+  .left-column {
+    background-color: rgba($color: #000000, $alpha: 0.7);
+    flex-grow: 1;
+    height: 100%;
+  }
+
+  .middle-column {
+    height: 100%;
+    width: 250px;
+
+    & img {
+      vertical-align: auto;
+    }
+  }
+
+  .right-column {
+    background-color: rgba($color: #000000, $alpha: 0.7);
+    flex-grow: 1;
+    height: 100%;
+  }
+}
+
+.bottom-section {
+  background-color: rgba($color: #000000, $alpha: 0.7);
+  position: relative;
+}
+
+.text-container {
+  position: absolute;
+  bottom: 40px;
+  left: 17.5%;
+  text-align: center;
+  width: 65%;
+}
+
+.scan-error-container {
+  position: absolute;
+  left: 17.5%;
+  top: 30px;
+  text-align: center;
+  width: 65%;
+}

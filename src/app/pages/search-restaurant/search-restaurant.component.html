@@ -1,0 +1,65 @@
+<div class="page-container">
+
+  <div class="nav-back-icon" (click)="goBack()">
+    <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
+  </div>
+
+  <div class="header-component header-shadow">
+    <div *ngIf="!isSelectRestaurant else chooseOutlets" class="search-box-container">
+      <app-input-search-box
+        placeholder="Search outlets"
+        (focusEvent)="setIsSearchRestaurant(true)"
+        (searchEvent)="onChangeSearch($event)">
+      </app-input-search-box>
+    </div>
+
+    <ng-template #chooseOutlets>
+      <app-bodytext-16 class="text-center" [isSemiBold]="true">Choose Outlets</app-bodytext-16>
+    </ng-template>
+  </div>
+
+  <ng-template [ngIf]="!isSelectRestaurant && !isSearchRestaurant" [ngIfElse]="showBranchList">
+    <div
+      *ngIf="!!this.brandList?.brands?.length"
+      class="brand-list-container d-flex flex-row align-items-start justify-content-around flex-wrap"
+    >
+      <div
+        *ngFor="let brand of this.brandList?.brands"
+        class="brand-container d-flex flex-column align-items-center text-center"
+        (click)="onClickOutlets(brand)"
+      >
+        <ng-template [ngIf]="!!brand.nearMeBranchCount">
+          <img class="brand-image" [src]="brand.brandImageUrl || 'https://via.placeholder.com/60'" [alt]="brand.brandName">
+          <app-caption  color="grey">{{ brand.brandName }}</app-caption>
+        </ng-template>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #showBranchList>
+
+    <div *ngIf="isSearchRestaurant" class="brand-list-container d-flex flex-column">
+      <div *ngFor="let branch of filteredBranches" class="branch-container" (click)="goToBranchRestaurant(branch.branchCode)">
+        <app-restaurant-card
+          [restaurantName]="branch.branchName"
+          [restaurantPlace]="branch.branchName"
+          [restaurantDistance]="branch.distanceText"
+          [thumbnailImage]="branch.thumbnailImageUrl">
+        </app-restaurant-card>
+      </div>
+    </div>
+
+    <div *ngIf="isSelectRestaurant" class="brand-list-container d-flex flex-column">
+      <div *ngFor="let branch of brandData?.branches" class="branch-container" (click)="goToBranchRestaurant(branch.branchCode)">
+        <app-restaurant-card
+          [restaurantName]="branch.branchName"
+          [restaurantPlace]="branch.branchName"
+          [restaurantDistance]="branch.distanceText"
+          [thumbnailImage]="branch.thumbnailImageUrl">
+        </app-restaurant-card>
+      </div>
+    </div>
+
+  </ng-template>
+
+</div>

@@ -1,0 +1,31 @@
+.restaurant-card-container {
+  padding: 10px 0;
+}
+
+.restaurant-thumbnail-container {
+  border: 1px solid var(--grey);
+  border-radius: 6px;
+  display: inline-block;
+  overflow: hidden;
+  height: 56px;
+  width: 56px;
+}
+
+.closed-overlay {
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  height: 56px;
+  width: 56px;
+  text-align: center;
+  z-index: 0;
+}
+
+.text-container {
+  flex: 1 0 auto;
+  padding-left: 16px;
+}
+
+.distance-icon {
+  padding-right: 5px;
+}

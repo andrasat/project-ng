@@ -1,0 +1,25 @@
+.primary-button {
+  text-align: center;
+  background-color: var(--tangerine);
+  border-radius: 6px;
+  color: var(--white);
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 1px;
+  padding: 14px 0;
+  width: 100%;
+
+  &.small-padding {
+    padding: 7px 0;
+  }
+
+  &.disabled {
+    background-color: var(--grey-4);
+  }
+
+  &.red {
+    background-color: var(--red-1);
+  }
+}

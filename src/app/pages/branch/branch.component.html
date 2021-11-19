@@ -1,0 +1,48 @@
+<div class="page-container">
+  <router-outlet></router-outlet>
+
+  <nav *ngIf="!hideBottomNav" class="nav justify-content-around align-items-center bottom-nav">
+
+    <a
+      routerLinkActive
+      #rla1="routerLinkActive"
+      [routerLink]="'/' + branchList?.companyCode">
+      <div class="bottom-nav-item nav-item d-flex flex-column">
+        <app-icon-home [color]="activeRoute === 'home' ? 'tangerine' : 'grey'"></app-icon-home>
+        <app-caption class="mt-1" [color]="activeRoute === 'home' ? 'tangerine' : 'grey'" [isBold]="activeRoute === 'home'">Home</app-caption>
+      </div>
+    </a>
+
+    <a
+      routerLinkActive
+      #rla2="routerLinkActive"
+      [routerLink]="'/' + branchList?.companyCode + '/promotion'">
+      <div class="bottom-nav-item nav-item d-flex flex-column">
+        <app-icon-promotion [color]="activeRoute === 'promo' ? 'tangerine' : 'grey'"></app-icon-promotion>
+        <app-caption class="mt-1" [color]="activeRoute === 'promo' ? 'tangerine' : 'grey'" [isBold]="activeRoute === 'promo'">Promotion</app-caption>
+      </div>
+    </a>
+
+    <a
+      routerLinkActive
+      #rla3="routerLinkActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      [routerLink]="'/' + branchList?.companyCode + '/order-history'">
+      <div class="bottom-nav-item nav-item d-flex flex-column">
+        <app-icon-history [color]="activeRoute === 'history' ? 'tangerine' : 'grey'"></app-icon-history>
+        <app-caption class="mt-1" [color]="activeRoute === 'history' ? 'tangerine' : 'grey'" [isBold]="activeRoute === 'history'">History</app-caption>
+      </div>
+    </a>
+
+    <a
+      routerLinkActive
+      #rla4="routerLinkActive"
+      [routerLink]="'/' + branchList?.companyCode + '/others'">
+      <div class="bottom-nav-item nav-item d-flex flex-column">
+        <app-icon-others [color]="activeRoute === 'others' ? 'tangerine' : 'grey'"></app-icon-others>
+        <app-caption class="mt-1" [color]="activeRoute === 'others' ? 'tangerine' : 'grey'" [isBold]="activeRoute === 'others'">Others</app-caption>
+      </div>
+    </a>
+
+  </nav>
+</div>

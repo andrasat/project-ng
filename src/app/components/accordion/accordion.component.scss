@@ -1,0 +1,27 @@
+.accordion {
+  position: relative;
+}
+
+.accordion-title {
+  border-bottom: 1px solid var(--grey-5);
+  padding: 0 0 16px;
+  margin: 16px 16px 0;
+}
+
+.chevron-icon {
+  &.active {
+    transform: rotate(180deg);
+    transition: transform 200ms;
+  }
+}
+
+.accordion-content {
+  background-color: var(--grey-6);
+  display: none;
+  height: 0px;
+
+  &.active {
+    display: block;
+    height: 100%;
+  }
+}

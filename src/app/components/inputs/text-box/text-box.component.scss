@@ -1,0 +1,27 @@
+.search-input-group {
+  border: 1px solid var(--light-grey);
+  border-radius: 6px;
+}
+
+.search-input {
+  border: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  height: 48px;
+  color: var(--black);
+
+  &:focus {
+    box-shadow: none;
+  }
+
+  &::-webkit-input-placeholder,
+  &:-ms-input-placeholder,
+  &::-ms-input-placeholder,
+  &:-moz-placeholder,
+  &::-moz-placeholder,
+  &::placeholder {
+    color: var(--light-grey);
+  }
+}

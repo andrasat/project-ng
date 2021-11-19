@@ -1,0 +1,34 @@
+<div class="restaurant-card-container d-flex flex-row align-items-center">
+
+  <div class="restaurant-thumbnail-container">
+    <div *ngIf="isClosed" class="closed-overlay d-flex justify-content-center align-items-center">
+      <app-caption
+        color="white"
+        [isBold]="true"
+        [fontSize]="9">
+        Closed
+      </app-caption>
+    </div>
+    <img [src]="thumbnailImage || 'https://via.placeholder.com/56'" [alt]="restaurantName" width="56px" height="56px">
+  </div>
+
+  <div class="text-container">
+    <app-bodytext-14 [isSemiBold]="true">{{ restaurantName }}</app-bodytext-14>
+    <app-caption color="grey">{{ restaurantPlace }}</app-caption>
+
+    <div *ngIf="restaurantDistance && showDistanceBelow" class="d-flex flex-row align-items-center">
+      <app-icon-marker class="distance-icon" [width]="9" color="grey"></app-icon-marker>
+      <app-caption color="grey">{{ restaurantDistance }}</app-caption>
+    </div>
+  </div>
+
+  <div *ngIf="restaurantDistance && !showDistanceBelow" class="d-flex flex-row align-items-center">
+    <app-icon-marker class="distance-icon" [width]="9" color="grey"></app-icon-marker>
+    <app-caption color="grey">{{ restaurantDistance }}</app-caption>
+  </div>
+
+  <div *ngIf="showChevron" >
+    <app-icon-chevron-right color="black"></app-icon-chevron-right>
+  </div>
+
+</div>

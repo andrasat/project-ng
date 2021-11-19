@@ -1,0 +1,8 @@
+<button
+  type="button"
+  class="btn primary-button"
+  [ngClass]="classes"
+  (click)="disabled ? undefined : clicked.emit()">
+  {{ text }}
+  <ng-content *ngIf="!text"></ng-content>
+</button>

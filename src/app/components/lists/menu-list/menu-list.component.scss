@@ -1,0 +1,30 @@
+.menu-container {
+  padding: 15px 0;
+}
+
+.menu-image-container {
+  border-radius: 6px;
+  margin-right: 16px;
+  height: 72px;
+  min-width: 72px;
+  overflow: hidden;
+}
+
+.menu-text-container {
+  flex: 1 0 70%;
+}
+
+.icon-list img {
+  margin-left: 6px;
+  height: 24px;
+  width: 24px;
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+}
+
+.menu-image {
+  height: 72px;
+  width: 72px;
+}

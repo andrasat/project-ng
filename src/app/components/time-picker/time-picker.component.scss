@@ -1,0 +1,114 @@
+.time-picker {
+  border: 1px solid var(--grey);
+  border-radius: 6px;
+  margin: 8px 0;
+  position: relative;
+  height: 150px;
+  width: 100%;
+}
+
+.hour-overlay {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: 45%;
+  z-index: 100;
+}
+
+.minute-overlay {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  width: 45%;
+  z-index: 100;
+}
+
+.selected-time {
+  background-color: var(--tangerine);
+  color: var(--white);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 40px;
+  letter-spacing: 2px;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 50px;
+  height: 50px;
+  width: 100%;
+  z-index: 10;
+}
+
+.background-time {
+  color: var(--grey);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 15px;
+  letter-spacing: 2px;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+.hour-container {
+  width: 45%;
+  overflow: hidden;
+  text-align: right;
+}
+
+.minute-container {
+  width: 45%;
+  overflow: hidden;
+  text-align: left;
+}
+
+.hour-counter,
+.minute-counter {
+  position: absolute;
+  width: 45%;
+  height: 50px;
+  overflow: hidden;
+}
+
+.background-hour-counter,
+.background-minute-counter {
+  position: absolute;
+  width: 45%;
+  height: 150px;
+  overflow: hidden;
+}
+
+.separator {
+  width: 10%;
+  text-align: center;
+}
+
+.hour-time,
+.minute-time {
+  display: block;
+  position: relative;
+  padding: 5px 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+
+  &.transition-transform {
+    transition: transform 100ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+  }
+}
+
+.background-hour-time,
+.background-minute-time {
+  display: block;
+  position: relative;
+  height: 30px;
+  padding: 10px 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+
+  &.transition-transform {
+    transition: transform 200ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+  }
+}

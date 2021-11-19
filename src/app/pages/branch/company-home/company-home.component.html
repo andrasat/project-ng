@@ -1,0 +1,67 @@
+<ngb-carousel *ngIf="images" [showNavigationArrows]="false">
+  <ng-template ngbSlide *ngFor="let image of images; let i = index">
+    <div class="image-container">
+      <img [src]="image" [alt]="'promo-image-'+i">
+    </div>
+  </ng-template>
+</ngb-carousel>
+
+<div class="nav-back-icon" backButton>
+  <app-icon-arrow-left color="white"></app-icon-arrow-left>
+</div>
+
+<div class="search-icon-container" (click)="goToSearchRestaurant()">
+  <img src="/assets/image/search-circle.svg" alt="search restaurants">
+</div>
+
+<div class="company-container">
+  <app-heading-3>
+    {{ branchList?.companyName }}
+    <img class="float-right" src="/assets/image/info.svg" [alt]="branchList?.companyName || 'info-icon'" (click)="goToAboutCompany()">
+  </app-heading-3>
+
+  <app-bodytext-14>Food & Beverage chain with +500 outlets in South-East Asia</app-bodytext-14>
+
+  <div class="mt-3" (click)="goToLocation()">
+    <app-location-card [showArrow]="true">
+      <app-caption color="grey" topText>My Location</app-caption>
+      <app-bodytext-14 [isTruncate]="true" bottomText>{{ currentAddress?.addressName || '&nbsp;' }}</app-bodytext-14>
+    </app-location-card>
+  </div>
+</div>
+
+<div class="branch-list-container">
+
+  <!-- branches not found -->
+  <div
+    *ngIf="!branchList?.branches?.length"
+    class="d-flex flex-column justify-content-center align-items-center text-center"
+  >
+    <img src="/assets/image/outlet-grey.svg" alt="Outlets not found" width="72px">
+    <app-heading-3>No Outlets found</app-heading-3>
+    <app-bodytext-14>
+      Sorry, it seems like your location is not <br/>
+      within our reach just yet, please change <br/>
+      location or try again next time
+    </app-bodytext-14>
+  </div>
+
+  <!-- branches list -->
+  <div
+    *ngIf="!!branchList?.branches?.length"
+    class="d-flex flex-column"
+  >
+    <app-heading-5>{{ branchList?.nearMeBranchCount }} OUTLETS NEARBY</app-heading-5>
+
+    <div *ngFor="let branch of branchList?.branches" class="branch-container" (click)="goToBranchRestaurant(branch)">
+      <app-restaurant-card
+        [restaurantName]="branch.branchName"
+        [restaurantPlace]="branch.branchName"
+        [restaurantDistance]="branch.distanceText"
+        [thumbnailImage]="branch.thumbnailImageUrl"
+        [isClosed]="branch.businessHour.status === 'closed' || !branch.flagNearMe">
+      </app-restaurant-card>
+    </div>
+  </div>
+
+</div>

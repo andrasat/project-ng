@@ -1,0 +1,20 @@
+<div class="nav-back-icon" (click)="goBack()">
+  <app-icon-arrow-left color="tangerine"></app-icon-arrow-left>
+</div>
+
+<div class="header-component header-shadow">
+  <div class="search-box-container">
+    <app-input-search-box
+      placeholder="Search menu"
+      (searchEvent)="onChangeSearch($event)">
+    </app-input-search-box>
+  </div>
+</div>
+
+<div class="menu-list-container">
+  <ng-container *ngFor="let menu of filteredMenu">
+    <div (click)="goToMenu(menu.menuID)">
+      <app-menu-list [menu]="menu"></app-menu-list>
+    </div>
+  </ng-container>
+</div>

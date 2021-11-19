@@ -1,0 +1,13 @@
+<div class="search-input-group input-group flex-nowrap">
+  <div class="input-group-prepend">
+    <app-icon-search class="input-group-text search-icon" color="tangerine"></app-icon-search>
+  </div>
+  <input
+    #searchinput
+    type="text"
+    class="form-control search-input"
+    [placeholder]="placeholder"
+    aria-describedby="addon-wrapping"
+    (focus)="focusEvent.emit($event)"
+    (focusout)="focusOutEvent.emit($event)">
+</div>

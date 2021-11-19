@@ -1,0 +1,208 @@
+<div class="header-component header-shadow">
+  <app-bodytext-16 class="text-center" [isSemiBold]="true">Order</app-bodytext-16>
+  <app-caption class="text-center" color="grey">{{ getHeaderText() }}</app-caption>
+</div>
+
+<div class="nav-close-icon" (click)="goBack()">
+  <app-icon-close color="tangerine"></app-icon-close>
+</div>
+
+<div class="section-container">
+  <div class="d-flex flex-row justify-content-between">
+    <app-heading-5>ORDER STATUS</app-heading-5>
+    <app-label [type]="currentStatus.toLowerCase()" [text]="currentStatus"></app-label>
+  </div>
+
+  <!-- IF TYPE PICK UP -->
+  <div *ngIf="orderData?.type === 'takeAway'" class="pick-up-container text-center">
+    <div class="pick-up-text d-flex flex-column justify-content-center align-items-center">
+      <app-caption color="grey">Pick Up Code</app-caption>
+      <app-heading-2>{{ orderData?.queueNum }}</app-heading-2>
+      <app-caption>Show this number to our waiters to picking up your order, or</app-caption>
+      <app-link (clicked)="showQRCode()">SHOW QR CODE</app-link>
+    </div>
+  </div>
+
+  <div class="order-status-container d-flex flex-column">
+
+    <ng-container *ngFor="let status of orderStatus;index as i">
+      <div class="order-status d-flex flex-row align-items-center">
+        <div class="circle" [ngClass]="getCustomClass(i)">
+          <div *ngIf="i !== orderStatus.length - 1" class="v-line" [ngClass]="getCustomClass()"></div>
+        </div>
+
+        <div class="status-text">
+          <app-caption color="grey">{{ getStatusTime(status.createdDate) }}</app-caption>
+          <app-bodytext-14>{{ status.statusName }}</app-bodytext-14>
+
+          <div *ngIf="i === orderStatus.length - 1 && currentStatus !== 'ONGOING'">
+            <app-caption color="grey">
+              Have an issue?
+              <app-link (clicked)="goToFeedback()">SEND FEEDBACK</app-link>
+            </app-caption>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+  </div>
+</div>
+
+<div class="section-container">
+  <app-heading-5>ORDER FROM</app-heading-5>
+
+  <div class="restaurant-container" (click)="goToRestaurant()">
+    <app-restaurant-card
+      [restaurantName]="branchData?.brandName || ''"
+      [restaurantPlace]="branchData?.branchName || ''"
+      [thumbnailImage]="branchData?.thumbnailImageUrl || ''"
+      [showChevron]="true"
+    ></app-restaurant-card>
+  </div>
+</div>
+
+<div class="section-container">
+  <app-heading-5>DELIVER TO</app-heading-5>
+
+  <!-- API does not return address data, using placeholder -->
+  <div class="address-container">
+    <app-bodytext-14 [isSemiBold]="true">Antikode HQ</app-bodytext-14>
+    <app-caption>Jl. Jurangmangu Barat No. 08</app-caption>
+    <div class="notes-box">
+      <app-caption color="grey">Tolong titip paket di pos security</app-caption>
+    </div>
+  </div>
+</div>
+
+<div class="section-container">
+  <app-heading-5>CONTACT DETAIL</app-heading-5>
+
+  <!-- API does not return address data, using placeholder -->
+  <div class="contact-container">
+    <app-bodytext-14 [isSemiBold]="true">William Santoso</app-bodytext-14>
+    <app-caption color="grey">0811123123</app-caption>
+    <app-caption color="grey">william.s@gmail.com</app-caption>
+  </div>
+</div>
+
+<div class="section-container">
+  <app-heading-5>YOUR ORDER</app-heading-5>
+
+  <ng-container *ngFor="let menu of displayMenus">
+    <div class="sale-menu d-flex flex-row">
+      <div class="sale-menu-image">
+        <img [src]="menu.imageUrl" [alt]="menu.menuName">
+      </div>
+
+      <div class="sale-menu-text">
+        <app-bodytext-14 [isBold]=true>{{ menu.menuName }}</app-bodytext-14>
+
+        <ng-container *ngIf="!!menu.extras.length">
+          <app-caption *ngFor="let extra of menu.extras" color="grey">{{ ((extra.qty || 0) * menu.qty) + ' ' + extra.menuExtraName }}</app-caption>
+        </ng-container>
+
+        <ng-container *ngIf="!!menu.packages.length">
+          <app-caption *ngFor="let packageData of menu.packages">{{ (packageData.qty * menu.qty) + ' ' + packageData.menuName }}</app-caption>
+        </ng-container>
+
+        <div class="bottom-price-text">
+          <app-caption [isSemiBold]="true">{{ menu.qty + ' X ' + formatToCurrency(menu.sellPrice) }}</app-caption>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<div class="section-container">
+  <app-heading-5>PAYMENT DETAIL</app-heading-5>
+
+  <div class="mt-3 d-flex flex-row justify-content-between">
+    <app-bodytext-14>Subtotal</app-bodytext-14>
+    <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(orderData?.subtotal || 0) }}</app-bodytext-14>
+  </div>
+
+  <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row align-items-center">
+      <app-bodytext-14>Additional Charge</app-bodytext-14>
+      <img class="ml-1" src="/assets/image/info.svg" alt="additional charge" width="13px">
+    </div>
+    <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(orderData?.otherTaxTotal || 0) }}</app-bodytext-14>
+  </div>
+
+  <!-- Get Order does not return delivery cost -->
+  <div class="d-flex flex-row justify-content-between">
+    <app-bodytext-14>Delivery</app-bodytext-14>
+    <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(0) }}</app-bodytext-14>
+  </div>
+
+  <div class="d-flex flex-row justify-content-between">
+    <app-bodytext-14>Tax</app-bodytext-14>
+    <app-bodytext-14 [isSemiBold]="true" >{{ formatToCurrency(orderData?.vatTotal || 0) }}</app-bodytext-14>
+  </div>
+
+  <div *ngIf="!!orderData?.discountTotal" class="d-flex flex-row justify-content-between">
+    <app-bodytext-14>Discount Total</app-bodytext-14>
+    <app-bodytext-14 [isSemiBold]="true" color="tangerine">-{{ formatToCurrency(orderData?.discountTotal || 0) }}</app-bodytext-14>
+  </div>
+
+  <!-- Get Order does not return voucher total -->
+  <div *ngIf="!!0" class="d-flex flex-row justify-content-between">
+    <app-bodytext-14>Voucher Code</app-bodytext-14>
+    <app-bodytext-14 [isSemiBold]="true" color="tangerine">-{{ formatToCurrency(0) }}</app-bodytext-14>
+  </div>
+</div>
+
+<div class="section-container">
+  <app-heading-5>PAYMENT METHOD</app-heading-5>
+
+  <div class="payment-container d-flex flex-row align-items-center">
+    <img class="payment-icon" [src]="getPaymentImage()" [alt]="getPaymentImage()">
+
+    <div class="payment-text d-flex flex-column">
+      <app-bodytext-14 [isSemiBold]="true">{{ orderData ? orderData.salesPayment.paymentMethodID.toUpperCase() : '' }}</app-bodytext-14>
+      <app-caption color="grey">0811123123</app-caption>
+    </div>
+
+    <app-label [widePadding]="true" type="completed" text="PAID"></app-label>
+  </div>
+</div>
+
+<div class="footer-component footer-shadow">
+  <div class="d-flex flex-row justify-content-between">
+    <div class="button-container">
+      <app-secondary-button [withBorder]="true" text="SEND FEEDBACK" (clicked)="goToFeedback()"></app-secondary-button>
+    </div>
+    <div class="button-container">
+      <app-primary-button text="ORDER AGAIN" (clicked)="goToRestaurant()"></app-primary-button>
+    </div>
+  </div>
+
+  <div class="mt-4 text-center">
+    <app-caption >
+      Have an issue?
+      <app-link>GET HELP</app-link>
+    </app-caption>
+  </div>
+</div>
+
+<div
+  [(ngbCollapse)]="hideCollapse"
+  #collapse="ngbCollapse"
+  class="collapse-container">
+
+  <div class="collapse-background-overlay" (click)="clickOnCollapseOverlay()"></div>
+
+  <div class="qr-code-container">
+    <div class="d-flex flex-row justify-content-between">
+      <app-heading-3 class="order-mode-title">QR Code</app-heading-3>
+      <div (click)="collapse.toggle()">
+        <app-icon-close></app-icon-close>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <qr-code [value]="orderData?.qrData || undefined" [size]="300" errorCorrectionLevel="M"></qr-code>
+    </div>
+  </div>
+
+</div>

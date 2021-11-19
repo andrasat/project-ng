@@ -1,0 +1,24 @@
+<div class="page-container">
+  <img class="payment-failed-image" src="/assets/image/payment-failed.png" alt="Payment failed">
+
+  <div class="content-container">
+    <app-heading-2>Something Went Wrong</app-heading-2>
+
+    <app-bodytext-14>Please check your balance before trying again your payment or use different payment method</app-bodytext-14>
+
+    <div class="button-container d-flex flex-row justify-content-between">
+      <app-secondary-button
+        class="half-size-button"
+        [withBorder]="true"
+        text="CANCEL ORDER"
+        (clicked)="cancelOrder()">
+      </app-secondary-button>
+
+      <app-primary-button
+        class="half-size-button"
+        text="TRY AGAIN"
+        (clicked)="tryAgainPayment()">
+      </app-primary-button>
+    </div>
+  </div>
+</div>

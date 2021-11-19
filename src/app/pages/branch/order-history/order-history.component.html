@@ -1,0 +1,60 @@
+<div class="header-component header-shadow">
+  <app-bodytext-16 class="text-center" [isSemiBold]="true">History</app-bodytext-16>
+</div>
+
+<div class="section-container">
+  <app-heading-5>TODAY</app-heading-5>
+
+  <ng-container *ngFor="let orderData of orderHistoryToday">
+    <div class="order-history-container" (click)="goToOrderHistoryDetail(orderData)">
+      <div class="order-history-header d-flex flex-row justify-content-between align-items-center">
+        <app-caption color="grey">{{ getHeaderText(orderData) }}</app-caption>
+        <app-label [type]="getCurrentStatus(orderData.status).toLowerCase()" [text]="getCurrentStatus(orderData.status)"></app-label>
+      </div>
+
+      <div class="order-history-content d-flex flex-row justify-content-between align-items-center">
+        <div>
+          <app-icon-bag *ngIf="orderData.type !== 'delivery'" [width]="32" [height]="32"></app-icon-bag>
+          <app-icon-delivery-bike *ngIf="orderData.type === 'delivery'" [width]="32" [height]="32"></app-icon-delivery-bike>
+        </div>
+
+        <div class="order-history-content-text">
+          <app-bodytext-14 [isSemiBold]="true">{{ orderData.branchName }}</app-bodytext-14>
+          <!-- API does not return qty and count, use placeholder -->
+          <app-caption color="grey">2 items, {{ formatToCurrency(71000) }}</app-caption>
+        </div>
+
+        <app-icon-chevron-right color="black"></app-icon-chevron-right>
+      </div>
+    </div>
+  </ng-container>
+
+</div>
+
+<div class="section-container">
+  <app-heading-5>PAST ORDER</app-heading-5>
+
+  <ng-container *ngFor="let orderData of orderHistoryPast">
+    <div class="order-history-container" (click)="goToOrderHistoryDetail(orderData)">
+      <div class="order-history-header d-flex flex-row justify-content-between align-items-center">
+        <app-caption color="grey">{{ getHeaderText(orderData) }}</app-caption>
+        <app-label [type]="getCurrentStatus(orderData.status).toLowerCase()" [text]="getCurrentStatus(orderData.status)"></app-label>
+      </div>
+
+      <div class="order-history-content d-flex flex-row justify-content-between align-items-center">
+        <div>
+          <app-icon-bag *ngIf="orderData.type !== 'delivery'" [width]="32" [height]="32"></app-icon-bag>
+          <app-icon-delivery-bike *ngIf="orderData.type === 'delivery'" [width]="32" [height]="32"></app-icon-delivery-bike>
+        </div>
+
+        <div class="order-history-content-text">
+          <app-bodytext-14 [isSemiBold]="true">{{ orderData.branchName }}</app-bodytext-14>
+          <!-- API does not return qty and count, use placeholder -->
+          <app-caption color="grey">2 items, {{ formatToCurrency(71000) }}</app-caption>
+        </div>
+
+        <app-icon-chevron-right color="black"></app-icon-chevron-right>
+      </div>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,12 @@
+<div class="payment-card">
+
+  <div class="d-flex flex-row align-items-center">
+    <img class="payment-icon" [src]="'/assets/image/' + payment.id + '.png'" [alt]="payment.name">
+    <div class="payment-text">
+      <app-bodytext-14>{{ payment.name }}</app-bodytext-14>
+    </div>
+    <app-icon-radio [color]="selected ? 'tangerine' : 'white'" (click)="radioClick.emit()"></app-icon-radio>
+  </div>
+
+  <ng-content select="[paymentContent]"></ng-content>
+</div>

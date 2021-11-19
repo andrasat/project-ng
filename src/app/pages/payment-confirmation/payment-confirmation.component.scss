@@ -1,0 +1,80 @@
+.payment-header {
+  background-color: var(--grey-4);
+  height: 120px;
+  position: relative;
+
+  &.ovo {
+    background-color: #8f6ace;
+  }
+
+  &.gopay {
+    background-color: #69d1e9;
+  }
+
+  &.shopeexen {
+    background-color: #ff9432;
+  }
+
+  &.dana {
+    background-color: #51b5ff;
+  }
+
+  &.linkaja {
+    background-color: #b7050c;
+  }
+}
+
+.payment-icon {
+  position: absolute;
+  bottom: -40px;
+  left: 16px;
+
+  & img {
+    height: 80px;
+    width: 80px;
+  }
+}
+
+.payment-confimation-content {
+  padding: 50px 16px 16px;
+}
+
+.step-number {
+  background-color: var(--grey);
+  border-radius: 50%;
+  color: var(--white);
+  flex: 0 0 auto;
+  height: 40px;
+  width: 40px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 28px;
+  padding-top: 7px;
+  text-align: center;
+
+  &.ovo {
+    background-color: #4b2987;
+  }
+
+  &.gopay {
+    background-color: #03afd6;
+  }
+
+  &.shopeexen {
+    background-color: #ed4c2f;
+  }
+
+  &.dana {
+    background-color: #118eea;
+  }
+
+  &.linkaja {
+    background-color: #ea232a;
+  }
+}
+
+.grow {
+  margin-left: 12px;
+  width: 100%;
+}

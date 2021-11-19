@@ -1,0 +1,26 @@
+h3 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 32px;
+
+  &.black {
+    color: var(--black);
+  }
+
+  &.white {
+    color: var(--white);
+  }
+
+  &.red {
+    color: var(--red);
+  }
+
+  &.tangerine {
+    color: var(--tangerine);
+  }
+
+  &.grey {
+    color: var(--grey-4);
+  }
+}

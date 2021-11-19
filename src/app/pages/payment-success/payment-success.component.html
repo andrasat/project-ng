@@ -1,0 +1,51 @@
+<div class="page-container">
+  <img class="payment-success-image" src="/assets/image/payment-success.png" alt="Payment success">
+
+  <div class="content-container">
+    <app-heading-2>Payment Successful</app-heading-2>
+
+    <app-bodytext-14>
+      Please check your {{ orderData?.salesPayment?.paymentMethodID?.toUpperCase() }} application to resume your payment process
+    </app-bodytext-14>
+
+    <div class="mt-3 order-container">
+
+      <div class="order-section d-flex flex-row justify-content-between align-items-center">
+        <div class="order-type-icon">
+          <app-icon-delivery-bike *ngIf="orderData?.type === 'delivery'" [width]="32" [height]="32"></app-icon-delivery-bike>
+          <app-icon-bag *ngIf="orderData?.type !== 'delivery'" [width]="32" [height]="32"></app-icon-bag>
+        </div>
+
+        <div class="order-text">
+          <app-bodytext-14 [isSemiBold]="true">{{ orderData?.branchName }}</app-bodytext-14>
+          <app-caption color="grey">{{ orderData?.branchName }}</app-caption>
+        </div>
+
+        <app-bodytext-14 [isSemiBold]="true">{{ formatCurrency(orderData?.grandTotal || 0) }}</app-bodytext-14>
+      </div>
+
+      <div class="order-status d-flex flex-row justify-content-between align-items-center">
+        <div class="dashed-line">
+          <div class="circle"></div>
+        </div>
+
+        <div class="order-text">
+          <ng-container *ngIf="orderData?.type !== 'takeAway'">
+            <app-caption color="grey">{{ getHourAndMinute(orderData?.editedDate || '') }}</app-caption>
+            <app-bodytext-14>{{ orderData?.status }}</app-bodytext-14>
+          </ng-container>
+
+          <ng-container *ngIf="orderData?.type === 'takeAway'">
+            <app-caption color="grey">Pickup Number</app-caption>
+            <app-bodytext-14>{{ orderData?.billNum }}</app-bodytext-14>
+          </ng-container>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-4 button-container">
+      <app-primary-button text="VIEW ORDER DETAIL" (clicked)="goToOrderDetail()"></app-primary-button>
+    </div>
+  </div>
+</div>

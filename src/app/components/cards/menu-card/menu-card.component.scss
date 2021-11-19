@@ -1,0 +1,40 @@
+.menu-card {
+  border: 1px solid var(--grey);
+  border-radius: 6px;
+  height: 220px;
+  width: 140px;
+  overflow: hidden;
+}
+
+.image-container {
+  position: relative;
+  height: 140px;
+  width: 140px;
+}
+
+.out-of-stock-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  height: 140px;
+  width: 140px;
+  z-index: 10;
+}
+
+.out-of-stock-text {
+  position: relative;
+  top: 50%;
+  text-align: center;
+}
+
+.image {
+  height: 140px;
+  width: 140px;
+}
+
+.text-container {
+  padding: 5px;
+}
+
+.price-container {
+  padding: 3px 0;
+}

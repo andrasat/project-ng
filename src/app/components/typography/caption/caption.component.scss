@@ -1,0 +1,37 @@
+.caption {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  line-height: 14px;
+
+  &.semibold {
+    font-weight: 600;
+  }
+
+  &.bold {
+    font-weight: 700;
+  }
+
+  &.strikethrough {
+    text-decoration: line-through;
+  }
+
+  &.black {
+    color: var(--black);
+  }
+
+  &.white {
+    color: var(--white);
+  }
+
+  &.red {
+    color: var(--red);
+  }
+
+  &.tangerine {
+    color: var(--tangerine);
+  }
+
+  &.grey {
+    color: var(--grey-4);
+  }
+}

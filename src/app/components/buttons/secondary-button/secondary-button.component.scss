@@ -1,0 +1,59 @@
+.secondary-button {
+  background-color: var(--white);
+  border: 1px solid var(--white);
+  border-radius: 6px;
+  color: var(--black);
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 1px;
+  padding: 14px 0;
+  position: relative;
+  width: 100%;
+
+  &:focus,
+  &:hover {
+    border: 1px solid var(--tangerine);
+  }
+
+  &.invert {
+    background-color: var(--black);
+    border: 1px solid var(--black);
+    color: var(--white);
+
+    &:focus,
+    &:hover {
+      border: 1px solid var(--black);
+    }
+  }
+
+  &.transparent {
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: var(--white);
+
+    &:focus,
+    &:hover {
+      border: 1px solid transparent;
+    }
+  }
+
+  &.with-border {
+    border: 1px solid var(--tangerine);
+  }
+
+  img {
+    left: 16px;
+    top: 12px;
+    position: absolute;
+
+    @media (max-width: 320px) {
+      left: 8px;
+    }
+  }
+
+  p {
+    text-align: center;
+  }
+}
