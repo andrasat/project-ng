@@ -41,6 +41,15 @@ export class FeedbackComponent implements AfterViewInit {
     this.selectedWhatWentWell = value;
   }
 
+  submitFeedback() {
+    // Feedback API
+    // const data = {
+    //   starRate: this.starRate,
+    //   selectedWhatWentWell: this.selectedWhatWentWell,
+    //   notes: this.notes,
+    // }
+  }
+
   goBack() {
     return this.navigation.navigate('..', { relativeTo: this.route });
   }
