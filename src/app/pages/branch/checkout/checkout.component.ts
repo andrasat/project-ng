@@ -349,6 +349,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           this.hidePromoFormCollapse();
         },
         () => {
+          this.orderInput.promotionCode = '';
           this.promoCodeControl.setErrors({ apiError: true });
         }
       );
@@ -373,6 +374,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           this.hideVoucherFormCollapse();
         },
         () => {
+          this.orderInput.vouchers = this.orderInput.vouchers.reduce((arr: string[], v) => v === this.voucherCodeControl.value ? arr : [...arr, v], []);
           this.voucherCodeControl.setErrors({ apiError: true });
         }
       );
