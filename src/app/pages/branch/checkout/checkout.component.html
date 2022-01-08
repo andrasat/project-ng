@@ -199,13 +199,13 @@
         <app-bodytext-14 [isSemiBold]="true">{{ voucherCode }}</app-bodytext-14>
         <img src="/assets/image/trash.svg" alt="Delete Promo" (click)="showVoucherDeleteCollapse(voucherCode)">
       </div>
-    </ng-container>
 
-    <div class="add-more-voucher-container">
-      <button class="add-mode-voucher-button" (click)="showVoucherFormCollapse()">
-        <app-bodytext-14 [isBold]="true">+ ADD MORE VOUCHER</app-bodytext-14>
-      </button>
-    </div>
+      <div class="add-more-voucher-container">
+        <button class="add-mode-voucher-button" (click)="showVoucherFormCollapse()">
+          <app-bodytext-14 [isBold]="true">+ ADD MORE VOUCHER</app-bodytext-14>
+        </button>
+      </div>
+    </ng-container>
   </div>
 
   <div class="section-container">
@@ -320,7 +320,7 @@
       </div>
 
       <div class="mt-3">
-        <app-primary-button text="APPLY" [disabled]="!voucherCodeControl.value" (clicked)="applyVoucherCode()"></app-primary-button>
+        <app-primary-button text="APPLY" [disabled]="!voucherCodeControl.value || getVoucherCodeControlError()" (clicked)="applyVoucherCode()"></app-primary-button>
       </div>
     </div>
   </div>

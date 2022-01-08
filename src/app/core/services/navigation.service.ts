@@ -17,16 +17,18 @@ export class NavigationService {
 
   private history: string[] = []
   
-  back(url?: string, navigationExtras?: NavigationExtras) {
+  back(url?: string, navigationExtras: NavigationExtras = {}) {
     this.history.pop();
 
-    if (this.history.length > 0) {
-      return this.location.back();
-    } else if(url) {
-      return this.router.navigate([url], navigationExtras);
-    } else {
-      return this.router.navigateByUrl('/');
+    if (url) {
+      return this.router.navigate([url], { ...navigationExtras, replaceUrl: true });
     }
+
+    if (this.history.length > 0 && !url) {
+      return this.location.back();
+    }
+
+    return this.router.navigateByUrl('/');
   }
 
   navigate(url?: string, navigationExtras?: NavigationExtras) {
